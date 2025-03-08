@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/mpir/0.0.2")]
+#![doc(html_root_url = "https://docs.rs/mpir/0.1.0")]
 //! partial Rust porting of mpir multiple precision library based on gmp mpfr
 //!
 //! # Requirements
@@ -18,13 +18,14 @@
 //! - [ https://github.com/nomissbowling/mpir ]( https://github.com/nomissbowling/mpir )
 //!
 
-pub mod mpir;
+pub mod prim;
+pub use crate::prim::{*, typ::*, mpz::*, mpf::*, mpq::*}; // gmp::*
 
 pub mod minimum;
 
 #[cfg(test)]
 mod tests {
-  use super::mpir::*;
+  use super::*;
   use super::minimum::simple_test;
 
   /// with [-- --nocapture] or with [-- --show-output]

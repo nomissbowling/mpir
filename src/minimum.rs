@@ -1,7 +1,7 @@
 //! minimum test for mpir
 //!
 
-use crate::mpir::*;
+use crate::*;
 
 /// simple test
 pub fn simple_test() {
@@ -56,6 +56,11 @@ pub fn simple_test() {
   assert_eq!(format!("{}", f), "0.24e+1");
   mpf_div_2exp(g, f, 3); // 0.24e+1 / 2**3 = 0.3e+0
   assert_eq!(format!("{}", g), "0.3e+0");
+
+  mpf_set_str(f, "-4.8", 10); // not use mpf_set_d(f, -4.8)
+  assert_eq!(format!("{}", f), "-0.48e+1");
+  mpf_div_2exp(g, f, 3); // -0.48e+1 / 2**3 = -0.59999999999999999999e+0
+  assert_eq!(format!("{}", g), "-0.59999999999999999999e+0");
 
   mpf_set_d(f, 5.0); // sqrt(5.0) = 0.22360679774997896964e+1
   mpf_sqrt(g, f);

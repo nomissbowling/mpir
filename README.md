@@ -11,6 +11,12 @@ Links
 - [https://github.com/nomissbowling/mpir](https://github.com/nomissbowling/mpir)
 
 
+Requirements
+------------
+
+- [gmp](https://gmplib.org/)
+- [mpir](https://github.com/ChillMagic/MPIR-Binary)
+
 
 License
 -------

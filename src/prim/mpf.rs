@@ -7,6 +7,7 @@ use std::error::Error;
 use crate::prim::{*, typ::*, mpz::*, gmp::*}; // mpq::*
 
 /// __mpf_struct
+#[derive(Clone)]
 #[repr(C)]
 pub struct __mpf_struct {
   /// _mp_prec
@@ -29,6 +30,122 @@ impl SNew for __mpf_struct {
       _mp_exp: 0,
       _mp_d: 0 as *mut mp_limb_t
     }
+  }
+}
+
+/// impl mpf_s
+impl __mpf_struct {
+  /// init create new instance
+  pub fn init() -> Self {
+    let mut t = mpf_s::new();
+    mpf_init(&mut t);
+    t
+  }
+
+  /// init_set create new instance
+  pub fn init_set(f: mpf_t) -> Self {
+    let mut t = mpf_s::new();
+    mpf_init_set(&mut t, f);
+    t
+  }
+
+  /// init_set_ui create new instance
+  pub fn init_set_ui(u: ui_t) -> Self {
+    let mut t = mpf_s::new();
+    mpf_init_set_ui(&mut t, u);
+    t
+  }
+
+  /// init_set_si create new instance
+  pub fn init_set_si(s: si_t) -> Self {
+    let mut t = mpf_s::new();
+    mpf_init_set_si(&mut t, s);
+    t
+  }
+
+  /// init_set_d create new instance
+  pub fn init_set_d(d: double_t) -> Self {
+    let mut t = mpf_s::new();
+    mpf_init_set_d(&mut t, d);
+    t
+  }
+
+  /// init_set_str create new instance
+  pub fn init_set_str(s: &str, b: int_t) -> Self {
+    let mut t = mpf_s::new();
+    mpf_init_set_str(&mut t, s, b);
+    t
+  }
+
+  /// set self = f
+  pub fn set(&mut self, f: mpf_t) -> &mut Self {
+    mpf_set(self, f);
+    self
+  }
+
+  /// set_ui self = u
+  pub fn set_ui(&mut self, u: ui_t) -> &mut Self {
+    mpf_set_ui(self, u);
+    self
+  }
+
+  /// set_si self = s
+  pub fn set_si(&mut self, s: si_t) -> &mut Self {
+    mpf_set_si(self, s);
+    self
+  }
+
+  /// set_d self = d
+  pub fn set_d(&mut self, d: double_t) -> &mut Self {
+    mpf_set_d(self, d);
+    self
+  }
+
+  /// set_z self = a
+  pub fn set_z(&mut self, a: mpz_t) -> &mut Self {
+    mpf_set_z(self, a);
+    self
+  }
+
+  /// set_str self from str
+  pub fn set_str(&mut self, s: &str, b: int_t) -> &mut Self {
+    mpf_set_str(self, s, b);
+    self
+  }
+
+  /// sqrt create new instance
+  pub fn sqrt(&mut self) -> Self {
+    let mut t = mpf_s::new();
+    mpf_sqrt(&mut t, self);
+    t
+  }
+
+  /// div self /= e
+  pub fn div(&mut self, e: mpf_t) -> &mut Self {
+    let t = &mut mpf_s::init_set(self);
+    mpf_div(self, t, e);
+    self
+  }
+
+  /// ui_div self = u / self
+  pub fn ui_div(&mut self, u: ui_t) -> &mut Self {
+    let t = &mut mpf_s::init_set(self);
+    mpf_ui_div(self, u, t);
+    self
+  }
+
+  /// div_ui self /= u
+  pub fn div_ui(&mut self, u: ui_t) -> &mut Self {
+    let t = &mut mpf_s::init_set(self);
+    mpf_div_ui(self, t, u);
+    self
+  }
+
+  /// div_2exp self /= 2**n
+  pub fn div_2exp(&mut self, n: mp_bitcnt_t) -> &mut Self {
+    let t = &mut mpf_s::init_set(self);
+    mpf_div_2exp(self, t, n);
+    self
   }
 }
 

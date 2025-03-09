@@ -7,6 +7,7 @@ use std::error::Error;
 use crate::prim::{*, typ::*, mpz::*, mpf::*, gmp::*};
 
 /// __mpq_struct
+#[derive(Clone)]
 #[repr(C)]
 pub struct __mpq_struct {
   /// _mp_num
@@ -23,6 +24,58 @@ impl SNew for __mpq_struct {
       _mp_num: __mpz_struct::new(),
       _mp_den: __mpz_struct::new()
     }
+  }
+}
+
+/// impl mpq_s
+impl __mpq_struct {
+  /// init create new instance
+  pub fn init() -> Self {
+    let mut t = mpq_s::new();
+    mpq_init(&mut t);
+    t
+  }
+
+  /// set self = q
+  pub fn set(&mut self, q: mpq_t) -> &mut Self {
+    mpq_set(self, q);
+    self
+  }
+
+  /// set_ui self = u
+  pub fn set_ui(&mut self, u: ui_t, f: ui_t) -> &mut Self {
+    mpq_set_ui(self, u, f);
+    self
+  }
+
+  /// set_si self = s
+  pub fn set_si(&mut self, s: si_t, f: ui_t) -> &mut Self {
+    mpq_set_si(self, s, f);
+    self
+  }
+
+  /// set_d self = d
+  pub fn set_d(&mut self, d: double_t) -> &mut Self {
+    mpq_set_d(self, d);
+    self
+  }
+
+  /// set_z self = a
+  pub fn set_z(&mut self, a: mpz_t) -> &mut Self {
+    mpq_set_z(self, a);
+    self
+  }
+
+  /// set_f self = f
+  pub fn set_f(&mut self, f: mpf_t) -> &mut Self {
+    mpq_set_f(self, f);
+    self
+  }
+
+  /// set_str self from str
+  pub fn set_str(&mut self, s: &str, b: int_t) -> &mut Self {
+    mpq_set_str(self, s, b);
+    self
   }
 }
 

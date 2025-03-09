@@ -7,6 +7,7 @@ use std::error::Error;
 use crate::prim::{*, typ::*, gmp::*}; // mpf::*, mpq::*
 
 /// __mpz_struct
+#[derive(Clone)]
 #[repr(C)]
 pub struct __mpz_struct {
   /// _mp_alloc
@@ -26,6 +27,135 @@ impl SNew for __mpz_struct {
       _mp_size: 0,
       _mp_d: 0 as *mut mp_limb_t
     }
+  }
+}
+
+/// impl mpz_s
+impl __mpz_struct {
+  /// init create new instance
+  pub fn init() -> Self {
+    let mut t = mpz_s::new();
+    mpz_init(&mut t);
+    t
+  }
+
+  /// init_set create new instance
+  pub fn init_set(a: mpz_t) -> Self {
+    let mut t = mpz_s::new();
+    mpz_init_set(&mut t, a);
+    t
+  }
+
+  /// init_set_ui create new instance
+  pub fn init_set_ui(u: ui_t) -> Self {
+    let mut t = mpz_s::new();
+    mpz_init_set_ui(&mut t, u);
+    t
+  }
+
+  /// init_set_si create new instance
+  pub fn init_set_si(s: si_t) -> Self {
+    let mut t = mpz_s::new();
+    mpz_init_set_si(&mut t, s);
+    t
+  }
+
+  /// init_set_d create new instance
+  pub fn init_set_d(d: double_t) -> Self {
+    let mut t = mpz_s::new();
+    mpz_init_set_d(&mut t, d);
+    t
+  }
+
+  /// init_set_str create new instance
+  pub fn init_set_str(s: &str, b: int_t) -> Self {
+    let mut t = mpz_s::new();
+    mpz_init_set_str(&mut t, s, b);
+    t
+  }
+
+  /// set self = a
+  pub fn set(&mut self, a: mpz_t) -> &mut Self {
+    mpz_set(self, a);
+    self
+  }
+
+  /// set_ui self = u
+  pub fn set_ui(&mut self, u: ui_t) -> &mut Self {
+    mpz_set_ui(self, u);
+    self
+  }
+
+  /// set_si self = s
+  pub fn set_si(&mut self, s: si_t) -> &mut Self {
+    mpz_set_si(self, s);
+    self
+  }
+
+  /// set_d self = d
+  pub fn set_d(&mut self, d: double_t) -> &mut Self {
+    mpz_set_d(self, d);
+    self
+  }
+
+  /// set_str self from str
+  pub fn set_str(&mut self, s: &str, b: int_t) -> &mut Self {
+    mpz_set_str(self, s, b);
+    self
+  }
+
+  /// add self += b
+  pub fn add(&mut self, b: mpz_t) -> &mut Self {
+    let t = &mut mpz_s::init_set(self);
+    mpz_add(self, t, b);
+    self
+  }
+
+  /// add_ui self += u
+  pub fn add_ui(&mut self, u: ui_t) -> &mut Self {
+    let t = &mut mpz_s::init_set(self);
+    mpz_add_ui(self, t, u);
+    self
+  }
+
+  /// addmul self += a * b
+  pub fn addmul(&mut self, a: mpz_t, b: mpz_t) -> &mut Self {
+    mpz_addmul(self, a, b);
+    self
+  }
+
+  /// addmul_ui self += a * u
+  pub fn addmul_ui(&mut self, a: mpz_t, u: ui_t) -> &mut Self {
+    mpz_addmul_ui(self, a, u);
+    self
+  }
+
+  /// mul self *= b
+  pub fn mul(&mut self, b: mpz_t) -> &mut Self {
+    let t = &mut mpz_s::init_set(self);
+    mpz_mul(self, t, b);
+    self
+  }
+
+  /// mul_ui self *= u
+  pub fn mul_ui(&mut self, u: ui_t) -> &mut Self {
+    let t = &mut mpz_s::init_set(self);
+    mpz_mul_ui(self, t, u);
+    self
+  }
+
+  /// mul_si self *= s
+  pub fn mul_si(&mut self, s: si_t) -> &mut Self {
+    let t = &mut mpz_s::init_set(self);
+    mpz_mul_si(self, t, s);
+    self
+  }
+
+  /// mul_2exp self *= 2**n
+  pub fn mul_2exp(&mut self, n: mp_bitcnt_t) -> &mut Self {
+    let t = &mut mpz_s::init_set(self);
+    mpz_mul_2exp(self, t, n);
+    self
   }
 }
 
@@ -145,4 +275,44 @@ pub fn mpz_get_str<'a>(s: Option<&mut String>, b: int_t, a: &'a mpz_s) ->
   None => Err("err mpz get str".into()),
   Some(r) => Ok(String::from_utf8(r)?)
   }
+}
+
+/// mpz_add c = a + b
+pub fn mpz_add(c: mpz_t, a: mpz_t, b: mpz_t) -> () {
+  unsafe { __gmpz_add(c, a, b) }
+}
+
+/// mpz_add_ui c = a + u
+pub fn mpz_add_ui(c: mpz_t, a: mpz_t, u: ui_t) -> () {
+  unsafe { __gmpz_add_ui(c, a, u) }
+}
+
+/// mpz_addmul c += a * b
+pub fn mpz_addmul(c: mpz_t, a: mpz_t, b: mpz_t) -> () {
+  unsafe { __gmpz_addmul(c, a, b) }
+}
+
+/// mpz_addmul_ui c += a * u
+pub fn mpz_addmul_ui(c: mpz_t, a: mpz_t, u: ui_t) -> () {
+  unsafe { __gmpz_addmul_ui(c, a, u) }
+}
+
+/// mpz_mul c = a * b
+pub fn mpz_mul(c: mpz_t, a: mpz_t, b: mpz_t) -> () {
+  unsafe { __gmpz_mul(c, a, b) }
+}
+
+/// mpz_mul_ui c = a * u
+pub fn mpz_mul_ui(c: mpz_t, a: mpz_t, u: ui_t) -> () {
+  unsafe { __gmpz_mul_ui(c, a, u) }
+}
+
+/// mpz_mul_si c = a * s
+pub fn mpz_mul_si(c: mpz_t, a: mpz_t, s: si_t) -> () {
+  unsafe { __gmpz_mul_si(c, a, s) }
+}
+
+/// mpz_mul_2exp c = a * 2**n
+pub fn mpz_mul_2exp(c: mpz_t, a: mpz_t, n: mp_bitcnt_t) -> () {
+  unsafe { __gmpz_mul_2exp(c, a, n) }
 }

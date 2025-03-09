@@ -35,6 +35,23 @@ extern "C" {
   /// __gmpz_get_str
   pub fn __gmpz_get_str(s: *mut u8, b: int_t, a: *const mpz_s) -> *mut u8;
 
+  /// __gmpz_add c = a + b
+  pub fn __gmpz_add(c: *mut mpz_s, a: *mut mpz_s, b: *mut mpz_s) -> ();
+  /// __gmpz_add_ui c = a + u
+  pub fn __gmpz_add_ui(c: *mut mpz_s, a: *mut mpz_s, u: ui_t) -> ();
+  /// __gmpz_addmul c += a * b
+  pub fn __gmpz_addmul(c: *mut mpz_s, a: *mut mpz_s, b: *mut mpz_s) -> ();
+  /// __gmpz_addmul_ui c += a * u
+  pub fn __gmpz_addmul_ui(c: *mut mpz_s, a: *mut mpz_s, u: ui_t) -> ();
+  /// __gmpz_mul c = a * b
+  pub fn __gmpz_mul(c: *mut mpz_s, a: *mut mpz_s, b: *mut mpz_s) -> ();
+  /// __gmpz_mul_ui c = a * u
+  pub fn __gmpz_mul_ui(c: *mut mpz_s, a: *mut mpz_s, u: ui_t) -> ();
+  /// __gmpz_mul_si c = a * s
+  pub fn __gmpz_mul_si(c: *mut mpz_s, a: *mut mpz_s, s: si_t) -> ();
+  /// __gmpz_mul_2exp c = a * 2**n
+  pub fn __gmpz_mul_2exp(c: *mut mpz_s, a: *mut mpz_s, n: mp_bitcnt_t) -> ();
+
   /// __gmpf_init
   pub fn __gmpf_init(f: *mut mpf_s) -> ();
   /// __gmpf_init_set

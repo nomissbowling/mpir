@@ -5,12 +5,23 @@ use crate::*;
 
 /// simple test
 pub fn simple_test() {
+  // mpz (c style)
   let a = &mut mpz_s::new();
   mpz_init_set_si(a, -123);
 //assert_eq!(gmp_printf("[%Zd]\n", a), ()); // -123
   assert_eq!(mpz_get_str(None, 10, a).expect("z"), "-123");
   assert_eq!(format!("{}", a), "-123");
 
+  // mpz (to be operator)
+  let b = &mut mpz_s::init_set_ui(654);
+  assert_eq!(format!("{}", a.add(b).add(b)), "1185"); // a + b + b
+  let c = &mut mpz_s::init_set_si(-1);
+  assert_eq!(format!("{}", a.addmul(c, b).addmul(b, c)), "-123"); // a - b - b
+  assert_eq!(format!("{}", a.mul(c.set_si(-2))), "246"); // -123 * -2
+  assert_eq!(format!("{}", a.mul_si(-1)), "-246"); // 246 * -1
+  assert_eq!(format!("{}", a.mul_2exp(20)), "-257949696"); // -246 * 2**20
+
+  // mpf (c style)
   let f = &mut mpf_s::new();
   mpf_init_set_d(f, -0.3);
 //assert_eq!(gmp_printf_1f("[%.*Ff]\n", 17, f), ()); // -0.29999999999999999
@@ -66,6 +77,13 @@ pub fn simple_test() {
   mpf_sqrt(g, f);
   assert_eq!(format!("{}", g), "0.22360679774997896964e+1");
 
+  // mpf (to be operator)
+  assert_eq!(format!("{}", a.set_ui(1).mul_2exp(100)), // 1 * 2**100
+    "1267650600228229401496703205376");
+  assert_eq!(format!("{}", f.set_z(a).div_2exp(100)), // 2**100 / 2**100
+    "0.1e+1");
+
+  // mpq (c style)
   let q = &mut mpq_s::new();
   mpq_init(q);
   mpq_set_ui(q, 2, 8);

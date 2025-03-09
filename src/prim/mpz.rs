@@ -3,11 +3,12 @@
 
 use std::fmt;
 use std::error::Error;
+use std::collections::HashMap;
 
 use crate::prim::{*, typ::*, gmp::*}; // mpf::*, mpq::*
 
 /// __mpz_struct
-#[derive(Clone)]
+// not use #[derive(Clone)]
 #[repr(C)]
 pub struct __mpz_struct {
   /// _mp_alloc
@@ -32,6 +33,11 @@ impl SNew for __mpz_struct {
 
 /// impl mpz_s
 impl __mpz_struct {
+  /// clear
+  pub fn clear(&mut self) -> () {
+    mpz_clear(self)
+  }
+
   /// init create new instance
   pub fn init() -> Self {
     let mut t = mpz_s::new();
@@ -157,6 +163,29 @@ impl __mpz_struct {
     mpz_mul_2exp(self, t, n);
     self
   }
+
+  /// fact create new instance (slow without cache)
+  pub fn fact(n: ui_t) -> Self {
+    let mut t = mpz_s::init_set_ui(1);
+    (1..=n).into_iter().for_each(|i| { t.mul_ui(i); });
+    t
+  }
+
+  /// fact cached
+  pub fn fact_cached(n: ui_t, m: &mut HashMap<ui_t, mpz_s>) -> Self {
+/*  // duplex mutable borrow m
+    let e = m.entry(n).or_insert(if n == 0 { mpz_s::init_set_ui(1) }
+      else { let mut t = mpz_s::fact_cached(n - 1, m); t.mul_ui(n); t }
+    );
+    mpz_s::init_set(e) // as clone
+*/
+    // early return to avoid duplex mutable borrow m
+    if let Some(e) = m.get_mut(&n) { return mpz_s::init_set(e); } // as clone
+    let mut e = if n == 0 { mpz_s::init_set_ui(1) }
+      else { let mut t = mpz_s::fact_cached(n - 1, m); t.mul_ui(n); t };
+    m.insert(n, mpz_s::init_set(&mut e)); // as clone
+    e
+  }
 }
 
 /// impl Debug
@@ -186,6 +215,18 @@ pub type mpz_s = __mpz_struct; // [__mpz_struct; 1]
 /// mpz_t
 #[allow(non_camel_case_types)]
 pub type mpz_t<'a> = &'a mut mpz_s; // *mut mpz_s
+
+/// mpz_clears
+pub fn mpz_clears(va: &mut Vec<mpz_t>) -> () {
+  va.iter_mut().for_each(|a| {
+    unsafe { __gmpz_clear(*a) } // not use __gmpz_clears
+  })
+}
+
+/// mpz_clear
+pub fn mpz_clear(a: mpz_t) -> () {
+  unsafe { __gmpz_clear(a) }
+}
 
 /// mpz_init
 pub fn mpz_init(a: mpz_t) -> () {

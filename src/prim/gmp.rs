@@ -10,6 +10,10 @@ extern "C" {
   /// __gmp_printf *** CAUTION *** (assume just 4 fake parameters after fmt)
   pub fn __gmp_printf(f: *const u8, a: mp_t, b: mp_t, c: mp_t, d: mp_t) -> ();
 
+  /// __gmpz_clears *** CAUTION *** (assume just 1 fake parameters after first)
+  pub fn __gmpz_clears(a: *mut mpz_s, b: *mut mpz_s) -> ();
+  /// __gmpz_clear
+  pub fn __gmpz_clear(a: *mut mpz_s) -> ();
   /// __gmpz_init
   pub fn __gmpz_init(a: *mut mpz_s) -> ();
   /// __gmpz_init_set
@@ -52,6 +56,10 @@ extern "C" {
   /// __gmpz_mul_2exp c = a * 2**n
   pub fn __gmpz_mul_2exp(c: *mut mpz_s, a: *mut mpz_s, n: mp_bitcnt_t) -> ();
 
+  /// __gmpf_clears *** CAUTION *** (assume just 1 fake parameters after first)
+  pub fn __gmpf_clears(f: *mut mpf_s, g: *mut mpf_s) -> ();
+  /// __gmpf_clear
+  pub fn __gmpf_clear(f: *mut mpf_s) -> ();
   /// __gmpf_init
   pub fn __gmpf_init(f: *mut mpf_s) -> ();
   /// __gmpf_init_set
@@ -91,6 +99,10 @@ extern "C" {
   /// __gmpf_div_2exp g = f / 2**n
   pub fn __gmpf_div_2exp(g: *mut mpf_s, f: *mut mpf_s, n: mp_bitcnt_t) -> ();
 
+  /// __gmpq_clears *** CAUTION *** (assume just 1 fake parameters after first)
+  pub fn __gmpq_clears(q: *mut mpq_s, r: *mut mpq_s) -> ();
+  /// __gmpq_clear
+  pub fn __gmpq_clear(q: *mut mpq_s) -> ();
   /// __gmpq_init
   pub fn __gmpq_init(q: *mut mpq_s) -> ();
   /// __gmpq_set

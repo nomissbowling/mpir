@@ -7,7 +7,7 @@ use std::error::Error;
 use crate::prim::{*, typ::*, mpz::*, gmp::*}; // mpq::*
 
 /// __mpf_struct
-#[derive(Clone)]
+// not use #[derive(Clone)]
 #[repr(C)]
 pub struct __mpf_struct {
   /// _mp_prec
@@ -35,6 +35,11 @@ impl SNew for __mpf_struct {
 
 /// impl mpf_s
 impl __mpf_struct {
+  /// clear
+  pub fn clear(&mut self) -> () {
+    mpf_clear(self)
+  }
+
   /// init create new instance
   pub fn init() -> Self {
     let mut t = mpf_s::new();
@@ -178,6 +183,18 @@ pub type mpf_s = __mpf_struct; // [__mpf_struct; 1]
 /// mpf_t
 #[allow(non_camel_case_types)]
 pub type mpf_t<'a> = &'a mut mpf_s; // *mut mpf_s
+
+/// mpf_clears
+pub fn mpf_clears(vf: &mut Vec<mpf_t>) -> () {
+  vf.iter_mut().for_each(|f| {
+    unsafe { __gmpf_clear(*f) } // not use __gmpf_clears
+  })
+}
+
+/// mpf_clear
+pub fn mpf_clear(f: mpf_t) -> () {
+  unsafe { __gmpf_clear(f) }
+}
 
 /// mpf_init
 pub fn mpf_init(f: mpf_t) -> () {

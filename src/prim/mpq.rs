@@ -7,7 +7,7 @@ use std::error::Error;
 use crate::prim::{*, typ::*, mpz::*, mpf::*, gmp::*};
 
 /// __mpq_struct
-#[derive(Clone)]
+// not use #[derive(Clone)]
 #[repr(C)]
 pub struct __mpq_struct {
   /// _mp_num
@@ -29,6 +29,11 @@ impl SNew for __mpq_struct {
 
 /// impl mpq_s
 impl __mpq_struct {
+  /// clear
+  pub fn clear(&mut self) -> () {
+    mpq_clear(self)
+  }
+
   /// init create new instance
   pub fn init() -> Self {
     let mut t = mpq_s::new();
@@ -72,6 +77,18 @@ impl __mpq_struct {
     self
   }
 
+  /// set_num
+  pub fn set_num(&mut self, num: mpz_t) -> &mut Self {
+    mpq_set_num(self, num);
+    self
+  }
+
+  /// set_den
+  pub fn mpq_set_den(&mut self, den: mpz_t) -> &mut Self {
+    mpq_set_den(self, den);
+    self
+  }
+
   /// set_str self from str
   pub fn set_str(&mut self, s: &str, b: int_t) -> &mut Self {
     mpq_set_str(self, s, b);
@@ -101,6 +118,18 @@ pub type mpq_s = __mpq_struct; // [__mpq_struct; 1]
 /// mpq_t
 #[allow(non_camel_case_types)]
 pub type mpq_t<'a> = &'a mut mpq_s; // *mut mpq_s
+
+/// mpq_clears
+pub fn mpq_clears(vq: &mut Vec<mpq_t>) -> () {
+  vq.iter_mut().for_each(|q| {
+    unsafe { __gmpq_clear(*q) } // not use __gmpq_clears
+  })
+}
+
+/// mpq_clear
+pub fn mpq_clear(q: mpq_t) -> () {
+  unsafe { __gmpq_clear(q) }
+}
 
 /// mpq_init
 pub fn mpq_init(q: mpq_t) -> () {

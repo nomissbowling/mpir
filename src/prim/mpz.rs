@@ -52,6 +52,13 @@ impl __mpz_struct {
     t
   }
 
+  /// init2 with prec create new instance
+  pub fn init2(n: mp_bitcnt_t) -> Self {
+    let mut t = mpz_s::new();
+    mpz_init2(&mut t, n);
+    t
+  }
+
   /// init_set create new instance
   pub fn init_set(a: mpz_t) -> Self {
     let mut t = mpz_s::new();
@@ -379,9 +386,21 @@ pub fn mpz_clear(a: mpz_t) -> () {
   unsafe { __gmpz_clear(a) }
 }
 
+/// mpz_inits
+pub fn mpz_inits(va: &mut Vec<mpz_t>) -> () {
+  va.iter_mut().for_each(|a| {
+    unsafe { __gmpz_init(*a) } // not use __gmpz_inits
+  })
+}
+
 /// mpz_init
 pub fn mpz_init(a: mpz_t) -> () {
   unsafe { __gmpz_init(a) }
+}
+
+/// mpz_init2
+pub fn mpz_init2(a: mpz_t, n: mp_bitcnt_t) -> () {
+  unsafe { __gmpz_init2(a, n) }
 }
 
 /// mpz_init_set

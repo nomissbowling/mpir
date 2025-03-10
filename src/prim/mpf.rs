@@ -3,6 +3,7 @@
 
 use std::fmt;
 use std::error::Error;
+use std::collections::HashMap;
 
 use crate::prim::{*, typ::*, mpz::*, gmp::*}; // mpq::*
 
@@ -51,6 +52,13 @@ impl __mpf_struct {
   pub fn init() -> Self {
     let mut t = mpf_s::new();
     mpf_init(&mut t);
+    t
+  }
+
+  /// init2 with prec create new instance
+  pub fn init2(n: mp_bitcnt_t) -> Self {
+    let mut t = mpf_s::new();
+    mpf_init2(&mut t, n);
     t
   }
 
@@ -162,35 +170,35 @@ impl __mpf_struct {
 
   /// reldiff returns abs(self - e) / self create new instance
   pub fn reldiff(&mut self, e: mpf_t) -> Self {
-    let mut t = mpf_s::init_set_ui(0); // new();
+    let mut t = mpf_s::init(); // new();
     mpf_reldiff(&mut t, self, e);
     t
   }
 
   /// sqrt create new instance
   pub fn sqrt(&mut self) -> Self {
-    let mut t = mpf_s::init_set_ui(0); // new();
+    let mut t = mpf_s::init(); // new();
     mpf_sqrt(&mut t, self);
     t
   }
 
   /// sqrt create new instance
   pub fn sqrt_ui(u: ui_t) -> Self {
-    let mut t = mpf_s::init_set_ui(0); // new();
+    let mut t = mpf_s::init(); // new();
     mpf_sqrt_ui(&mut t, u);
     t
   }
 
   /// abs create new instance
   pub fn abs(&mut self) -> Self {
-    let mut t = mpf_s::init_set_ui(0); // new();
+    let mut t = mpf_s::init(); // new();
     mpf_abs(&mut t, self);
     t
   }
 
   /// neg create new instance
   pub fn neg(&mut self) -> Self {
-    let mut t = mpf_s::init_set_ui(0); // new();
+    let mut t = mpf_s::init(); // new();
     mpf_neg(&mut t, self);
     t
   }
@@ -281,9 +289,49 @@ impl __mpf_struct {
 
   /// pow_ui f**n create new instance
   pub fn pow_ui(f: mpf_t, n: ui_t) -> Self {
-    let mut t = mpf_s::init_set_ui(0); // ***never*** use new();
+    let mut t = mpf_s::init(); // ***never*** use new();
     mpf_pow_ui(&mut t, f, n);
     t
+  }
+
+  /// get_prec
+  pub fn get_prec(&mut self) -> mp_bitcnt_t {
+    mpf_get_prec(self)
+  }
+
+  /// set_prec
+  pub fn set_prec(&mut self, n: mp_bitcnt_t) -> () {
+    mpf_set_prec(self, n)
+  }
+
+  /// set_prec_raw
+  pub fn set_prec_raw(&mut self, n: mp_bitcnt_t) -> () {
+    mpf_set_prec_raw(self, n)
+  }
+
+  /// calc_bits_from_digits
+  pub fn calc_bits_from_digits(d: mp_size_t) -> mp_bitcnt_t {
+    (10f64.log2() * (d + 1) as f64) as mp_bitcnt_t
+  }
+
+  /// calc_digits_from_bits
+  pub fn calc_digits_from_bits(n: mp_bitcnt_t) -> mp_size_t {
+    (n as f64 / 10f64.log2()) as mp_size_t
+  }
+
+  /// calc_napier
+  pub fn calc_napier(x: mpf_t, digits: mp_size_t) -> Self {
+    let mut e = mpf_s::init_set_ui(0);
+//    e.set_str("2.71828182845904523536", 10); // when digits = 21
+    let g = &mut mpf_s::init_set_ui(0);
+    let m = &mut HashMap::<ui_t, mpz_s>::new();
+    (0..=digits as ui_t).into_iter().for_each(|i| {
+      let n = &mut mpz_s::fact_cached(i, m);
+      let f = &mut mpf_s::pow_ui(x, i);
+      e.add(f.div(g.set_z(n)));
+//      println!("i {} g {} f {} e {}", i, g, f, e);
+    });
+    e
   }
 }
 
@@ -329,9 +377,21 @@ pub fn mpf_clear(f: mpf_t) -> () {
   unsafe { __gmpf_clear(f) }
 }
 
+/// mpf_inits
+pub fn mpf_inits(vf: &mut Vec<mpf_t>) -> () {
+  vf.iter_mut().for_each(|f| {
+    unsafe { __gmpf_init(*f) } // not use __gmpf_inits
+  })
+}
+
 /// mpf_init
 pub fn mpf_init(f: mpf_t) -> () {
   unsafe { __gmpf_init(f) }
+}
+
+/// mpf_init2
+pub fn mpf_init2(f: mpf_t, n: mp_bitcnt_t) -> () {
+  unsafe { __gmpf_init2(f, n) }
 }
 
 /// mpf_init_set

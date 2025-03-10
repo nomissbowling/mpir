@@ -14,8 +14,12 @@ extern "C" {
   pub fn __gmpz_clears(a: *mut mpz_s, b: *mut mpz_s) -> ();
   /// __gmpz_clear
   pub fn __gmpz_clear(a: *mut mpz_s) -> ();
+  /// __gmpz_inits *** CAUTION *** (assume just 1 fake parameters after first)
+  pub fn __gmpz_inits(a: *mut mpz_s, b: *mut mpz_s) -> ();
   /// __gmpz_init
   pub fn __gmpz_init(a: *mut mpz_s) -> ();
+  /// __gmpz_init2
+  pub fn __gmpz_init2(a: *mut mpz_s, n: mp_bitcnt_t) -> ();
   /// __gmpz_init_set
   pub fn __gmpz_init_set(a: *mut mpz_s, b: *mut mpz_s) -> ();
   /// __gmpz_init_set_ui
@@ -116,8 +120,12 @@ extern "C" {
   pub fn __gmpf_clears(f: *mut mpf_s, g: *mut mpf_s) -> ();
   /// __gmpf_clear
   pub fn __gmpf_clear(f: *mut mpf_s) -> ();
+  /// __gmpf_inits *** CAUTION *** (assume just 1 fake parameters after first)
+  pub fn __gmpf_inits(f: *mut mpf_s, g: *mut mpf_s) -> ();
   /// __gmpf_init
   pub fn __gmpf_init(f: *mut mpf_s) -> ();
+  /// __gmpf_init2
+  pub fn __gmpf_init2(f: *mut mpf_s, n: mp_bitcnt_t) -> ();
   /// __gmpf_init_set
   pub fn __gmpf_init_set(f: *mut mpf_s, g: *mut mpf_s) -> ();
   /// __gmpf_init_set_ui
@@ -218,6 +226,8 @@ extern "C" {
   pub fn __gmpq_clears(q: *mut mpq_s, r: *mut mpq_s) -> ();
   /// __gmpq_clear
   pub fn __gmpq_clear(q: *mut mpq_s) -> ();
+  /// __gmpq_inits *** CAUTION *** (assume just 1 fake parameters after first)
+  pub fn __gmpq_inits(q: *mut mpq_s, r: *mut mpq_s) -> ();
   /// __gmpq_init
   pub fn __gmpq_init(q: *mut mpq_s) -> ();
   /// __gmpq_set
@@ -241,10 +251,47 @@ extern "C" {
   /// __gmpq_get_str
   pub fn __gmpq_get_str(s: *mut u8, b: int_t, q: *const mpq_s) -> *mut u8;
 
+  /// __gmpq_cmp
+  pub fn __gmpq_cmp(q: *mut mpq_s, r: *mut mpq_s) -> int_t;
+  /// __gmpq_cmp_z
+  pub fn __gmpq_cmp_z(q: *mut mpq_s, a: *mut mpz_s) -> int_t;
+  /// __gmpq_cmp_ui
+  pub fn __gmpq_cmp_ui(q: *mut mpq_s, u: ui_t) -> int_t;
+  /// __gmpq_cmp_si
+  pub fn __gmpq_cmp_si(q: *mut mpq_s, s: si_t) -> int_t;
+  /// __gmpq_equal
+  pub fn __gmpq_equal(q: *mut mpq_s, r: *mut mpq_s) -> int_t;
 /*
   /// __gmpq_sgn
   pub fn __gmpq_sgn(q: *mut mpq_s) -> int_t;
 */
+
+  /// __gmpq_inv p = q**-1
+  pub fn __gmpq_inv(p: *mut mpq_s, q: *mut mpq_s) -> ();
+
+  /// __gmpq_abs
+  pub fn __gmpq_abs(p: *mut mpq_s, q: *mut mpq_s) -> ();
+
+  /// __gmpq_neg
+  pub fn __gmpq_neg(p: *mut mpq_s, q: *mut mpq_s) -> ();
+
+  /// __gmpq_sub p = q - r
+  pub fn __gmpq_sub(p: *mut mpq_s, q: *mut mpq_s, r: *mut mpq_s) -> ();
+
+  /// __gmpq_add p = q + r
+  pub fn __gmpq_add(p: *mut mpq_s, q: *mut mpq_s, r: *mut mpq_s) -> ();
+
+  /// __gmpq_mul p = q * r
+  pub fn __gmpq_mul(p: *mut mpq_s, q: *mut mpq_s, r: *mut mpq_s) -> ();
+
+  /// __gmpq_mul_2exp p = q * 2**n
+  pub fn __gmpq_mul_2exp(p: *mut mpq_s, q: *mut mpq_s, n: mp_bitcnt_t) -> ();
+
+  /// __gmpq_div p = q / r
+  pub fn __gmpq_div(p: *mut mpq_s, q: *mut mpq_s, r: *mut mpq_s) -> ();
+
+  /// __gmpq_div_2exp p = q / 2**n
+  pub fn __gmpq_div_2exp(p: *mut mpq_s, q: *mut mpq_s, n: mp_bitcnt_t) -> ();
 
   /// ___gmp_get_memory_functions
   pub fn __gmp_get_memory_functions(

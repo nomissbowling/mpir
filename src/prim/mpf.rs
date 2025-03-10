@@ -33,6 +33,13 @@ impl SNew for __mpf_struct {
   }
 }
 
+/// impl Drop
+impl Drop for __mpf_struct {
+  fn drop(&mut self) {
+    self.clear()
+  }
+}
+
 /// impl mpf_s
 impl __mpf_struct {
   /// clear
@@ -118,6 +125,48 @@ impl __mpf_struct {
     self
   }
 
+  /// cmp
+  pub fn cmp(&mut self, g: mpf_t) -> int_t {
+    mpf_cmp(self, g)
+  }
+
+  /// cmp_d
+  pub fn cmp_d(&mut self, d: double_t) -> int_t {
+    mpf_cmp_d(self, d)
+  }
+
+  /// cmp_ui
+  pub fn cmp_ui(&mut self, u: ui_t) -> int_t {
+    mpf_cmp_ui(self, u)
+  }
+
+  /// cmp_si
+  pub fn cmp_si(&mut self, s: si_t) -> int_t {
+    mpf_cmp_si(self, s)
+  }
+
+  /// cmp_z
+  pub fn cmp_z(&mut self, a: mpz_t) -> int_t {
+    mpf_cmp_z(self, a)
+  }
+
+  /// eq ***mathematically ill-defined and should not be used***
+  pub fn eq(&mut self, g: mpf_t, n: mp_bitcnt_t) -> int_t {
+    mpf_eq(self, g, n)
+  }
+
+  /// sgn
+  pub fn sgn(&mut self) -> int_t {
+    mpf_sgn(self)
+  }
+
+  /// reldiff returns abs(self - e) / self create new instance
+  pub fn reldiff(&mut self, e: mpf_t) -> Self {
+    let mut t = mpf_s::new();
+    mpf_reldiff(&mut t, self, e);
+    t
+  }
+
   /// sqrt create new instance
   pub fn sqrt(&mut self) -> Self {
     let mut t = mpf_s::new();
@@ -125,17 +174,87 @@ impl __mpf_struct {
     t
   }
 
+  /// sqrt create new instance
+  pub fn sqrt_ui(u: ui_t) -> Self {
+    let mut t = mpf_s::new();
+    mpf_sqrt_ui(&mut t, u);
+    t
+  }
+
+  /// abs create new instance
+  pub fn abs(&mut self) -> Self {
+    let mut t = mpf_s::new();
+    mpf_abs(&mut t, self);
+    t
+  }
+
+  /// neg create new instance
+  pub fn neg(&mut self) -> Self {
+    let mut t = mpf_s::new();
+    mpf_neg(&mut t, self);
+    t
+  }
+
+  /// sub self -= e
+  pub fn sub(&mut self, e: mpf_t) -> &mut Self {
+    let t = &mut mpf_s::init_set(self);
+    mpf_sub(self, t, e);
+    self
+  }
+
+  /// sub_ui self -= u
+  pub fn sub_ui(&mut self, u: ui_t) -> &mut Self {
+    let t = &mut mpf_s::init_set(self);
+    mpf_sub_ui(self, t, u);
+    self
+  }
+
+  /// ui_sub self = u - self
+  pub fn ui_sub(&mut self, u: ui_t) -> &mut Self {
+    let t = &mut mpf_s::init_set(self);
+    mpf_ui_sub(self, u, t);
+    self
+  }
+
+  /// add self += e
+  pub fn add(&mut self, e: mpf_t) -> &mut Self {
+    let t = &mut mpf_s::init_set(self);
+    mpf_add(self, t, e);
+    self
+  }
+
+  /// add_ui self += u
+  pub fn add_ui(&mut self, u: ui_t) -> &mut Self {
+    let t = &mut mpf_s::init_set(self);
+    mpf_add_ui(self, t, u);
+    self
+  }
+
+  /// mul self *= e
+  pub fn mul(&mut self, e: mpf_t) -> &mut Self {
+    let t = &mut mpf_s::init_set(self);
+    mpf_mul(self, t, e);
+    self
+  }
+
+  /// mul_ui self *= u
+  pub fn mul_ui(&mut self, u: ui_t) -> &mut Self {
+    let t = &mut mpf_s::init_set(self);
+    mpf_mul_ui(self, t, u);
+    self
+  }
+
+  /// mul_2exp g = f * 2**n
+  pub fn mul_2exp(&mut self, n: mp_bitcnt_t) -> &mut Self {
+    let t = &mut mpf_s::init_set(self);
+    mpf_mul_2exp(self, t, n);
+    self
+  }
+
   /// div self /= e
   pub fn div(&mut self, e: mpf_t) -> &mut Self {
     let t = &mut mpf_s::init_set(self);
     mpf_div(self, t, e);
-    self
-  }
-
-  /// ui_div self = u / self
-  pub fn ui_div(&mut self, u: ui_t) -> &mut Self {
-    let t = &mut mpf_s::init_set(self);
-    mpf_ui_div(self, u, t);
     self
   }
 
@@ -146,11 +265,25 @@ impl __mpf_struct {
     self
   }
 
+  /// ui_div self = u / self
+  pub fn ui_div(&mut self, u: ui_t) -> &mut Self {
+    let t = &mut mpf_s::init_set(self);
+    mpf_ui_div(self, u, t);
+    self
+  }
+
   /// div_2exp self /= 2**n
   pub fn div_2exp(&mut self, n: mp_bitcnt_t) -> &mut Self {
     let t = &mut mpf_s::init_set(self);
     mpf_div_2exp(self, t, n);
     self
+  }
+
+  /// pow_ui f**n create new instance
+  pub fn pow_ui(f: mpf_t, n: ui_t) -> Self {
+    let mut t = mpf_s::new();
+    mpf_pow_ui(&mut t, f, n);
+    t
   }
 }
 
@@ -319,9 +452,104 @@ pub fn mpf_get_fmtstr<'a>(f: &'a mpf_s, b: int_t, d: mp_size_t) ->
   }
 }
 
+/// mpf_cmp
+pub fn mpf_cmp(f: mpf_t, g: mpf_t) -> int_t {
+  unsafe { __gmpf_cmp(f, g) }
+}
+
+/// mpf_cmp_d
+pub fn mpf_cmp_d(f: mpf_t, d: double_t) -> int_t {
+  unsafe { __gmpf_cmp_d(f, d) }
+}
+
+/// mpf_cmp_ui
+pub fn mpf_cmp_ui(f: mpf_t, u: ui_t) -> int_t {
+  unsafe { __gmpf_cmp_ui(f, u) }
+}
+
+/// mpf_cmp_si
+pub fn mpf_cmp_si(f: mpf_t, s: si_t) -> int_t {
+  unsafe { __gmpf_cmp_si(f, s) }
+}
+
+/// mpf_cmp_z
+pub fn mpf_cmp_z(f: mpf_t, a: mpz_t) -> int_t {
+  unsafe { __gmpf_cmp_z(f, a) }
+}
+
+/// mpf_eq ***mathematically ill-defined and should not be used***
+pub fn mpf_eq(f: mpf_t, g: mpf_t, n: mp_bitcnt_t) -> int_t {
+  unsafe { __gmpf_eq(f, g, n) }
+}
+
+/// mpf_sgn
+pub fn mpf_sgn(f: mpf_t) -> int_t {
+  unsafe { __gmpf_sgn(f) }
+}
+
+/// mpf_reldiff
+pub fn mpf_reldiff(g: mpf_t, f: mpf_t, e: mpf_t) -> () {
+  unsafe { __gmpf_reldiff(g, f, e) }
+}
+
 /// mpf_sqrt
 pub fn mpf_sqrt(g: mpf_t, f: mpf_t) -> () {
   unsafe { __gmpf_sqrt(g, f) }
+}
+
+/// mpf_sqrt_ui
+pub fn mpf_sqrt_ui(g: mpf_t, u: ui_t) -> () {
+  unsafe { __gmpf_sqrt_ui(g, u) }
+}
+
+/// mpf_abs
+pub fn mpf_abs(g: mpf_t, f: mpf_t) -> () {
+  unsafe { __gmpf_abs(g, f) }
+}
+
+/// mpf_neg
+pub fn mpf_neg(g: mpf_t, f: mpf_t) -> () {
+  unsafe { __gmpf_neg(g, f) }
+}
+
+/// mpf_sub g = f - e
+pub fn mpf_sub(g: mpf_t, f: mpf_t, e: mpf_t) -> () {
+  unsafe { __gmpf_sub(g, f, e) }
+}
+
+/// mpf_sub_ui g = f - u
+pub fn mpf_sub_ui(g: mpf_t, f: mpf_t, u: ui_t) -> () {
+  unsafe { __gmpf_sub_ui(g, f, u) }
+}
+
+/// mpf_ui_sub g = u - f
+pub fn mpf_ui_sub(g: mpf_t, u: ui_t, f: mpf_t) -> () {
+  unsafe { __gmpf_ui_sub(g, u, f) }
+}
+
+/// mpf_add g = f + e
+pub fn mpf_add(g: mpf_t, f: mpf_t, e: mpf_t) -> () {
+  unsafe { __gmpf_add(g, f, e) }
+}
+
+/// mpf_add_ui g = f + u
+pub fn mpf_add_ui(g: mpf_t, f: mpf_t, u: ui_t) -> () {
+  unsafe { __gmpf_add_ui(g, f, u) }
+}
+
+/// mpf_mul g = f * e
+pub fn mpf_mul(g: mpf_t, f: mpf_t, e: mpf_t) -> () {
+  unsafe { __gmpf_mul(g, f, e) }
+}
+
+/// mpf_mul_ui g = f * u
+pub fn mpf_mul_ui(g: mpf_t, f: mpf_t, u: ui_t) -> () {
+  unsafe { __gmpf_mul_ui(g, f, u) }
+}
+
+/// mpf_mul_2exp g = f * 2**n
+pub fn mpf_mul_2exp(g: mpf_t, f: mpf_t, n: mp_bitcnt_t) -> () {
+  unsafe { __gmpf_mul_2exp(g, f, n) }
 }
 
 /// mpf_div g = f / e
@@ -329,17 +557,22 @@ pub fn mpf_div(g: mpf_t, f: mpf_t, e: mpf_t) -> () {
   unsafe { __gmpf_div(g, f, e) }
 }
 
-/// mpf_ui_div g = u / f
-pub fn mpf_ui_div(g: mpf_t, u: ui_t, f: mpf_t) -> () {
-  unsafe { __gmpf_ui_div(g, u, f) }
-}
-
 /// mpf_div_ui g = f / u
 pub fn mpf_div_ui(g: mpf_t, f: mpf_t, u: ui_t) -> () {
   unsafe { __gmpf_div_ui(g, f, u) }
 }
 
+/// mpf_ui_div g = u / f
+pub fn mpf_ui_div(g: mpf_t, u: ui_t, f: mpf_t) -> () {
+  unsafe { __gmpf_ui_div(g, u, f) }
+}
+
 /// mpf_div_2exp g = f / 2**n
 pub fn mpf_div_2exp(g: mpf_t, f: mpf_t, n: mp_bitcnt_t) -> () {
   unsafe { __gmpf_div_2exp(g, f, n) }
+}
+
+/// mpf_pow_ui g = f**n
+pub fn mpf_pow_ui(g: mpf_t, f: mpf_t, n: ui_t) -> () {
+  unsafe { __gmpf_pow_ui(g, f, n) }
 }

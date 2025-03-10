@@ -31,6 +31,13 @@ impl SNew for __mpz_struct {
   }
 }
 
+/// impl Drop
+impl Drop for __mpz_struct {
+  fn drop(&mut self) {
+    self.clear()
+  }
+}
+
 /// impl mpz_s
 impl __mpz_struct {
   /// clear
@@ -110,6 +117,114 @@ impl __mpz_struct {
     self
   }
 
+  /// cmp
+  pub fn cmp(&mut self, b: mpz_t) -> int_t {
+    mpz_cmp(self, b)
+  }
+
+  /// cmp_d
+  pub fn cmp_d(&mut self, d: double_t) -> int_t {
+    mpz_cmp_d(self, d)
+  }
+
+  /// cmp_ui
+  pub fn cmp_ui(&mut self, u: ui_t) -> int_t {
+    mpz_cmp_ui(self, u)
+  }
+
+  /// cmp_si
+  pub fn cmp_si(&mut self, s: si_t) -> int_t {
+    mpz_cmp_si(self, s)
+  }
+
+  /// cmpabs
+  pub fn cmpabs(&mut self, b: mpz_t) -> int_t {
+    mpz_cmpabs(self, b)
+  }
+
+  /// cmpabs_d
+  pub fn cmpabs_d(&mut self, d: double_t) -> int_t {
+    mpz_cmpabs_d(self, d)
+  }
+
+  /// cmpabs_ui
+  pub fn cmpabs_ui(&mut self, u: ui_t) -> int_t {
+    mpz_cmpabs_ui(self, u)
+  }
+
+  /// sgn
+  pub fn sgn(&mut self) -> int_t {
+    mpz_sgn(self)
+  }
+
+  /// fac_ui create new instance
+  pub fn fac_ui(n: ui_t) -> Self {
+    let mut t = mpz_s::init_set_ui(1);
+    mpz_fac_ui(&mut t, n);
+    t
+  }
+
+  /// fac2_ui create new instance
+  pub fn fac2_ui(n: ui_t) -> Self {
+    let mut t = mpz_s::init_set_ui(1);
+    mpz_2fac_ui(&mut t, n);
+    t
+  }
+
+  /// mfac_uiui create new instance
+  pub fn mfac_uiui(n: ui_t, m: ui_t) -> Self {
+    let mut t = mpz_s::init_set_ui(1);
+    mpz_mfac_uiui(&mut t, n, m);
+    t
+  }
+
+  /// abs create new instance
+  pub fn abs(&mut self) -> Self {
+    let mut t = mpz_s::new();
+    mpz_abs(&mut t, self);
+    t
+  }
+
+  /// neg create new instance
+  pub fn neg(&mut self) -> Self {
+    let mut t = mpz_s::new();
+    mpz_neg(&mut t, self);
+    t
+  }
+
+  /// sub self -= b
+  pub fn sub(&mut self, b: mpz_t) -> &mut Self {
+    let t = &mut mpz_s::init_set(self);
+    mpz_sub(self, t, b);
+    self
+  }
+
+  /// sub_ui self -= u
+  pub fn sub_ui(&mut self, u: ui_t) -> &mut Self {
+    let t = &mut mpz_s::init_set(self);
+    mpz_sub_ui(self, t, u);
+    self
+  }
+
+  /// ui_sub self = u - self
+  pub fn ui_sub(&mut self, u: ui_t) -> &mut Self {
+    let t = &mut mpz_s::init_set(self);
+    mpz_ui_sub(self, u, t);
+    self
+  }
+
+  /// submul self -= a * b
+  pub fn submul(&mut self, a: mpz_t, b: mpz_t) -> &mut Self {
+    mpz_submul(self, a, b);
+    self
+  }
+
+  /// submul_ui self -= a * u
+  pub fn submul_ui(&mut self, a: mpz_t, u: ui_t) -> &mut Self {
+    mpz_submul_ui(self, a, u);
+    self
+  }
+
   /// add self += b
   pub fn add(&mut self, b: mpz_t) -> &mut Self {
     let t = &mut mpz_s::init_set(self);
@@ -162,6 +277,42 @@ impl __mpz_struct {
     let t = &mut mpz_s::init_set(self);
     mpz_mul_2exp(self, t, n);
     self
+  }
+
+
+  /// powwm_sec (a**n) mod m ***required n &gt; 0 and m is odd*** create new instance
+  pub fn powm_sec(a: mpz_t, n: mpz_t, m: mpz_t) -> Self {
+    let mut t = mpz_s::new();
+    mpz_powm_sec(&mut t, a, n, m);
+    t
+  }
+
+  /// powm (a**n) mod m ***n &lt; 0 when exists inv a**-1 mod m*** create new instance
+  pub fn powm(a: mpz_t, n: mpz_t, m: mpz_t) -> Self {
+    let mut t = mpz_s::new();
+    mpz_powm(&mut t, a, n, m);
+    t
+  }
+
+  /// powm_ui (a**n) mod m create new instance
+  pub fn powm_ui(a: mpz_t, n: ui_t, m: mpz_t) -> Self {
+    let mut t = mpz_s::new();
+    mpz_powm_ui(&mut t, a, n, m);
+    t
+  }
+
+  /// pow_ui a**n create new instance
+  pub fn pow_ui(a: mpz_t, n: ui_t) -> Self {
+    let mut t = mpz_s::new();
+    mpz_pow_ui(&mut t, a, n);
+    t
+  }
+
+  /// ui_pow_ui a**n create new instance
+  pub fn ui_pow_ui(a: ui_t, n: ui_t) -> Self {
+    let mut t = mpz_s::new();
+    mpz_ui_pow_ui(&mut t, a, n);
+    t
   }
 
   /// fact create new instance (slow without cache)
@@ -318,6 +469,96 @@ pub fn mpz_get_str<'a>(s: Option<&mut String>, b: int_t, a: &'a mpz_s) ->
   }
 }
 
+/// mpz_cmp
+pub fn mpz_cmp(a: mpz_t, b: mpz_t) -> int_t {
+  unsafe { __gmpz_cmp(a, b) }
+}
+
+/// mpz_cmp_d
+pub fn mpz_cmp_d(a: mpz_t, d: double_t) -> int_t {
+  unsafe { __gmpz_cmp_d(a, d) }
+}
+
+/// mpz_cmp_ui
+pub fn mpz_cmp_ui(a: mpz_t, u: ui_t) -> int_t {
+  unsafe { __gmpz_cmp_ui(a, u) }
+}
+
+/// mpz_cmp_si
+pub fn mpz_cmp_si(a: mpz_t, s: si_t) -> int_t {
+  unsafe { __gmpz_cmp_si(a, s) }
+}
+
+/// mpz_cmpabs
+pub fn mpz_cmpabs(a: mpz_t, b: mpz_t) -> int_t {
+  unsafe { __gmpz_cmpabs(a, b) }
+}
+
+/// mpz_cmpabs_d
+pub fn mpz_cmpabs_d(a: mpz_t, d: double_t) -> int_t {
+  unsafe { __gmpz_cmpabs_d(a, d) }
+}
+
+/// mpz_cmpabs_ui
+pub fn mpz_cmpabs_ui(a: mpz_t, u: ui_t) -> int_t {
+  unsafe { __gmpz_cmpabs_ui(a, u) }
+}
+
+/// mpz_sgn
+pub fn mpz_sgn(a: mpz_t) -> int_t {
+  unsafe { __gmpz_sgn(a) }
+}
+
+/// mpz_fac_ui c = n!
+pub fn mpz_fac_ui(c: mpz_t, n: ui_t) -> () {
+  unsafe { __gmpz_fac_ui(c, n) }
+}
+
+/// mpz_2fac_ui c = n!!
+pub fn mpz_2fac_ui(c: mpz_t, n: ui_t) -> () {
+  unsafe { __gmpz_2fac_ui(c, n) }
+}
+
+/// mpz_mfac_uiui c = n! ** m
+pub fn mpz_mfac_uiui(c: mpz_t, n: ui_t, m: ui_t) -> () {
+  unsafe { __gmpz_mfac_uiui(c, n, m) }
+}
+
+/// mpz_abs
+pub fn mpz_abs(c: mpz_t, a: mpz_t) -> () {
+  unsafe { __gmpz_abs(c, a) }
+}
+
+/// mpz_neg
+pub fn mpz_neg(c: mpz_t, a: mpz_t) -> () {
+  unsafe { __gmpz_neg(c, a) }
+}
+
+/// mpz_sub c = a - b
+pub fn mpz_sub(c: mpz_t, a: mpz_t, b: mpz_t) -> () {
+  unsafe { __gmpz_sub(c, a, b) }
+}
+
+/// mpz_sub_ui c = a - u
+pub fn mpz_sub_ui(c: mpz_t, a: mpz_t, u: ui_t) -> () {
+  unsafe { __gmpz_sub_ui(c, a, u) }
+}
+
+/// mpz_ui_sub c = u - a
+pub fn mpz_ui_sub(c: mpz_t, u: ui_t, a: mpz_t) -> () {
+  unsafe { __gmpz_ui_sub(c, u, a) }
+}
+
+/// mpz_submul c -= a * b
+pub fn mpz_submul(c: mpz_t, a: mpz_t, b: mpz_t) -> () {
+  unsafe { __gmpz_submul(c, a, b) }
+}
+
+/// mpz_submul_ui c -= a * u
+pub fn mpz_submul_ui(c: mpz_t, a: mpz_t, u: ui_t) -> () {
+  unsafe { __gmpz_submul_ui(c, a, u) }
+}
+
 /// mpz_add c = a + b
 pub fn mpz_add(c: mpz_t, a: mpz_t, b: mpz_t) -> () {
   unsafe { __gmpz_add(c, a, b) }
@@ -356,4 +597,29 @@ pub fn mpz_mul_si(c: mpz_t, a: mpz_t, s: si_t) -> () {
 /// mpz_mul_2exp c = a * 2**n
 pub fn mpz_mul_2exp(c: mpz_t, a: mpz_t, n: mp_bitcnt_t) -> () {
   unsafe { __gmpz_mul_2exp(c, a, n) }
+}
+
+/// mpz_powwm_sec c = (a**n) mod m ***required n &gt; 0 and m is odd***
+pub fn mpz_powm_sec(c: mpz_t, a: mpz_t, n: mpz_t, m: mpz_t) -> () {
+  unsafe { __gmpz_powm_sec(c, a, n, m) }
+}
+
+/// mpz_powm c = (a**n) mod m ***n &lt; 0 when exists inv a**-1 mod m***
+pub fn mpz_powm(c: mpz_t, a: mpz_t, n: mpz_t, m: mpz_t) -> () {
+  unsafe { __gmpz_powm(c, a, n, m) }
+}
+
+/// mpz_powm_ui c = (a**n) mod m
+pub fn mpz_powm_ui(c: mpz_t, a: mpz_t, n: ui_t, m: mpz_t) -> () {
+  unsafe { __gmpz_powm_ui(c, a, n, m) }
+}
+
+/// mpz_pow_ui c == a**n
+pub fn mpz_pow_ui(c: mpz_t, a: mpz_t, n: ui_t) -> () {
+  unsafe { __gmpz_pow_ui(c, a, n) }
+}
+
+/// mpz_ui_pow_ui c = a**n
+pub fn mpz_ui_pow_ui(c: mpz_t, a: ui_t, n: ui_t) -> () {
+  unsafe { __gmpz_ui_pow_ui(c, a, n) }
 }

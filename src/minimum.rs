@@ -90,11 +90,13 @@ pub fn simple_test() {
   let f = &mut mpf_s::init();
   let g = &mut mpf_s::init();
 /*
+  // ***must NOT call*** auto called clear
   a.clear(); mpz_init(a);
   f.clear(); mpf_init(f);
   g.clear(); mpf_init(g);
 */
 /*
+  // ***must NOT call*** auto called clear
   mpz_clears(&mut vec![a]); mpz_init(a);
   mpf_clears(&mut vec![g, f]); mpf_init(f); mpf_init(g);
 */
@@ -130,7 +132,8 @@ pub fn simple_test() {
   (0..=20).into_iter().for_each(|n: usize| {
     let t = &mut mpz_s::fact(n as ui_t);
     assert_eq!(format!("{}! = {}", n, t), format!("{}! = {}", n, facts[n]));
-    t.clear();
+    let u = &mut mpz_s::fac_ui(n as ui_t);
+    assert_eq!(format!("{}! = {}", n, t), format!("{}! = {}", n, u));
   });
 
   // mpz fact (to be operator) cached
@@ -138,7 +141,6 @@ pub fn simple_test() {
   (0..=20).into_iter().for_each(|n: usize| {
     let t = &mut mpz_s::fact_cached(n as ui_t, m);
     assert_eq!(format!("{}! = {}", n, t), format!("{}! = {}", n, facts[n]));
-    t.clear();
   });
 
   // mpq (c style)
@@ -148,4 +150,8 @@ pub fn simple_test() {
 //assert_eq!(gmp_printf("[%#40Qx]\n", q), ()); // [ ... 0x2/0x8]
   assert_eq!(mpq_get_str(None, 10, q).expect("q"), "2/8");
   assert_eq!(format!("{}", q), "2/8");
+
+  // mpq (to be operator)
+  let q = &mut mpq_s::init();
+  assert_eq!(format!("{}", q.set_ui(2, 8)), "2/8");
 }

@@ -21,9 +21,20 @@ impl SNew for __mpq_struct {
   /// new
   fn new() -> Self {
     __mpq_struct {
-      _mp_num: __mpz_struct::new(),
-      _mp_den: __mpz_struct::new()
+      _mp_num: mpz_s::new(), // init_set_ui(0),
+      _mp_den: mpz_s::new() // init_set_ui(1)
     }
+  }
+}
+
+/// impl Drop
+impl Drop for __mpq_struct {
+  fn drop(&mut self) {
+/*
+    self.clear(); // ***must NOT call*** auto called clear for mpz_s members
+    self._mp_num = mpz_s::new(); // must set _mp_num after called self.clear()
+    self._mp_den = mpz_s::new(); // must set _mp_den after called self.clear()
+*/
   }
 }
 
@@ -84,7 +95,7 @@ impl __mpq_struct {
   }
 
   /// set_den
-  pub fn mpq_set_den(&mut self, den: mpz_t) -> &mut Self {
+  pub fn set_den(&mut self, den: mpz_t) -> &mut Self {
     mpq_set_den(self, den);
     self
   }

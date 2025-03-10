@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/mpir/0.1.2")]
+#![doc(html_root_url = "https://docs.rs/mpir/0.1.3")]
 //! partial Rust porting of mpir multiple precision library based on gmp mpfr
 //!
 //! # Requirements

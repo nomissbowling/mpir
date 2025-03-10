@@ -162,35 +162,35 @@ impl __mpf_struct {
 
   /// reldiff returns abs(self - e) / self create new instance
   pub fn reldiff(&mut self, e: mpf_t) -> Self {
-    let mut t = mpf_s::new();
+    let mut t = mpf_s::init_set_ui(0); // new();
     mpf_reldiff(&mut t, self, e);
     t
   }
 
   /// sqrt create new instance
   pub fn sqrt(&mut self) -> Self {
-    let mut t = mpf_s::new();
+    let mut t = mpf_s::init_set_ui(0); // new();
     mpf_sqrt(&mut t, self);
     t
   }
 
   /// sqrt create new instance
   pub fn sqrt_ui(u: ui_t) -> Self {
-    let mut t = mpf_s::new();
+    let mut t = mpf_s::init_set_ui(0); // new();
     mpf_sqrt_ui(&mut t, u);
     t
   }
 
   /// abs create new instance
   pub fn abs(&mut self) -> Self {
-    let mut t = mpf_s::new();
+    let mut t = mpf_s::init_set_ui(0); // new();
     mpf_abs(&mut t, self);
     t
   }
 
   /// neg create new instance
   pub fn neg(&mut self) -> Self {
-    let mut t = mpf_s::new();
+    let mut t = mpf_s::init_set_ui(0); // new();
     mpf_neg(&mut t, self);
     t
   }
@@ -281,7 +281,7 @@ impl __mpf_struct {
 
   /// pow_ui f**n create new instance
   pub fn pow_ui(f: mpf_t, n: ui_t) -> Self {
-    let mut t = mpf_s::new();
+    let mut t = mpf_s::init_set_ui(0); // ***never*** use new();
     mpf_pow_ui(&mut t, f, n);
     t
   }
@@ -577,4 +577,29 @@ pub fn mpf_div_2exp(g: mpf_t, f: mpf_t, n: mp_bitcnt_t) -> () {
 /// mpf_pow_ui g = f**n
 pub fn mpf_pow_ui(g: mpf_t, f: mpf_t, n: ui_t) -> () {
   unsafe { __gmpf_pow_ui(g, f, n) }
+}
+
+/// mpf_get_default_prec
+pub fn mpf_get_default_prec() -> mp_bitcnt_t {
+  unsafe { __gmpf_get_default_prec() }
+}
+
+/// mpf_get_prec
+pub fn mpf_get_prec(f: mpf_t) -> mp_bitcnt_t {
+  unsafe { __gmpf_get_prec(f) }
+}
+
+/// mpf_set_default_prec
+pub fn mpf_set_default_prec(n: mp_bitcnt_t) -> () {
+  unsafe { __gmpf_set_default_prec(n) }
+}
+
+/// mpf_set_prec
+pub fn mpf_set_prec(f: mpf_t, n: mp_bitcnt_t) -> () {
+  unsafe { __gmpf_set_prec(f, n) }
+}
+
+/// mpf_set_prec_raw
+pub fn mpf_set_prec_raw(f: mpf_t, n: mp_bitcnt_t) -> () {
+  unsafe { __gmpf_set_prec_raw(f, n) }
 }

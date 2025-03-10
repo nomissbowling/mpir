@@ -203,6 +203,17 @@ extern "C" {
   /// __gmpf_pow_ui g = f**n
   pub fn __gmpf_pow_ui(g: *mut mpf_s, f: *mut mpf_s, n: ui_t) -> ();
 
+  /// __gmpf_get_default_prec
+  pub fn __gmpf_get_default_prec() -> mp_bitcnt_t;
+  /// __gmpf_get_prec
+  pub fn __gmpf_get_prec(f: *mut mpf_s) -> mp_bitcnt_t;
+  /// __gmpf_set_default_prec
+  pub fn __gmpf_set_default_prec(n: mp_bitcnt_t) -> ();
+  /// __gmpf_set_prec
+  pub fn __gmpf_set_prec(f: *mut mpf_s, n: mp_bitcnt_t) -> ();
+  /// __gmpf_set_prec_raw
+  pub fn __gmpf_set_prec_raw(f: *mut mpf_s, n: mp_bitcnt_t) -> ();
+
   /// __gmpq_clears *** CAUTION *** (assume just 1 fake parameters after first)
   pub fn __gmpq_clears(q: *mut mpq_s, r: *mut mpq_s) -> ();
   /// __gmpq_clear

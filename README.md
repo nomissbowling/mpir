@@ -58,6 +58,18 @@ Sample
   // mpq (to be operator)
   let q = &mut mpq_s::init();
   assert_eq!(format!("{}", q.set_ui(2, 8)), "2/8");
+
+  // mpf prec (c style)
+  mpf_set_default_prec(100); // 100 set to 128 bits (step by 2**n)
+
+  // mpf significant digits (to be operator)
+  let f = &mut mpf_s::init_set_str("1.0e-19", 10);
+  let e = &mut mpf_s::init_set_str("1.0e-50", 10);
+  assert_eq!(mpf_get_fmtstr(e, 10, 60).expect("fmtstr"), "0.1e-49");
+  assert_eq!(mpf_get_fmtstr(f, 10, 60).expect("fmtstr"), "0.1e-18");
+  // f.add(e) as 0.99999999999999999999e-19 without mpf_set_default_prec(100)
+  assert_eq!(mpf_get_fmtstr(f.add(e), 10, 60).expect("fmtstr"),
+    "0.1000000000000000000000000000000099999999e-18");
 ```
 
 

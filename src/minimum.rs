@@ -1,9 +1,25 @@
 //! minimum test for mpir
 //!
 
+use std::error::Error;
 use std::collections::HashMap;
 
 use crate::*;
+
+/// calc napier
+pub fn calc_napier(x: mpf_t, d: ui_t) -> Result<mpf_s, Box<dyn Error>> {
+  let mut e = mpf_s::init_set_ui(0);
+//  e.set_str("2.71828182845904523536", 10); // when d = 21
+  let g = &mut mpf_s::init_set_ui(0);
+  let m = &mut HashMap::<ui_t, mpz_s>::new();
+  (0..=d).into_iter().for_each(|i| {
+    let n = &mut mpz_s::fact_cached(i, m);
+    let f = &mut mpf_s::pow_ui(x, i);
+    e.add(f.div(g.set_z(n)));
+//    println!("i {} g {} f {} e {}", i, g, f, e);
+  });
+  Ok(e)
+}
 
 /// simple test
 pub fn simple_test() {
@@ -156,25 +172,60 @@ pub fn simple_test() {
   assert_eq!(format!("{}", q.set_ui(2, 8)), "2/8");
 
   // mpz (to be operator)
-  assert_eq!(format!("{}", a.set_si(-1).sgn()), "-1");
-  assert_eq!(format!("{}", a.cmp(b.set_si(-1))), "0");
-  assert_eq!(format!("{}", a.cmp_d(-10.0)), "1");
-  assert_eq!(format!("{}", a.cmp_ui(10)), "-1");
-  assert_eq!(format!("{}", a.cmp_si(-10)), "1");
-  assert_eq!(format!("{}", a.cmpabs(b.set_si(-10))), "-1");
-  assert_eq!(format!("{}", a.cmpabs_d(-10.0)), "-1");
-  assert_eq!(format!("{}", a.cmpabs_ui(10)), "-1");
+  assert!(a.set_si(0).sgn() == 0);
+  assert!(a.set_si(1).sgn() > 0);
+  assert!(a.set_si(-1).sgn() < 0);
+  assert!(a.cmp(b.set_si(-1)) == 0);
+  assert!(a.cmp_d(-10.0) > 0);
+  assert!(a.cmp_ui(10) < 0);
+  assert!(a.cmp_si(-10) > 0);
+  assert!(a.cmpabs(b.set_si(-10)) < 0);
+  assert!(a.cmpabs_d(-10.0) < 0);
+  assert!(a.cmpabs_ui(10) < 0);
 
   // mpf (to be operator)
-  assert_eq!(format!("{}", f.set_si(-1).sgn()), "-1");
-  assert_eq!(format!("{}", f.cmp(g.set_si(-10))), "1");
-  assert_eq!(format!("{}", f.cmp_d(-10.0)), "1");
-  assert_eq!(format!("{}", f.cmp_ui(1)), "-1");
-  assert_eq!(format!("{}", f.cmp_si(-10)), "1");
-  assert_eq!(format!("{}", f.cmp_z(a)), "0");
-  assert_eq!(format!("{}", f.cmp_z(a.set_si(-20))), "1");
-  assert_eq!(format!("{}", f.cmp_z(a.set_ui(20))), "-1");
+  assert!(f.set_si(0).sgn() == 0);
+  assert!(f.set_si(1).sgn() > 0);
+  assert!(f.set_si(-1).sgn() < 0);
+  assert!(f.cmp(g.set_si(-10)) > 0);
+  assert!(f.cmp_d(-10.0) > 0);
+  assert!(f.cmp_ui(1) < 0);
+  assert!(f.cmp_si(-10) > 0);
+  assert!(f.cmp_z(a) == 0);
+  assert!(f.cmp_z(a.set_si(-20)) > 0);
+  assert!(f.cmp_z(a.set_ui(20)) < 0);
 
   // mpq (to be operator)
-  assert_eq!(format!("{}", q.set_si(-1, 1).sgn()), "-1");
+  assert!(q.set_si(0, 1).sgn() == 0);
+  assert!(q.set_si(1, 1).sgn() > 0);
+  assert!(q.set_si(-1, 1).sgn() < 0);
+
+  // mpf prec (c style)
+//  assert_eq!(mpf_get_default_prec(), 64); // may be 64
+  mpf_set_default_prec(100); // 100 set to 128 bits (step by 2**n)
+//  assert_eq!(mpf_get_default_prec(), 128); // may be 128 (about 40 digits)
+
+  // mpf significant digits (to be operator)
+  let f = &mut mpf_s::init_set_str("1.0e-19", 10);
+  let e = &mut mpf_s::init_set_str("1.0e-50", 10);
+  assert_eq!(mpf_get_fmtstr(e, 10, 60).expect("fmtstr"), "0.1e-49");
+  assert_eq!(mpf_get_fmtstr(f, 10, 60).expect("fmtstr"), "0.1e-18");
+  // f.add(e) as 0.99999999999999999999e-19 without mpf_set_default_prec(100)
+  assert_eq!(mpf_get_fmtstr(f.add(e), 10, 60).expect("fmtstr"),
+    "0.1000000000000000000000000000000099999999e-18");
+
+  // mpf calc napier (to be operator)
+  let d: ui_t = 21; // expect 21 digits 2.718281828459045235360287471352 ...
+  let e = &mut calc_napier(&mut mpf_s::init_set_d(1.0), d).expect("exp");
+  assert_eq!(format!("{}", e),
+    "0.27182818284590452354e+1");
+  assert_eq!(mpf_get_fmtstr(e, 10, 21).expect("fmtstr"),
+    "0.271828182845904523536e+1");
+
+  let d: ui_t = 26; // overwrite recalc
+  let e = &mut calc_napier(&mut mpf_s::init_set_d(1.0), d).expect("exp");
+  assert_eq!(format!("{}", e),
+    "0.27182818284590452354e+1");
+  assert_eq!(mpf_get_fmtstr(e, 10, 26).expect("fmtstr"),
+    "0.27182818284590452353602875e+1");
 }

@@ -154,4 +154,27 @@ pub fn simple_test() {
   // mpq (to be operator)
   let q = &mut mpq_s::init();
   assert_eq!(format!("{}", q.set_ui(2, 8)), "2/8");
+
+  // mpz (to be operator)
+  assert_eq!(format!("{}", a.set_si(-1).sgn()), "-1");
+  assert_eq!(format!("{}", a.cmp(b.set_si(-1))), "0");
+  assert_eq!(format!("{}", a.cmp_d(-10.0)), "1");
+  assert_eq!(format!("{}", a.cmp_ui(10)), "-1");
+  assert_eq!(format!("{}", a.cmp_si(-10)), "1");
+  assert_eq!(format!("{}", a.cmpabs(b.set_si(-10))), "-1");
+  assert_eq!(format!("{}", a.cmpabs_d(-10.0)), "-1");
+  assert_eq!(format!("{}", a.cmpabs_ui(10)), "-1");
+
+  // mpf (to be operator)
+  assert_eq!(format!("{}", f.set_si(-1).sgn()), "-1");
+  assert_eq!(format!("{}", f.cmp(g.set_si(-10))), "1");
+  assert_eq!(format!("{}", f.cmp_d(-10.0)), "1");
+  assert_eq!(format!("{}", f.cmp_ui(1)), "-1");
+  assert_eq!(format!("{}", f.cmp_si(-10)), "1");
+  assert_eq!(format!("{}", f.cmp_z(a)), "0");
+  assert_eq!(format!("{}", f.cmp_z(a.set_si(-20))), "1");
+  assert_eq!(format!("{}", f.cmp_z(a.set_ui(20))), "-1");
+
+  // mpq (to be operator)
+  assert_eq!(format!("{}", q.set_si(-1, 1).sgn()), "-1");
 }

@@ -105,6 +105,11 @@ impl __mpq_struct {
     mpq_set_str(self, s, b);
     self
   }
+
+  /// sgn
+  pub fn sgn(&mut self) -> int_t {
+    mpq_sgn(self)
+  }
 }
 
 /// impl Debug
@@ -220,4 +225,11 @@ pub fn mpq_get_str<'a>(s: Option<&mut String>, b: int_t, q: &'a mpq_s) ->
   None => Err("err mpq get str".into()),
   Some(r) => Ok(String::from_utf8(r)?)
   }
+}
+
+/// mpq_sgn
+pub fn mpq_sgn(q: mpq_t) -> int_t {
+//  unsafe { __gmpq_sgn(q) }
+  let t = q._mp_num._mp_size;
+  if t < 0 { -1 } else { if t > 0 { 1 } else { 0 } }
 }

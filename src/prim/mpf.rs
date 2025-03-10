@@ -484,7 +484,9 @@ pub fn mpf_eq(f: mpf_t, g: mpf_t, n: mp_bitcnt_t) -> int_t {
 
 /// mpf_sgn
 pub fn mpf_sgn(f: mpf_t) -> int_t {
-  unsafe { __gmpf_sgn(f) }
+//  unsafe { __gmpf_sgn(f) }
+  let t = f._mp_size;
+  if t < 0 { -1 } else { if t > 0 { 1 } else { 0 } }
 }
 
 /// mpf_reldiff

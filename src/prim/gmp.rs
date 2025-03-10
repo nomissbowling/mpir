@@ -53,8 +53,10 @@ extern "C" {
   pub fn __gmpz_cmpabs_d(a: *mut mpz_s, d: double_t) -> int_t;
   /// __gmpz_cmpabs_ui
   pub fn __gmpz_cmpabs_ui(a: *mut mpz_s, u: ui_t) -> int_t;
+/*
   /// __gmpz_sgn
   pub fn __gmpz_sgn(a: *mut mpz_s) -> int_t;
+*/
 
   /// __gmpz_fac_ui c = n!
   pub fn __gmpz_fac_ui(c: *mut mpz_s, n: ui_t) -> ();
@@ -154,8 +156,10 @@ extern "C" {
   pub fn __gmpf_cmp_z(f: *mut mpf_s, a: *mut mpz_s) -> int_t;
   /// __gmpf_eq ***mathematically ill-defined and should not be used***
   pub fn __gmpf_eq(f: *mut mpf_s, g: *mut mpf_s, n: mp_bitcnt_t) -> int_t;
+/*
   /// __gmpf_sgn
   pub fn __gmpf_sgn(f: *mut mpf_s) -> int_t;
+*/
   /// __gmpf_reldiff
   pub fn __gmpf_reldiff(g: *mut mpf_s, f: *mut mpf_s, e: *mut mpf_s) -> ();
 
@@ -225,6 +229,11 @@ extern "C" {
   pub fn __gmpq_set_str(q: *mut mpq_s, s: *const u8, b: int_t) -> ();
   /// __gmpq_get_str
   pub fn __gmpq_get_str(s: *mut u8, b: int_t, q: *const mpq_s) -> *mut u8;
+
+/*
+  /// __gmpq_sgn
+  pub fn __gmpq_sgn(q: *mut mpq_s) -> int_t;
+*/
 
   /// ___gmp_get_memory_functions
   pub fn __gmp_get_memory_functions(

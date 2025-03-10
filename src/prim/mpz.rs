@@ -506,7 +506,9 @@ pub fn mpz_cmpabs_ui(a: mpz_t, u: ui_t) -> int_t {
 
 /// mpz_sgn
 pub fn mpz_sgn(a: mpz_t) -> int_t {
-  unsafe { __gmpz_sgn(a) }
+//  unsafe { __gmpz_sgn(a) }
+  let t = a._mp_size;
+  if t < 0 { -1 } else { if t > 0 { 1 } else { 0 } }
 }
 
 /// mpz_fac_ui c = n!

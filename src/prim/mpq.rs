@@ -107,6 +107,11 @@ impl __mpq_struct {
     self
   }
 
+  /// fmtstr
+  pub fn fmtstr(&mut self, b: int_t) -> String {
+    mpq_get_str(None, b, self).expect("mpq fmtstr")
+  }
+
   /// cmp
   pub fn cmp(&mut self, r: mpq_t) -> int_t {
     mpq_cmp(self, r)
@@ -219,6 +224,7 @@ impl fmt::Debug for __mpq_struct {
 impl fmt::Display for __mpq_struct {
   /// fmt
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+//    write!(f, "{}", self.fmtstr(10)) // cannot be borrowed as mutable
     write!(f, "{}", mpq_get_str(None, 10, self).expect("mpq str"))
   }
 }

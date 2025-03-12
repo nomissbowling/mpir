@@ -97,6 +97,11 @@ impl __mpf_struct {
     t
   }
 
+  /// fmtstr
+  pub fn fmtstr(&mut self, b: int_t, d: mp_size_t) -> String {
+    mpf_get_fmtstr(self, b, d).expect("mpf fmtstr")
+  }
+
   /// set self = f
   pub fn set(&mut self, f: mpf_t) -> &mut Self {
     mpf_set(self, f);
@@ -321,15 +326,38 @@ impl __mpf_struct {
 
   /// calc_napier
   pub fn calc_napier(x: mpf_t, digits: mp_size_t) -> Self {
+    // significant digits of calc napier by Stirling's approximation
+    let significant_digits_of_calc_napier = |n: f64| -> f64 {
+      let p = (2.0 * std::f64::consts::PI * n).sqrt();
+      let q = (n / std::f64::consts::E).powf(n); // use preset napier f64
+      (p * q).log10() - 1.0 // same as .log(10.0) - 1.0
+    };
+
+    // prepare cut off value
+    let c = (1..=digits).rev().scan(digits, |acc: &mut mp_size_t, n| {
+      let s = significant_digits_of_calc_napier(n as f64) as mp_size_t;
+//      println!("acc {}, s {}, n {}", acc, s, n);
+      *acc -= 1;
+      if s < digits { None } else { Some(n as ui_t) }
+    }).collect::<Vec<_>>();
+    let c = if c.len() == 0 { digits as ui_t } else { c[c.len() - 1] };
+
     let mut e = mpf_s::init_set_ui(0);
 //    e.set_str("2.71828182845904523536", 10); // when digits = 21
     let g = &mut mpf_s::init_set_ui(0);
     let m = &mut HashMap::<ui_t, mpz_s>::new();
-    (0..=digits as ui_t).into_iter().for_each(|i| {
+    (0..=c).into_iter().for_each(|i| {
       let n = &mut mpz_s::fact_cached(i, m);
       let f = &mut mpf_s::pow_ui(x, i);
       e.add(f.div(g.set_z(n)));
-//      println!("i {} g {} f {} e {}", i, g, f, e);
+/*
+      if i == c {
+        println!("i {} g {} f {} e {}", i,
+         g.fmtstr(10, digits),
+         f.fmtstr(10, digits),
+         e.fmtstr(10, digits + 3));
+      }
+*/
     });
     e
   }
@@ -354,6 +382,7 @@ unsafe {
 impl fmt::Display for __mpf_struct {
   /// fmt
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+//    write!(f, "{}", self.fmtstr(10, 20)) // cannot be borrowed as mutable
     write!(f, "{}", mpf_get_fmtstr(self, 10, 20).expect("mpf fmtstr"))
   }
 }

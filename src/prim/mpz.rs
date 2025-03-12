@@ -124,6 +124,11 @@ impl __mpz_struct {
     self
   }
 
+  /// fmtstr
+  pub fn fmtstr(&mut self, b: int_t) -> String {
+    mpz_get_str(None, b, self).expect("mpz fmtstr")
+  }
+
   /// cmp
   pub fn cmp(&mut self, b: mpz_t) -> int_t {
     mpz_cmp(self, b)
@@ -363,6 +368,7 @@ unsafe {
 impl fmt::Display for __mpz_struct {
   /// fmt
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+//    write!(f, "{}", self.fmtstr(10)) // cannot be borrowed as mutable
     write!(f, "{}", mpz_get_str(None, 10, self).expect("mpz str"))
   }
 }

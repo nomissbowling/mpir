@@ -187,7 +187,7 @@ impl __mpf_struct {
     t
   }
 
-  /// sqrt create new instance
+  /// sqrt_ui create new instance
   pub fn sqrt_ui(u: ui_t) -> Self {
     let mut t = mpf_s::init(); // new();
     mpf_sqrt_ui(&mut t, u);
@@ -328,37 +328,32 @@ impl __mpf_struct {
   pub fn calc_napier(x: mpf_t, digits: mp_size_t) -> Self {
     // significant digits of calc napier by Stirling's approximation
     let significant_digits_of_calc_napier = |n: f64| -> f64 {
-      let p = (2.0 * std::f64::consts::PI * n).sqrt();
-      let q = (n / std::f64::consts::E).powf(n); // use preset napier f64
-      (p * q).log10() - 1.0 // same as .log(10.0) - 1.0
+      let p = (2.0 * std::f64::consts::PI * n).sqrt().log10(); // .log(10.0)
+      let q = n * (n / std::f64::consts::E).log10(); // use preset napier f64
+      p + q - 1.0
     };
-
-    // prepare cut off value
-    let c = (1..=digits).rev().scan(digits, |acc: &mut mp_size_t, n| {
-      let s = significant_digits_of_calc_napier(n as f64) as mp_size_t;
-//      println!("acc {}, s {}, n {}", acc, s, n);
-      *acc -= 1;
-      if s < digits { None } else { Some(n as ui_t) }
-    }).collect::<Vec<_>>();
-    let c = if c.len() == 0 { digits as ui_t } else { c[c.len() - 1] };
 
     let mut e = mpf_s::init_set_ui(0);
 //    e.set_str("2.71828182845904523536", 10); // when digits = 21
     let g = &mut mpf_s::init_set_ui(0);
     let m = &mut HashMap::<ui_t, mpz_s>::new();
-    (0..=c).into_iter().for_each(|i| {
+    let _s = (0..=digits as ui_t).try_fold(&mut e, |e: mpf_t, i| {
+      let d = if i == 0 { 0 } // 0.log10() is NaN
+        else { significant_digits_of_calc_napier(i as f64) as mp_size_t };
+//      println!("i {}, d {}", i, d);
       let n = &mut mpz_s::fact_cached(i, m);
       let f = &mut mpf_s::pow_ui(x, i);
       e.add(f.div(g.set_z(n)));
 /*
-      if i == c {
+      if d >= digits || i == digits as ui_t {
         println!("i {} g {} f {} e {}", i,
          g.fmtstr(10, digits),
          f.fmtstr(10, digits),
          e.fmtstr(10, digits + 3));
       }
 */
-    });
+      if d >= digits { None } else { Some(e) }
+    }); // skip .ok_or_else(|| {...}) .expect(...) when break by None
     e
   }
 }

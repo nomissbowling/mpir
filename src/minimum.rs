@@ -23,6 +23,56 @@ pub fn simple_test() {
   assert_eq!(format!("{}", a.mul_si(-1)), "-246"); // 246 * -1
   assert_eq!(format!("{}", a.mul_2exp(20)), "-257949696"); // -246 * 2**20
 
+  // mpz (to be operator)
+  a.swap(b);
+  assert_eq!(format!("{}", a), "654");
+  assert_eq!(format!("{}", b), "-257949696");
+  b.swap(a);
+  assert_eq!(format!("{}", a), "-257949696");
+  assert_eq!(format!("{}", b), "654");
+
+  // mpz (to be operator)
+  let (r3, flg) = &mut c.set_ui(27).root(3);
+  assert_eq!(format!("{} {}", r3, flg), "3 true"); // 3
+  let (r3, rem) = &mut c.rootrem(3);
+  assert_eq!(format!("{} {}", r3, rem), "3 0"); // 3
+  let r2 = &mut c.set_ui(16).sqrt();
+  assert_eq!(format!("{}", r2), "4"); // 4
+  let (r2, rem) = &mut c.sqrtrem();
+  assert_eq!(format!("{} {}", r2, rem), "4 0"); // 4
+
+  let (r2, flg) = &mut b.root(2);
+  assert_eq!(format!("{} {}", r2, flg), "25 false"); // 25.5734...
+  let (r3, rem) = &mut b.rootrem(3);
+  assert_eq!(format!("{} {}", r3, rem), "8 142"); // 8.68...
+  let r2 = &mut b.sqrt();
+  assert_eq!(format!("{}", r2), "25"); // 25.5734...
+  let (r2, rem) = &mut b.sqrtrem();
+  assert_eq!(format!("{} {}", r2, rem), "25 29"); // 25.5734...
+
+  assert_eq!(b.perfect_power_p(), false);
+  assert_eq!(b.perfect_square_p(), false);
+
+  a.set_ui(8);
+  assert_eq!(a.perfect_power_p(), true);
+  assert_eq!(a.perfect_square_p(), false);
+  a.set_ui(9);
+  assert_eq!(a.perfect_power_p(), true);
+  assert_eq!(a.perfect_square_p(), true);
+  a.set_ui(16);
+  assert_eq!(a.perfect_power_p(), true);
+  assert_eq!(a.perfect_square_p(), true);
+
+  a.set_ui(1);
+  assert_eq!(a.perfect_power_p(), true);
+  assert_eq!(a.perfect_square_p(), true);
+  a.set_ui(10);
+  assert_eq!(a.perfect_power_p(), false);
+  assert_eq!(a.perfect_square_p(), false);
+  a.set_ui(1000);
+  assert_eq!(a.perfect_power_p(), true);
+  assert_eq!(a.perfect_square_p(), false);
+
   // mpf (c style)
   let f = &mut mpf_s::new();
   mpf_init_set_d(f, -0.3);
@@ -166,6 +216,14 @@ pub fn simple_test() {
   assert_eq!(format!("{}", r.set_ui(2, 3)), "2/3");
   assert!(r.cmp(q) > 0);
   assert_eq!(r.equal(q), false);
+
+  // mpq (to be operator)
+  q.swap(r);
+  assert_eq!(format!("{}", q), "2/3");
+  assert_eq!(format!("{}", r), "2/8");
+  r.swap(q);
+  assert_eq!(format!("{}", q), "2/8");
+  assert_eq!(format!("{}", r), "2/3");
 
   // mpz (to be operator)
   assert!(a.set_si(0).sgn() == 0);

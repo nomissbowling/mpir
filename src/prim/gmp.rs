@@ -43,6 +43,11 @@ extern "C" {
   /// __gmpz_get_str
   pub fn __gmpz_get_str(s: *mut u8, b: int_t, a: *const mpz_s) -> *mut u8;
 
+  /// __gmpz_swap
+  pub fn __gmpz_swap(a: *mut mpz_s, b: *mut mpz_s) -> ();
+  /// __gmpz_realloc2
+  pub fn __gmpz_realloc2(a: *mut mpz_s, n: mp_bitcnt_t) -> ();
+
   /// __gmpz_cmp
   pub fn __gmpz_cmp(a: *mut mpz_s, b: *mut mpz_s) -> int_t;
   /// __gmpz_cmp_d
@@ -61,6 +66,19 @@ extern "C" {
   /// __gmpz_sgn
   pub fn __gmpz_sgn(a: *mut mpz_s) -> int_t;
 */
+
+  /// __gmpz_root r = nth root of a
+  pub fn __gmpz_root(r: *mut mpz_s, a: *mut mpz_s, n: ui_t) -> int_t;
+  /// __gmpz_rootrem r = nth root of u, rem = u - r**n (to the remainder)
+  pub fn __gmpz_rootrem(r: *mut mpz_s, rem: *mut mpz_s, u: *mut mpz_s, n: ui_t) -> ();
+  /// __gmpz_sqrt r = square root of a
+  pub fn __gmpz_sqrt(r: *mut mpz_s, a: *mut mpz_s) -> ();
+  /// __gmpz_sqrtrem r = square root of u, rem = u - r**2 (to the remainder)
+  pub fn __gmpz_sqrtrem(r: *mut mpz_s, rem: *mut mpz_s, u: *mut mpz_s) -> ();
+  /// __gmpz_perfect_power_p
+  pub fn __gmpz_perfect_power_p(a: *mut mpz_s) -> int_t;
+  /// __gmpz_perfect_square_p
+  pub fn __gmpz_perfect_square_p(a: *mut mpz_s) -> int_t;
 
   /// __gmpz_fac_ui c = n!
   pub fn __gmpz_fac_ui(c: *mut mpz_s, n: ui_t) -> ();
@@ -251,6 +269,9 @@ extern "C" {
   /// __gmpq_get_str
   pub fn __gmpq_get_str(s: *mut u8, b: int_t, q: *const mpq_s) -> *mut u8;
 
+  /// __gmpq_swap
+  pub fn __gmpq_swap(q: *mut mpq_s, r: *mut mpq_s) -> ();
+
   /// __gmpq_cmp
   pub fn __gmpq_cmp(q: *mut mpq_s, r: *mut mpq_s) -> int_t;
   /// __gmpq_cmp_z
@@ -268,28 +289,23 @@ extern "C" {
 
   /// __gmpq_inv p = q**-1
   pub fn __gmpq_inv(p: *mut mpq_s, q: *mut mpq_s) -> ();
-
   /// __gmpq_abs
   pub fn __gmpq_abs(p: *mut mpq_s, q: *mut mpq_s) -> ();
-
   /// __gmpq_neg
   pub fn __gmpq_neg(p: *mut mpq_s, q: *mut mpq_s) -> ();
 
   /// __gmpq_sub p = q - r
   pub fn __gmpq_sub(p: *mut mpq_s, q: *mut mpq_s, r: *mut mpq_s) -> ();
-
   /// __gmpq_add p = q + r
   pub fn __gmpq_add(p: *mut mpq_s, q: *mut mpq_s, r: *mut mpq_s) -> ();
 
   /// __gmpq_mul p = q * r
   pub fn __gmpq_mul(p: *mut mpq_s, q: *mut mpq_s, r: *mut mpq_s) -> ();
-
   /// __gmpq_mul_2exp p = q * 2**n
   pub fn __gmpq_mul_2exp(p: *mut mpq_s, q: *mut mpq_s, n: mp_bitcnt_t) -> ();
 
   /// __gmpq_div p = q / r
   pub fn __gmpq_div(p: *mut mpq_s, q: *mut mpq_s, r: *mut mpq_s) -> ();
-
   /// __gmpq_div_2exp p = q / 2**n
   pub fn __gmpq_div_2exp(p: *mut mpq_s, q: *mut mpq_s, n: mp_bitcnt_t) -> ();
 

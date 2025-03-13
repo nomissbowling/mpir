@@ -129,6 +129,18 @@ impl __mpz_struct {
     mpz_get_str(None, b, self).expect("mpz fmtstr")
   }
 
+  /// swap
+  pub fn swap(&mut self, b: mpz_t) -> &mut Self {
+    mpz_swap(self, b);
+    self
+  }
+
+  /// realloc2
+  pub fn realloc2(&mut self, n: mp_bitcnt_t) -> &mut Self {
+    mpz_realloc2(self, n);
+    self
+  }
+
   /// cmp
   pub fn cmp(&mut self, b: mpz_t) -> int_t {
     mpz_cmp(self, b)
@@ -167,6 +179,46 @@ impl __mpz_struct {
   /// sgn
   pub fn sgn(&mut self) -> int_t {
     mpz_sgn(self)
+  }
+
+  /// root nth root of self create new instance
+  pub fn root(&mut self, n: ui_t) -> (Self, bool) {
+    let mut t = mpz_s::init();
+    let f = mpz_root(&mut t, self, n);
+    (t, f)
+  }
+
+  /// rootrem (nth root of self, self - root**n) create new instance
+  pub fn rootrem(&mut self, n: ui_t) -> (Self, Self) {
+    let mut t = mpz_s::init();
+    let mut rem = mpz_s::init();
+    mpz_rootrem(&mut t, &mut rem, self, n);
+    (t, rem)
+  }
+
+  /// sqrt square root of self create new instance
+  pub fn sqrt(&mut self) -> Self {
+    let mut t = mpz_s::init();
+    mpz_sqrt(&mut t, self);
+    t
+  }
+
+  /// sqrtrem (square root of self, self - root**2) create new instance
+  pub fn sqrtrem(&mut self) -> (Self, Self) {
+    let mut t = mpz_s::init();
+    let mut rem = mpz_s::init();
+    mpz_sqrtrem(&mut t, &mut rem, self);
+    (t, rem)
+  }
+
+  /// perfect_power_p
+  pub fn perfect_power_p(&mut self) -> bool {
+    mpz_perfect_power_p(self)
+  }
+
+  /// perfect_square_p
+  pub fn perfect_square_p(&mut self) -> bool {
+    mpz_perfect_square_p(self)
   }
 
   /// fac_ui create new instance
@@ -494,6 +546,16 @@ pub fn mpz_get_str<'a>(s: Option<&mut String>, b: int_t, a: &'a mpz_s) ->
   }
 }
 
+/// mpz_swap
+pub fn mpz_swap(a: mpz_t, b: mpz_t) -> () {
+  unsafe { __gmpz_swap(a, b) }
+}
+
+/// mpz_realloc2
+pub fn mpz_realloc2(a: mpz_t, n: mp_bitcnt_t) -> () {
+  unsafe { __gmpz_realloc2(a, n) }
+}
+
 /// mpz_cmp
 pub fn mpz_cmp(a: mpz_t, b: mpz_t) -> int_t {
   unsafe { __gmpz_cmp(a, b) }
@@ -534,6 +596,36 @@ pub fn mpz_sgn(a: mpz_t) -> int_t {
 //  unsafe { __gmpz_sgn(a) }
   let t = a._mp_size;
   if t < 0 { -1 } else { if t > 0 { 1 } else { 0 } }
+}
+
+/// mpz_root r = nth root of a
+pub fn mpz_root(r: mpz_t, a: mpz_t, n: ui_t) -> bool {
+  unsafe { __gmpz_root(r, a, n) != 0 }
+}
+
+/// mpz_rootrem r = nth root of u, rem = u - r**n (to the remainder)
+pub fn mpz_rootrem(r: mpz_t, rem: mpz_t, u: mpz_t, n: ui_t) -> () {
+  unsafe { __gmpz_rootrem(r, rem, u, n) }
+}
+
+/// mpz_sqrt r = square root of a
+pub fn mpz_sqrt(r: mpz_t, a: mpz_t) -> () {
+  unsafe { __gmpz_sqrt(r, a) }
+}
+
+/// mpz_sqrtrem r = square root of u, rem = u - r**2 (to the remainder)
+pub fn mpz_sqrtrem(r: mpz_t, rem: mpz_t, u: mpz_t) -> () {
+  unsafe { __gmpz_sqrtrem(r, rem, u) }
+}
+
+/// mpz_perfect_power_p
+pub fn mpz_perfect_power_p(a: mpz_t) -> bool {
+  unsafe { __gmpz_perfect_power_p(a) != 0 }
+}
+
+/// mpz_perfect_square_p
+pub fn mpz_perfect_square_p(a: mpz_t) -> bool {
+  unsafe { __gmpz_perfect_square_p(a) != 0 }
 }
 
 /// mpz_fac_ui c = n!

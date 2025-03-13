@@ -18,7 +18,7 @@ Sample
     "987654321098765432109"); // 21 digits
   assert_eq!(format!("{}", f.set_z(a).div(g.set_str("1.0e+11", 10))), // drift
     "0.98765432109876543211e+10"); // 20 digits by default formatter
-  assert_eq!(mpf_get_fmtstr(f, 10, 22).expect("fmtstr"), // check to 22 digits
+  assert_eq!(f.fmtstr(10, 22), // check to 22 digits
     "0.987654321098765432109e+10"); // 21 digits ok
 
   // mpf (to be operator)
@@ -60,16 +60,39 @@ Sample
   assert_eq!(format!("{}", q.set_ui(2, 8)), "2/8");
 
   // mpf prec (c style)
+//  assert_eq!(mpf_get_default_prec(), 64); // may be 64
   mpf_set_default_prec(100); // 100 set to 128 bits (step by 2**n)
+//  assert_eq!(mpf_get_default_prec(), 128); // may be 128 (about 38 digits)
+  let digits = mpf_s::calc_digits_from_bits(128);
+  assert_eq!(digits, 38); // may be 38
 
-  // mpf significant digits (to be operator)
+  // mpf significant digits (to be operator) test loss of digits on display
+  let disp_digits = digits + 3; // set disp_digits to over prec
   let f = &mut mpf_s::init_set_str("1.0e-19", 10);
   let e = &mut mpf_s::init_set_str("1.0e-50", 10);
-  assert_eq!(mpf_get_fmtstr(e, 10, 60).expect("fmtstr"), "0.1e-49");
-  assert_eq!(mpf_get_fmtstr(f, 10, 60).expect("fmtstr"), "0.1e-18");
+  assert_eq!(e.fmtstr(10, disp_digits), "0.1e-49");
+  assert_eq!(f.fmtstr(10, disp_digits), "0.1e-18");
   // f.add(e) as 0.99999999999999999999e-19 without mpf_set_default_prec(100)
-  assert_eq!(mpf_get_fmtstr(f.add(e), 10, 60).expect("fmtstr"),
-    "0.1000000000000000000000000000000099999999e-18");
+  assert_eq!(f.add(e).fmtstr(10, disp_digits), // use disp_digits
+    "0.1000000000000000000000000000000099999999e-18"); // disp over prec
+  assert_eq!(f.fmtstr(10, digits), // use digits
+    "0.10000000000000000000000000000001e-18"); // disp as match with prec
+
+  // mpf calc napier (to be operator)
+  let digits = 150;
+  mpf_set_default_prec(mpf_s::calc_bits_from_digits(digits + 3));
+  let e = &mut mpf_s::calc_napier(&mut mpf_s::init_set_d(1.0), digits);
+  assert_eq!(format!("{}", e),
+    "0.27182818284590452354e+1");
+  assert_eq!(e.fmtstr(10, digits),
+    "0.271828182845904523536028747135266249775724709369995957496696762772407663035354759457138217852516642742746639193200305992181741359662904357290033429526e+1");
+/*
+  2.
+  7182818284 5904523536 0287471352 6624977572 4709369995
+  9574966967 6277240766 3035354759 4571382178 5251664274
+  2746639193 2003059921 8174135966 2904357290 0334295260
+  ...
+*/
 ```
 
 

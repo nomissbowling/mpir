@@ -112,6 +112,12 @@ impl __mpq_struct {
     mpq_get_str(None, b, self).expect("mpq fmtstr")
   }
 
+  /// swap
+  pub fn swap(&mut self, r: mpq_t) -> &mut Self {
+    mpq_swap(self, r);
+    self
+  }
+
   /// cmp
   pub fn cmp(&mut self, r: mpq_t) -> int_t {
     mpq_cmp(self, r)
@@ -333,6 +339,11 @@ pub fn mpq_get_str<'a>(s: Option<&mut String>, b: int_t, q: &'a mpq_s) ->
   None => Err("err mpq get str".into()),
   Some(r) => Ok(String::from_utf8(r)?)
   }
+}
+
+/// mpq_swap
+pub fn mpq_swap(q: mpq_t, r: mpq_t) -> () {
+  unsafe { __gmpq_swap(q, r) }
 }
 
 /// mpq_cmp

@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/mpir/0.1.8")]
+#![doc(html_root_url = "https://docs.rs/mpir/0.1.9")]
 //! partial Rust porting of mpir multiple precision library based on gmp mpfr
 //!
 //! # Requirements
@@ -26,7 +26,15 @@ pub mod minimum;
 #[cfg(test)]
 mod tests {
   use super::*;
-  use super::minimum::simple_test;
+  use super::minimum::{
+    calc_mpz_test,
+    calc_fact_test,
+    calc_mpf_prec64_test, // single thread
+    calc_mpq_test,
+    compare_test, // single thread
+    significant_digits_test, // single thread
+    calc_napier_test}; // single thread
+  use serial_test::serial;
 
   /// with [-- --nocapture] or with [-- --show-output]
   #[test]
@@ -39,7 +47,9 @@ mod tests {
 
   /// with [-- --nocapture] or with [-- --show-output]
   #[test]
+  #[serial] // expected on the single thread for mpf_set_default_prec
   fn test_mpf() {
+    mpf_set_default_prec(64); // 64 bits default
     let f = &mut mpf_s::new();
     mpf_init_set_d(f, -0.3);
     assert_eq!(format!("{:?}", f),
@@ -58,7 +68,47 @@ mod tests {
 
   /// with [-- --nocapture] or with [-- --show-output]
   #[test]
-  fn test_mpir() {
-    assert_eq!(simple_test(), ());
+  fn test_calc_mpz() {
+    assert_eq!(calc_mpz_test(), ());
+  }
+
+  /// with [-- --nocapture] or with [-- --show-output]
+  #[test]
+  fn test_calc_fact() {
+    assert_eq!(calc_fact_test(), ());
+  }
+
+  /// with [-- --nocapture] or with [-- --show-output]
+  #[test]
+  #[serial] // expected on the single thread for mpf_set_default_prec
+  fn test_calc_mpf_prec64() {
+    assert_eq!(calc_mpf_prec64_test(), ());
+  }
+
+  /// with [-- --nocapture] or with [-- --show-output]
+  #[test]
+  fn test_calc_mpq() {
+    assert_eq!(calc_mpq_test(), ());
+  }
+
+  /// with [-- --nocapture] or with [-- --show-output]
+  #[test]
+  #[serial] // expected on the single thread for mpf_set_default_prec
+  fn test_compare() {
+    assert_eq!(compare_test(), ());
+  }
+
+  /// with [-- --nocapture] or with [-- --show-output]
+  #[test]
+  #[serial] // expected on the single thread for mpf_set_default_prec
+  fn test_significant_digits() {
+    assert_eq!(significant_digits_test(), ());
+  }
+
+  /// with [-- --nocapture] or with [-- --show-output]
+  #[test]
+  #[serial] // expected on the single thread for mpf_set_default_prec
+  fn test_calc_napier() {
+    assert_eq!(calc_napier_test(), ());
   }
 }

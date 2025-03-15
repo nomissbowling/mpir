@@ -343,6 +343,252 @@ impl __mpz_struct {
     self
   }
 
+  /// cdiv_q create new instance
+  pub fn cdiv_q(&mut self, d: mpz_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_cdiv_q(&mut t, self, d);
+    t
+  }
+
+  /// cdiv_r create new instance
+  pub fn cdiv_r(&mut self, d: mpz_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_cdiv_r(&mut t, self, d);
+    t
+  }
+
+  /// cdiv_qr create new instance
+  pub fn cdiv_qr(&mut self, d: mpz_t) -> (Self, Self) {
+    let mut t = mpz_s::init();
+    let mut r = mpz_s::init();
+    mpz_cdiv_qr(&mut t, &mut r, self, d);
+    (t, r)
+  }
+
+  /// cdiv_q_ui create new instance
+  pub fn cdiv_q_ui(&mut self, d: ui_t) -> (Self, ui_t) {
+    let mut t = mpz_s::init();
+    let u = mpz_cdiv_q_ui(&mut t, self, d);
+    (t, u)
+  }
+
+  /// cdiv_r_ui create new instance
+  pub fn cdiv_r_ui(&mut self, d: ui_t) -> (Self, ui_t) {
+    let mut t = mpz_s::init();
+    let u = mpz_cdiv_r_ui(&mut t, self, d);
+    (t, u)
+  }
+
+  /// cdiv_qr_ui create new instance
+  pub fn cdiv_qr_ui(&mut self, d: ui_t) -> (Self, Self, ui_t) {
+    let mut t = mpz_s::init();
+    let mut r = mpz_s::init();
+    let u = mpz_cdiv_qr_ui(&mut t, &mut r, self, d);
+    (t, r, u)
+  }
+
+  /// cdiv_ui
+  pub fn cdiv_ui(&mut self, d: ui_t) -> ui_t {
+    mpz_cdiv_ui(self, d)
+  }
+
+  /// cdiv_q_2exp create new instance
+  pub fn cdiv_q_2exp(&mut self, b: mp_bitcnt_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_cdiv_q_2exp(&mut t, self, b);
+    t
+  }
+
+  /// cdiv_r_2exp create new instance
+  pub fn cdiv_r_2exp(&mut self, b: mp_bitcnt_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_cdiv_r_2exp(&mut t, self, b);
+    t
+  }
+
+  /// fdiv_q create new instance
+  pub fn fdiv_q(&mut self, d: mpz_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_fdiv_q(&mut t, self, d);
+    t
+  }
+
+  /// fdiv_r create new instance
+  pub fn fdiv_r(&mut self, d: mpz_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_fdiv_r(&mut t, self, d);
+    t
+  }
+
+  /// fdiv_qr create new instance
+  pub fn fdiv_qr(&mut self, d: mpz_t) -> (Self, Self) {
+    let mut t = mpz_s::init();
+    let mut r = mpz_s::init();
+    mpz_fdiv_qr(&mut t, &mut r, self, d);
+    (t, r)
+  }
+
+  /// fdiv_q_ui create new instance
+  pub fn fdiv_q_ui(&mut self, d: ui_t) -> (Self, ui_t) {
+    let mut t = mpz_s::init();
+    let u = mpz_fdiv_q_ui(&mut t, self, d);
+    (t, u)
+  }
+
+  /// fdiv_r_ui create new instance
+  pub fn fdiv_r_ui(&mut self, d: ui_t) -> (Self, ui_t) {
+    let mut t = mpz_s::init();
+    let u = mpz_fdiv_r_ui(&mut t, self, d);
+    (t, u)
+  }
+
+  /// fdiv_qr_ui create new instance
+  pub fn fdiv_qr_ui(&mut self, d: ui_t) -> (Self, Self, ui_t) {
+    let mut t = mpz_s::init();
+    let mut r = mpz_s::init();
+    let u = mpz_fdiv_qr_ui(&mut t, &mut r, self, d);
+    (t, r, u)
+  }
+
+  /// fdiv_ui
+  pub fn fdiv_ui(&mut self, d: ui_t) -> ui_t {
+    mpz_fdiv_ui(self, d)
+  }
+
+  /// fdiv_q_2exp create new instance
+  pub fn fdiv_q_2exp(&mut self, b: mp_bitcnt_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_fdiv_q_2exp(&mut t, self, b);
+    t
+  }
+
+  /// fdiv_r_2exp create new instance
+  pub fn fdiv_r_2exp(&mut self, b: mp_bitcnt_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_fdiv_r_2exp(&mut t, self, b);
+    t
+  }
+
+  /// tdiv_q create new instance
+  pub fn tdiv_q(&mut self, d: mpz_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_tdiv_q(&mut t, self, d);
+    t
+  }
+
+  /// tdiv_r create new instance
+  pub fn tdiv_r(&mut self, d: mpz_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_tdiv_r(&mut t, self, d);
+    t
+  }
+
+  /// tdiv_qr create new instance
+  pub fn tdiv_qr(&mut self, d: mpz_t) -> (Self, Self) {
+    let mut t = mpz_s::init();
+    let mut r = mpz_s::init();
+    mpz_tdiv_qr(&mut t, &mut r, self, d);
+    (t, r)
+  }
+
+  /// tdiv_q_ui create new instance
+  pub fn tdiv_q_ui(&mut self, d: ui_t) -> (Self, ui_t) {
+    let mut t = mpz_s::init();
+    let u = mpz_tdiv_q_ui(&mut t, self, d);
+    (t, u)
+  }
+
+  /// tdiv_r_ui create new instance
+  pub fn tdiv_r_ui(&mut self, d: ui_t) -> (Self, ui_t) {
+    let mut t = mpz_s::init();
+    let u = mpz_tdiv_r_ui(&mut t, self, d);
+    (t, u)
+  }
+
+  /// tdiv_qr_ui create new instance
+  pub fn tdiv_qr_ui(&mut self, d: ui_t) -> (Self, Self, ui_t) {
+    let mut t = mpz_s::init();
+    let mut r = mpz_s::init();
+    let u = mpz_tdiv_qr_ui(&mut t, &mut r, self, d);
+    (t, r, u)
+  }
+
+  /// tdiv_ui
+  pub fn tdiv_ui(&mut self, d: ui_t) -> ui_t {
+    mpz_tdiv_ui(self, d)
+  }
+
+  /// tdiv_q_2exp create new instance
+  pub fn tdiv_q_2exp(&mut self, b: mp_bitcnt_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_tdiv_q_2exp(&mut t, self, b);
+    t
+  }
+
+  /// tdiv_r_2exp create new instance
+  pub fn tdiv_r_2exp(&mut self, b: mp_bitcnt_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_tdiv_r_2exp(&mut t, self, b);
+    t
+  }
+
+  /// modulo create new instance
+  pub fn modulo(&mut self, d: mpz_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_mod(&mut t, self, d);
+    t
+  }
+
+  /// mod_ui (the result is always non-negative) create new instance
+  pub fn mod_ui(&mut self, d: ui_t) -> (Self, ui_t) {
+    let mut t = mpz_s::init();
+    let m = mpz_mod_ui(&mut t, self, d);
+    (t, m)
+  }
+
+  /// divexact create new instance
+  pub fn divexact(&mut self, d: mpz_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_divexact(&mut t, self, d);
+    t
+  }
+
+  /// divexact_ui create new instance
+  pub fn divexact_ui(&mut self, d: ui_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_divexact_ui(&mut t, self, d);
+    t
+  }
+
+  /// divisible_p
+  pub fn divisible_p(&mut self, d: mpz_t) -> bool {
+    mpz_divisible_p(self, d)
+  }
+
+  /// divisible_ui_p
+  pub fn divisible_ui_p(&mut self, d: ui_t) -> bool {
+    mpz_divisible_ui_p(self, d)
+  }
+
+  /// divisible_2exp_p
+  pub fn divisible_2exp_p(&mut self, b: mp_bitcnt_t) -> bool {
+    mpz_divisible_2exp_p(self, b)
+  }
+
+  /// congruent_p
+  pub fn congruent_p(&mut self, c: mpz_t, d: mpz_t) -> bool {
+    mpz_congruent_p(self, c, d)
+  }
+
+  /// congruent_ui_p
+  pub fn congruent_ui_p(&mut self, c: ui_t, d: ui_t) -> bool {
+    mpz_congruent_ui_p(self, c, d)
+  }
+
+  /// congruent_2exp_p
+  pub fn congruent_2exp_p(&mut self, c: mpz_t, b: mp_bitcnt_t) -> bool {
+    mpz_congruent_2exp_p(self, c, b)
+  }
 
   /// powwm_sec (a**n) mod m ***required n &gt; 0 and m is odd*** create new instance
   pub fn powm_sec(a: mpz_t, n: mpz_t, m: mpz_t) -> Self {
@@ -716,6 +962,192 @@ pub fn mpz_mul_si(c: mpz_t, a: mpz_t, s: si_t) -> () {
 /// mpz_mul_2exp c = a * 2**n
 pub fn mpz_mul_2exp(c: mpz_t, a: mpz_t, n: mp_bitcnt_t) -> () {
   unsafe { __gmpz_mul_2exp(c, a, n) }
+}
+
+/// mpz_cdiv_q
+pub fn mpz_cdiv_q(q: mpz_t, n: mpz_t, d: mpz_t) -> () {
+  unsafe { __gmpz_cdiv_q(q, n, d) }
+}
+
+/// mpz_cdiv_r
+pub fn mpz_cdiv_r(r: mpz_t, n: mpz_t, d: mpz_t) -> () {
+  unsafe { __gmpz_cdiv_r(r, n, d) }
+}
+
+/// mpz_cdiv_qr
+pub fn mpz_cdiv_qr(q: mpz_t, r: mpz_t, n: mpz_t, d: mpz_t) -> () {
+  unsafe { __gmpz_cdiv_qr(q, r, n, d) }
+}
+
+/// mpz_cdiv_q_ui
+pub fn mpz_cdiv_q_ui(q: mpz_t, n: mpz_t, d: ui_t) -> ui_t {
+  unsafe { __gmpz_cdiv_q_ui(q, n, d) }
+}
+
+/// mpz_cdiv_r_ui
+pub fn mpz_cdiv_r_ui(r: mpz_t, n: mpz_t, d: ui_t) -> ui_t {
+  unsafe { __gmpz_cdiv_r_ui(r, n, d) }
+}
+
+/// mpz_cdiv_qr_ui
+pub fn mpz_cdiv_qr_ui(q: mpz_t, r: mpz_t, n: mpz_t, d: ui_t) -> ui_t {
+  unsafe { __gmpz_cdiv_qr_ui(q, r, n, d) }
+}
+
+/// mpz_cdiv_ui
+pub fn mpz_cdiv_ui(n: mpz_t, d: ui_t) -> ui_t {
+  unsafe { __gmpz_cdiv_ui(n, d) }
+}
+
+/// mpz_cdiv_q_2exp
+pub fn mpz_cdiv_q_2exp(q: mpz_t, n: mpz_t, b: mp_bitcnt_t) -> () {
+  unsafe { __gmpz_cdiv_q_2exp(q, n, b) }
+}
+
+/// mpz_cdiv_r_2exp
+pub fn mpz_cdiv_r_2exp(r: mpz_t, n: mpz_t, b: mp_bitcnt_t) -> () {
+  unsafe { __gmpz_cdiv_r_2exp(r, n, b) }
+}
+
+/// mpz_fdiv_q
+pub fn mpz_fdiv_q(q: mpz_t, n: mpz_t, d: mpz_t) -> () {
+  unsafe { __gmpz_fdiv_q(q, n, d) }
+}
+
+/// mpz_fdiv_r
+pub fn mpz_fdiv_r(r: mpz_t, n: mpz_t, d: mpz_t) -> () {
+  unsafe { __gmpz_fdiv_r(r, n, d) }
+}
+
+/// mpz_fdiv_qr
+pub fn mpz_fdiv_qr(q: mpz_t, r: mpz_t, n: mpz_t, d: mpz_t) -> () {
+  unsafe { __gmpz_fdiv_qr(q, r, n, d) }
+}
+
+/// mpz_fdiv_q_ui
+pub fn mpz_fdiv_q_ui(q: mpz_t, n: mpz_t, d: ui_t) -> ui_t {
+  unsafe { __gmpz_fdiv_q_ui(q, n, d) }
+}
+
+/// mpz_fdiv_r_ui
+pub fn mpz_fdiv_r_ui(r: mpz_t, n: mpz_t, d: ui_t) -> ui_t {
+  unsafe { __gmpz_fdiv_r_ui(r, n, d) }
+}
+
+/// mpz_fdiv_qr_ui
+pub fn mpz_fdiv_qr_ui(q: mpz_t, r: mpz_t, n: mpz_t, d: ui_t) -> ui_t {
+  unsafe { __gmpz_fdiv_qr_ui(q, r, n, d) }
+}
+
+/// mpz_fdiv_ui
+pub fn mpz_fdiv_ui(n: mpz_t, d: ui_t) -> ui_t {
+  unsafe { __gmpz_fdiv_ui(n, d) }
+}
+
+/// mpz_fdiv_q_2exp
+pub fn mpz_fdiv_q_2exp(q: mpz_t, n: mpz_t, b: mp_bitcnt_t) -> () {
+  unsafe { __gmpz_fdiv_q_2exp(q, n, b) }
+}
+
+/// mpz_fdiv_r_2exp
+pub fn mpz_fdiv_r_2exp(r: mpz_t, n: mpz_t, b: mp_bitcnt_t) -> () {
+  unsafe { __gmpz_fdiv_r_2exp(r, n, b) }
+}
+
+/// mpz_tdiv_q
+pub fn mpz_tdiv_q(q: mpz_t, n: mpz_t, d: mpz_t) -> () {
+  unsafe { __gmpz_tdiv_q(q, n, d) }
+}
+
+/// mpz_tdiv_r
+pub fn mpz_tdiv_r(r: mpz_t, n: mpz_t, d: mpz_t) -> () {
+  unsafe { __gmpz_tdiv_r(r, n, d) }
+}
+
+/// mpz_tdiv_qr
+pub fn mpz_tdiv_qr(q: mpz_t, r: mpz_t, n: mpz_t, d: mpz_t) -> () {
+  unsafe { __gmpz_tdiv_qr(q, r, n, d) }
+}
+
+/// mpz_tdiv_q_ui
+pub fn mpz_tdiv_q_ui(q: mpz_t, n: mpz_t, d: ui_t) -> ui_t {
+  unsafe { __gmpz_tdiv_q_ui(q, n, d) }
+}
+
+/// mpz_tdiv_r_ui
+pub fn mpz_tdiv_r_ui(r: mpz_t, n: mpz_t, d: ui_t) -> ui_t {
+  unsafe { __gmpz_tdiv_r_ui(r, n, d) }
+}
+
+/// mpz_tdiv_qr_ui
+pub fn mpz_tdiv_qr_ui(q: mpz_t, r: mpz_t, n: mpz_t, d: ui_t) -> ui_t {
+  unsafe { __gmpz_tdiv_qr_ui(q, r, n, d) }
+}
+
+/// mpz_tdiv_ui
+pub fn mpz_tdiv_ui(n: mpz_t, d: ui_t) -> ui_t {
+  unsafe { __gmpz_tdiv_ui(n, d) }
+}
+
+/// mpz_tdiv_q_2exp
+pub fn mpz_tdiv_q_2exp(q: mpz_t, n: mpz_t, b: mp_bitcnt_t) -> () {
+  unsafe { __gmpz_tdiv_q_2exp(q, n, b) }
+}
+
+/// mpz_tdiv_r_2exp
+pub fn mpz_tdiv_r_2exp(r: mpz_t, n: mpz_t, b: mp_bitcnt_t) -> () {
+  unsafe { __gmpz_tdiv_r_2exp(r, n, b) }
+}
+
+/// mpz_mod
+pub fn mpz_mod(r: mpz_t, n: mpz_t, d: mpz_t) -> () {
+  unsafe { __gmpz_mod(r, n, d) }
+}
+
+/// mpz_mod_ui
+pub fn mpz_mod_ui(r: mpz_t, n: mpz_t, d: ui_t) -> ui_t {
+//  unsafe { __gmpz_mod_ui(r, n, d) }
+  unsafe { __gmpz_fdiv_r_ui(r, n, d) }
+}
+
+/// mpz_divexact
+pub fn mpz_divexact(q: mpz_t, n: mpz_t, d: mpz_t) -> () {
+  unsafe { __gmpz_divexact(q, n, d) }
+}
+
+/// mpz_divexact_ui
+pub fn mpz_divexact_ui(q: mpz_t, n: mpz_t, d: ui_t) -> () {
+  unsafe { __gmpz_divexact_ui(q, n, d) }
+}
+
+/// mpz_divisible_p
+pub fn mpz_divisible_p(n: mpz_t, d: mpz_t) -> bool {
+  unsafe { __gmpz_divisible_p(n, d) != 0 }
+}
+
+/// mpz_divisible_ui_p
+pub fn mpz_divisible_ui_p(n: mpz_t, d: ui_t) -> bool {
+  unsafe { __gmpz_divisible_ui_p(n, d) != 0 }
+}
+
+/// mpz_divisible_2exp_p
+pub fn mpz_divisible_2exp_p(n: mpz_t, b: mp_bitcnt_t) -> bool {
+  unsafe { __gmpz_divisible_2exp_p(n, b) != 0 }
+}
+
+/// mpz_congruent_p
+pub fn mpz_congruent_p(n: mpz_t, c: mpz_t, d: mpz_t) -> bool {
+  unsafe { __gmpz_congruent_p(n, c, d) != 0 }
+}
+
+/// mpz_congruent_ui_p
+pub fn mpz_congruent_ui_p(n: mpz_t, c: ui_t, d: ui_t) -> bool {
+  unsafe { __gmpz_congruent_ui_p(n, c, d) != 0 }
+}
+
+/// mpz_congruent_2exp_p
+pub fn mpz_congruent_2exp_p(n: mpz_t, c: mpz_t, b: mp_bitcnt_t) -> bool {
+  unsafe { __gmpz_congruent_2exp_p(n, c, b) != 0 }
 }
 
 /// mpz_powwm_sec c = (a**n) mod m ***required n &gt; 0 and m is odd***

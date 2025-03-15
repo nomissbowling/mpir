@@ -120,6 +120,104 @@ extern "C" {
   /// __gmpz_mul_2exp c = a * 2**n
   pub fn __gmpz_mul_2exp(c: *mut mpz_s, a: *mut mpz_s, n: mp_bitcnt_t) -> ();
 
+  /// __gmpz_cdiv_q
+  pub fn __gmpz_cdiv_q(q: *mut mpz_s, n: *mut mpz_s, d: *mut mpz_s) -> ();
+  /// __gmpz_cdiv_r
+  pub fn __gmpz_cdiv_r(r: *mut mpz_s, n: *mut mpz_s, d: *mut mpz_s) -> ();
+  /// __gmpz_cdiv_qr
+  pub fn __gmpz_cdiv_qr(q: *mut mpz_s, r: *mut mpz_s,
+    n: *mut mpz_s, d: *mut mpz_s) -> ();
+  /// __gmpz_cdiv_q_ui
+  pub fn __gmpz_cdiv_q_ui(q: *mut mpz_s, n: *mut mpz_s, d: ui_t) -> ui_t;
+  /// __gmpz_cdiv_r_ui
+  pub fn __gmpz_cdiv_r_ui(r: *mut mpz_s, n: *mut mpz_s, d: ui_t) -> ui_t;
+  /// __gmpz_cdiv_qr_ui
+  pub fn __gmpz_cdiv_qr_ui(q: *mut mpz_s, r: *mut mpz_s,
+    n: *mut mpz_s, d: ui_t) -> ui_t;
+  /// __gmpz_cdiv_ui
+  pub fn __gmpz_cdiv_ui(n: *mut mpz_s, d: ui_t) -> ui_t;
+  /// __gmpz_cdiv_q_2exp
+  pub fn __gmpz_cdiv_q_2exp(q: *mut mpz_s,
+    n: *mut mpz_s, b: mp_bitcnt_t) -> ();
+  /// __gmpz_cdiv_r_2exp
+  pub fn __gmpz_cdiv_r_2exp(r: *mut mpz_s,
+    n: *mut mpz_s, b: mp_bitcnt_t) -> ();
+
+  /// __gmpz_fdiv_q
+  pub fn __gmpz_fdiv_q(q: *mut mpz_s, n: *mut mpz_s, d: *mut mpz_s) -> ();
+  /// __gmpz_fdiv_r
+  pub fn __gmpz_fdiv_r(r: *mut mpz_s, n: *mut mpz_s, d: *mut mpz_s) -> ();
+  /// __gmpz_fdiv_qr
+  pub fn __gmpz_fdiv_qr(q: *mut mpz_s, r: *mut mpz_s,
+    n: *mut mpz_s, d: *mut mpz_s) -> ();
+  /// __gmpz_fdiv_q_ui
+  pub fn __gmpz_fdiv_q_ui(q: *mut mpz_s, n: *mut mpz_s, d: ui_t) -> ui_t;
+  /// __gmpz_fdiv_r_ui
+  pub fn __gmpz_fdiv_r_ui(r: *mut mpz_s, n: *mut mpz_s, d: ui_t) -> ui_t;
+  /// __gmpz_fdiv_qr_ui
+  pub fn __gmpz_fdiv_qr_ui(q: *mut mpz_s, r: *mut mpz_s,
+    n: *mut mpz_s, d: ui_t) -> ui_t;
+  /// __gmpz_fdiv_ui
+  pub fn __gmpz_fdiv_ui(n: *mut mpz_s, d: ui_t) -> ui_t;
+  /// __gmpz_fdiv_q_2exp
+  pub fn __gmpz_fdiv_q_2exp(q: *mut mpz_s,
+    n: *mut mpz_s, b: mp_bitcnt_t) -> ();
+  /// __gmpz_fdiv_r_2exp
+  pub fn __gmpz_fdiv_r_2exp(r: *mut mpz_s,
+    n: *mut mpz_s, b: mp_bitcnt_t) -> ();
+
+  /// __gmpz_tdiv_q
+  pub fn __gmpz_tdiv_q(q: *mut mpz_s, n: *mut mpz_s, d: *mut mpz_s) -> ();
+  /// __gmpz_tdiv_r
+  pub fn __gmpz_tdiv_r(r: *mut mpz_s, n: *mut mpz_s, d: *mut mpz_s) -> ();
+  /// __gmpz_tdiv_qr
+  pub fn __gmpz_tdiv_qr(q: *mut mpz_s, r: *mut mpz_s,
+    n: *mut mpz_s, d: *mut mpz_s) -> ();
+  /// __gmpz_tdiv_q_ui
+  pub fn __gmpz_tdiv_q_ui(q: *mut mpz_s, n: *mut mpz_s, d: ui_t) -> ui_t;
+  /// __gmpz_tdiv_r_ui
+  pub fn __gmpz_tdiv_r_ui(r: *mut mpz_s, n: *mut mpz_s, d: ui_t) -> ui_t;
+  /// __gmpz_tdiv_qr_ui
+  pub fn __gmpz_tdiv_qr_ui(q: *mut mpz_s, r: *mut mpz_s,
+    n: *mut mpz_s, d: ui_t) -> ui_t;
+  /// __gmpz_tdiv_ui
+  pub fn __gmpz_tdiv_ui(n: *mut mpz_s, d: ui_t) -> ui_t;
+  /// __gmpz_tdiv_q_2exp
+  pub fn __gmpz_tdiv_q_2exp(q: *mut mpz_s,
+    n: *mut mpz_s, b: mp_bitcnt_t) -> ();
+  /// __gmpz_tdiv_r_2exp
+  pub fn __gmpz_tdiv_r_2exp(r: *mut mpz_s,
+    n: *mut mpz_s, b: mp_bitcnt_t) -> ();
+
+  /// __gmpz_mod
+  pub fn __gmpz_mod(r: *mut mpz_s, n: *mut mpz_s, d: *mut mpz_s) -> ();
+/*
+  /// __gmpz_mod_ui (use __gmpz_fdiv_r_ui)
+  pub fn __gmpz_mod_ui(r: *mut mpz_s, n: *mut mpz_s, d: ui_t) -> ui_t;
+*/
+
+  /// __gmpz_divexact
+  pub fn __gmpz_divexact(q: *mut mpz_s, n: *mut mpz_s, d: *mut mpz_s) -> ();
+  /// __gmpz_divexact_ui
+  pub fn __gmpz_divexact_ui(q: *mut mpz_s, n: *mut mpz_s, d: ui_t) -> ();
+
+  /// __gmpz_divisible_p
+  pub fn __gmpz_divisible_p(n: *mut mpz_s, d: *mut mpz_s) -> int_t;
+  /// __gmpz_divisible_ui_p
+  pub fn __gmpz_divisible_ui_p(n: *mut mpz_s, d: ui_t) -> int_t;
+  /// __gmpz_divisible_2exp_p
+  pub fn __gmpz_divisible_2exp_p(n: *mut mpz_s, b: mp_bitcnt_t) -> int_t;
+
+  /// __gmpz_congruent_p
+  pub fn __gmpz_congruent_p(n: *mut mpz_s,
+    c: *mut mpz_s, d: *mut mpz_s) -> int_t;
+  /// __gmpz_congruent_ui_p
+  pub fn __gmpz_congruent_ui_p(n: *mut mpz_s,
+    c: ui_t, d: ui_t) -> int_t;
+  /// __gmpz_congruent_2exp_p
+  pub fn __gmpz_congruent_2exp_p(n: *mut mpz_s,
+    c: *mut mpz_s, b: mp_bitcnt_t) -> int_t;
+
   /// __gmpz_powwm_sec c = (a**n) mod m ***required n &gt; 0 and m is odd***
   pub fn __gmpz_powm_sec(c: *mut mpz_s,
     a: *mut mpz_s, n: *mut mpz_s, m: *mut mpz_s) -> ();

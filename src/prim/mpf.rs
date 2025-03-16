@@ -138,6 +138,28 @@ impl __mpf_struct {
     self
   }
 
+  /// get_d (loss of digits)
+  pub fn get_d(&mut self) -> double_t {
+    mpf_get_d(self)
+  }
+
+  /// get_ui (loss of digits)
+  pub fn get_ui(&mut self) -> ui_t {
+    mpf_get_ui(self)
+  }
+
+  /// get_si (loss of digits)
+  pub fn get_si(&mut self) -> si_t {
+    mpf_get_si(self)
+  }
+
+  /// get_d_2exp (loss of digits)
+  pub fn get_d_2exp(&mut self) -> (double_t, si_t) {
+    let mut e: si_t = 0;
+    let d = mpf_get_d_2exp(&mut e, self);
+    (d, e)
+  }
+
   /// cmp
   pub fn cmp(&mut self, g: mpf_t) -> int_t {
     mpf_cmp(self, g)
@@ -534,6 +556,26 @@ pub fn mpf_get_fmtstr<'a>(f: &'a mpf_s, b: int_t, d: mp_size_t) ->
     Ok(format!("{}0.{}e{}{}", sign, s, es, *e * en))
   }
   }
+}
+
+/// mpf_get_d
+pub fn mpf_get_d(f: mpf_t) -> double_t {
+  unsafe { __gmpf_get_d(f) }
+}
+
+/// mpf_get_ui
+pub fn mpf_get_ui(f: mpf_t) -> ui_t {
+  unsafe { __gmpf_get_ui(f) }
+}
+
+/// mpf_get_si
+pub fn mpf_get_si(f: mpf_t) -> si_t {
+  unsafe { __gmpf_get_si(f) }
+}
+
+/// mpf_get_d_2exp
+pub fn mpf_get_d_2exp(e: &mut si_t, f: mpf_t) -> double_t {
+  unsafe { __gmpf_get_d_2exp(e, f) }
 }
 
 /// mpf_cmp

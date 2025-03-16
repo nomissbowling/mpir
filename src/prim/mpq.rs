@@ -112,6 +112,11 @@ impl __mpq_struct {
     mpq_get_str(None, b, self).expect("mpq fmtstr")
   }
 
+  /// get_d (loss of digits)
+  pub fn get_d(&mut self) -> double_t {
+    mpq_get_d(self)
+  }
+
   /// swap
   pub fn swap(&mut self, r: mpq_t) -> &mut Self {
     mpq_swap(self, r);
@@ -339,6 +344,11 @@ pub fn mpq_get_str<'a>(s: Option<&mut String>, b: int_t, q: &'a mpq_s) ->
   None => Err("err mpq get str".into()),
   Some(r) => Ok(String::from_utf8(r)?)
   }
+}
+
+/// mpq_get_d
+pub fn mpq_get_d(q: mpq_t) -> double_t {
+  unsafe { __gmpq_get_d(q) }
 }
 
 /// mpq_swap

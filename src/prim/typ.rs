@@ -22,10 +22,10 @@ pub type mp_exp_t = i32;
 pub type mp_t = *mut u8;
 /// unsigned
 #[allow(non_camel_case_types)]
-pub type ui_t = mp_limb_t;
+pub type ui_t = u32; // not mp_limb_t
 /// signed
 #[allow(non_camel_case_types)]
-pub type si_t = mp_limb_signed_t;
+pub type si_t = i32; // not mp_limb_signed_t
 /// c_double
 #[allow(non_camel_case_types)]
 pub type double_t = f64;

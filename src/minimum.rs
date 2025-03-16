@@ -220,6 +220,13 @@ pub fn calc_mpz_test() {
   assert_eq!(a.congruent_p(c.set_ui(20), b.set_ui(7)), true); // (1000===20)%7
   assert_eq!(a.congruent_ui_p(20, 7), true); // (1000===20)%7
   assert_eq!(a.congruent_2exp_p(c.set_ui(1512), 8), true); // (1000===1512)%256
+
+  // loss of digits
+  a.set_si(-3);
+  assert!(a.get_d() == -3.0);
+  assert!(a.get_ui() == 3);
+  assert!(a.get_si() == -3);
+  assert!(a.get_d_2exp() == (-0.75, 2)); // -0.75 * 2**2
 }
 
 /// calc fact test
@@ -243,6 +250,42 @@ pub fn calc_fact_test() {
     let t = &mut mpz_s::fact_cached(n as ui_t, m);
     assert_eq!(format!("{}! = {}", n, t), format!("{}! = {}", n, facts[n]));
   });
+}
+
+/// calc fib test
+pub fn calc_fib_test() {
+  let fibs = vec!["0", "1", "1", "2", "3", "5", "8", "13", "21", "34", "55"];
+  (0..fibs.len() as ui_t).for_each(|i| {
+    let f_n = &mut mpz_s::fib_ui(i);
+//    println!("{}: {}", i, f_n);
+    assert_eq!(format!("{}", f_n), fibs[i as usize]);
+  });
+  (1..fibs.len() as ui_t).for_each(|i| {
+    let (f_n, f_nsub1) = &mut mpz_s::fib2_ui(i);
+//    println!("{}: {}, {}", i, f_n, f_nsub1);
+    assert_eq!(format!("{}, {}", f_n, f_nsub1),
+      format!("{}, {}", fibs[i as usize], fibs[i as usize - 1]));
+  });
+}
+
+/// calc gcd test
+pub fn calc_gcd_test() {
+  let a = &mut mpz_s::init_set_ui(12); // 2 2 3
+  let b = &mut mpz_s::init_set_ui(30); // 2 3 5
+  assert_eq!(format!("{}", a.gcd(b)), "6");
+  let (g, u) = a.gcd_ui(90); // 2 3 3 5
+  assert_eq!(format!("{}", g), "6");
+  assert!(u == 6);
+  let (g, s, t) = &mut a.gcdext(b);
+  assert_eq!(format!("{}, {}, {}", g, s, t), "6, -2, 1"); // 6, 3, -1
+}
+
+/// calc lcm test
+pub fn calc_lcm_test() {
+  let a = &mut mpz_s::init_set_ui(6); // 2 3
+  let b = &mut mpz_s::init_set_ui(15); // 3 5
+  assert_eq!(format!("{}", a.lcm(b)), "30");
+  assert_eq!(format!("{}", a.lcm_ui(8)), "24"); // 2 2 2
 }
 
 /// calc mpf prec64 test
@@ -349,6 +392,13 @@ pub fn calc_mpf_prec64_test() {
     "0.66666666666666666667e+0"); // 2 / 3
   assert_eq!(format!("{}", f.set_ui(3).ui_div(2)),
     format!("{}", g.set_ui(2).div_ui(3))); // 2 / 3
+
+  // loss of digits
+  g.set_si(-2).div_ui(3).ui_div(1);
+  assert!(g.get_d() == -1.5);
+  assert!(g.get_ui() == 1);
+  assert!(g.get_si() == -1);
+  assert!(g.get_d_2exp() == (-0.75, 1)); // -0.75 * 2**1
 }
 
 /// calc mpq test
@@ -384,6 +434,25 @@ pub fn calc_mpq_test() {
   r.swap(q);
   assert_eq!(format!("{}", q), "2/8");
   assert_eq!(format!("{}", r), "2/3");
+
+  // mpz (to be operator)
+  assert_eq!(format!("{}", o.set(q).div(p)), "2/2");
+  assert!(o.cmp(r.set_ui(1, 1)) == 0); // true
+  assert_eq!(o.equal(r), false); // ***false*** 2/2 != 1/1
+  assert_eq!(o.equal(r.set_ui(2, 2)), true); // true
+
+  assert_eq!(format!("{}", o.set(q).mul(&mut p.inv())), "2/2");
+  assert!(o.cmp(r.set_ui(1, 1)) == 0); // true
+
+  assert_eq!(format!("{}", o.set(q).div_2exp(2)), "1/16"); // reduced fraction
+  assert!(o.cmp(r.set_ui(1, 16)) == 0); // true
+
+  assert_eq!(format!("{}", o.set(q).mul_2exp(2)), "2/2");
+  assert!(o.cmp(r.set_ui(1, 1)) == 0); // true
+
+  // loss of digits
+  let t = &mut r.set_si(-2, 3).inv();
+  assert!(t.get_d() == -1.5);
 }
 
 /// compare test

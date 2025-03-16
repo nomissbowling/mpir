@@ -43,6 +43,15 @@ extern "C" {
   /// __gmpz_get_str
   pub fn __gmpz_get_str(s: *mut u8, b: int_t, a: *const mpz_s) -> *mut u8;
 
+  /// __gmpz_get_d
+  pub fn __gmpz_get_d(a: *mut mpz_s) -> double_t;
+  /// __gmpz_get_ui
+  pub fn __gmpz_get_ui(a: *mut mpz_s) -> ui_t;
+  /// __gmpz_get_si
+  pub fn __gmpz_get_si(a: *mut mpz_s) -> si_t;
+  /// __gmpz_get_d_2exp
+  pub fn __gmpz_get_d_2exp(e: *mut si_t, a: *mut mpz_s) -> double_t;
+
   /// __gmpz_swap
   pub fn __gmpz_swap(a: *mut mpz_s, b: *mut mpz_s) -> ();
   /// __gmpz_realloc2
@@ -86,6 +95,24 @@ extern "C" {
   pub fn __gmpz_2fac_ui(c: *mut mpz_s, n: ui_t) -> ();
   /// __gmpz_mfac_uiui c = n! ** m
   pub fn __gmpz_mfac_uiui(c: *mut mpz_s, n: ui_t, m: ui_t) -> ();
+
+  /// __gmpz_fib_ui
+  pub fn __gmpz_fib_ui(f_n: *mut mpz_s, n: ui_t) -> ();
+  /// __gmpz_fib2_ui
+  pub fn __gmpz_fib2_ui(f_n: *mut mpz_s, f_nsub1: *mut mpz_s, n: ui_t) -> ();
+
+  /// __gmpz_gcd
+  pub fn __gmpz_gcd(g: *mut mpz_s, a: *mut mpz_s, b: *mut mpz_s) -> ();
+  /// __gmpz_gcd_ui return 0 when gcd does not fit to ui_t
+  pub fn __gmpz_gcd_ui(g: *mut mpz_s, a: *mut mpz_s, u: ui_t) -> ui_t;
+  /// __gmpz_gcdext s and t to coefficients satisfying a*s + b*t == gcd
+  pub fn __gmpz_gcdext(g: *mut mpz_s, s: *mut mpz_s, t: *mut mpz_s,
+    a: *mut mpz_s, b: *mut mpz_s) -> ();
+
+  /// __gmpz_lcm
+  pub fn __gmpz_lcm(c: *mut mpz_s, a: *mut mpz_s, b: *mut mpz_s) -> ();
+  /// __gmpz_lcm_ui
+  pub fn __gmpz_lcm_ui(c: *mut mpz_s, a: *mut mpz_s, u: ui_t) -> ();
 
   /// __gmpz_abs
   pub fn __gmpz_abs(c: *mut mpz_s, a: *mut mpz_s) -> ();
@@ -268,6 +295,15 @@ extern "C" {
   pub fn __gmpf_get_str(s: *mut u8,
     e: *mut mp_exp_t, b: int_t, d: mp_size_t, f: *const mpf_s) -> *mut u8;
 
+  /// __gmpf_get_d
+  pub fn __gmpf_get_d(f: *mut mpf_s) -> double_t;
+  /// __gmpf_get_ui
+  pub fn __gmpf_get_ui(f: *mut mpf_s) -> ui_t;
+  /// __gmpf_get_si
+  pub fn __gmpf_get_si(f: *mut mpf_s) -> si_t;
+  /// __gmpf_get_d_2exp
+  pub fn __gmpf_get_d_2exp(e: *mut si_t, f: *mut mpf_s) -> double_t;
+
   /// __gmpf_cmp
   pub fn __gmpf_cmp(f: *mut mpf_s, g: *mut mpf_s) -> int_t;
   /// __gmpf_cmp_d
@@ -366,6 +402,9 @@ extern "C" {
   pub fn __gmpq_set_str(q: *mut mpq_s, s: *const u8, b: int_t) -> ();
   /// __gmpq_get_str
   pub fn __gmpq_get_str(s: *mut u8, b: int_t, q: *const mpq_s) -> *mut u8;
+
+  /// __gmpq_get_d
+  pub fn __gmpq_get_d(q: *mut mpq_s) -> double_t;
 
   /// __gmpq_swap
   pub fn __gmpq_swap(q: *mut mpq_s, r: *mut mpq_s) -> ();

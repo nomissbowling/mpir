@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/mpir/0.1.9")]
+#![doc(html_root_url = "https://docs.rs/mpir/0.2.0")]
 //! partial Rust porting of mpir multiple precision library based on gmp mpfr
 //!
 //! # Requirements
@@ -29,6 +29,9 @@ mod tests {
   use super::minimum::{
     calc_mpz_test,
     calc_fact_test,
+    calc_fib_test,
+    calc_gcd_test,
+    calc_lcm_test,
     calc_mpf_prec64_test, // single thread
     calc_mpq_test,
     compare_test, // single thread
@@ -76,6 +79,24 @@ mod tests {
   #[test]
   fn test_calc_fact() {
     assert_eq!(calc_fact_test(), ());
+  }
+
+  /// with [-- --nocapture] or with [-- --show-output]
+  #[test]
+  fn test_calc_fib() {
+    assert_eq!(calc_fib_test(), ());
+  }
+
+  /// with [-- --nocapture] or with [-- --show-output]
+  #[test]
+  fn test_calc_gcd() {
+    assert_eq!(calc_gcd_test(), ());
+  }
+
+  /// with [-- --nocapture] or with [-- --show-output]
+  #[test]
+  fn test_calc_lcm() {
+    assert_eq!(calc_lcm_test(), ());
   }
 
   /// with [-- --nocapture] or with [-- --show-output]

@@ -129,6 +129,28 @@ impl __mpz_struct {
     mpz_get_str(None, b, self).expect("mpz fmtstr")
   }
 
+  /// get_d (loss of digits)
+  pub fn get_d(&mut self) -> double_t {
+    mpz_get_d(self)
+  }
+
+  /// get_ui (loss of digits)
+  pub fn get_ui(&mut self) -> ui_t {
+    mpz_get_ui(self)
+  }
+
+  /// get_si (loss of digits)
+  pub fn get_si(&mut self) -> si_t {
+    mpz_get_si(self)
+  }
+
+  /// get_d_2exp (loss of digits)
+  pub fn get_d_2exp(&mut self) -> (double_t, si_t) {
+    let mut e: si_t = 0;
+    let d = mpz_get_d_2exp(&mut e, self);
+    (d, e)
+  }
+
   /// swap
   pub fn swap(&mut self, b: mpz_t) -> &mut Self {
     mpz_swap(self, b);
@@ -239,6 +261,60 @@ impl __mpz_struct {
   pub fn mfac_uiui(n: ui_t, m: ui_t) -> Self {
     let mut t = mpz_s::init_set_ui(1);
     mpz_mfac_uiui(&mut t, n, m);
+    t
+  }
+
+  /// fib_ui create new instance
+  pub fn fib_ui(n: ui_t) -> Self {
+    let mut f_n = mpz_s::init_set_ui(1);
+    mpz_fib_ui(&mut f_n, n);
+    f_n
+  }
+
+  /// fib2_ui create new instance (f_n, f_nsub1)
+  pub fn fib2_ui(n: ui_t) -> (Self, Self) {
+    let mut f_n = mpz_s::init_set_ui(1);
+    let mut f_nsub1 = mpz_s::init_set_ui(1);
+    mpz_fib2_ui(&mut f_n, &mut f_nsub1, n);
+    (f_n, f_nsub1)
+  }
+
+  /// gcd create new instance
+  pub fn gcd(&mut self, b: mpz_t) -> Self {
+    let mut gcd = mpz_s::init_set_ui(1);
+    mpz_gcd(&mut gcd, self, b);
+    gcd
+  }
+
+  /// gcd_ui create new instance (gcd, gcd: ui_t)
+  /// return 0 when gcd does not fit to ui_t
+  pub fn gcd_ui(&mut self, u: ui_t) -> (Self, ui_t) {
+    let mut gcd = mpz_s::init_set_ui(1);
+    let u = mpz_gcd_ui(&mut gcd, self, u);
+    (gcd, u)
+  }
+
+  /// gcdext create new instance (gcd, s, t)
+  /// s and t to coefficients satisfying a*s + b*t == gcd
+  pub fn gcdext(&mut self, b: mpz_t) -> (Self, Self, Self) {
+    let mut gcd = mpz_s::init_set_ui(1);
+    let mut s = mpz_s::init_set_ui(1);
+    let mut t = mpz_s::init_set_ui(1);
+    mpz_gcdext(&mut gcd, &mut s, &mut t, self, b);
+    (gcd, s, t)
+  }
+
+  /// lcm create new instance
+  pub fn lcm(&mut self, b: mpz_t) -> Self {
+    let mut t = mpz_s::init_set_ui(1);
+    mpz_lcm(&mut t, self, b);
+    t
+  }
+
+  /// lcm_ui create new instance
+  pub fn lcm_ui(&mut self, u: ui_t) -> Self {
+    let mut t = mpz_s::init_set_ui(1);
+    mpz_lcm_ui(&mut t, self, u);
     t
   }
 
@@ -792,6 +868,26 @@ pub fn mpz_get_str<'a>(s: Option<&mut String>, b: int_t, a: &'a mpz_s) ->
   }
 }
 
+/// mpz_get_d
+pub fn mpz_get_d(a: mpz_t) -> double_t {
+  unsafe { __gmpz_get_d(a) }
+}
+
+/// mpz_get_ui
+pub fn mpz_get_ui(a: mpz_t) -> ui_t {
+  unsafe { __gmpz_get_ui(a) }
+}
+
+/// mpz_get_si
+pub fn mpz_get_si(a: mpz_t) -> si_t {
+  unsafe { __gmpz_get_si(a) }
+}
+
+/// mpz_get_d_2exp
+pub fn mpz_get_d_2exp(e: &mut si_t, a: mpz_t) -> double_t {
+  unsafe { __gmpz_get_d_2exp(e, a) }
+}
+
 /// mpz_swap
 pub fn mpz_swap(a: mpz_t, b: mpz_t) -> () {
   unsafe { __gmpz_swap(a, b) }
@@ -887,6 +983,41 @@ pub fn mpz_2fac_ui(c: mpz_t, n: ui_t) -> () {
 /// mpz_mfac_uiui c = n! ** m
 pub fn mpz_mfac_uiui(c: mpz_t, n: ui_t, m: ui_t) -> () {
   unsafe { __gmpz_mfac_uiui(c, n, m) }
+}
+
+/// mpz_fib_ui
+pub fn mpz_fib_ui(f_n: mpz_t, n: ui_t) -> () {
+  unsafe { __gmpz_fib_ui(f_n, n) }
+}
+
+/// mpz_fib2_ui
+pub fn mpz_fib2_ui(f_n: mpz_t, f_nsub1: mpz_t, n: ui_t) -> () {
+  unsafe { __gmpz_fib2_ui(f_n, f_nsub1, n) }
+}
+
+/// mpz_gcd
+pub fn mpz_gcd(g: mpz_t, a: mpz_t, b: mpz_t) -> () {
+  unsafe { __gmpz_gcd(g, a, b) }
+}
+
+/// mpz_gcd_ui return 0 when gcd does not fit to ui_t
+pub fn mpz_gcd_ui(g: mpz_t, a: mpz_t, u: ui_t) -> ui_t {
+  unsafe { __gmpz_gcd_ui(g, a, u) }
+}
+
+/// mpz_gcdext s and t to coefficients satisfying a*s + b*t == gcd
+pub fn mpz_gcdext(g: mpz_t, s: mpz_t, t: mpz_t, a: mpz_t, b: mpz_t) -> () {
+  unsafe { __gmpz_gcdext(g, s, t, a, b) }
+}
+
+/// mpz_lcm
+pub fn mpz_lcm(c: mpz_t, a: mpz_t, b: mpz_t) -> () {
+  unsafe { __gmpz_lcm(c, a, b) }
+}
+
+/// mpz_lcm_ui
+pub fn mpz_lcm_ui(c: mpz_t, a: mpz_t, u: ui_t) -> () {
+  unsafe { __gmpz_lcm_ui(c, a, u) }
 }
 
 /// mpz_abs

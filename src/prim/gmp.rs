@@ -1,7 +1,7 @@
 //! gmp
 //!
 
-use crate::prim::{typ::*, mpz::*, mpf::*, mpq::*};
+use crate::prim::{typ::*, mpz::*, mpf::*, mpq::*, randstate::*};
 
 // #[link(name="libgmp-10", kind="static")]
 // #[link(name="libgmp-10", kind="dylib")]
@@ -259,6 +259,66 @@ extern "C" {
   /// __gmpz_ui_pow_ui c = a**n
   pub fn __gmpz_ui_pow_ui(c: *mut mpz_s, a: ui_t, n: ui_t) -> ();
 
+  /// __gmpz_sizeinbase
+  pub fn __gmpz_sizeinbase(a: *mut mpz_s, base: int_t) -> mp_size_t;
+/*
+  /// __gmpz_even_p
+  pub fn __gmpz_even_p(a: *mut mpz_s) -> int_t;
+  /// __gmpz_odd_p
+  pub fn __gmpz_odd_p(a: *mut mpz_s) -> int_t;
+*/
+  /// __gmpz_fits_ulong_p
+  pub fn __gmpz_fits_ulong_p(a: *mut mpz_s) -> int_t;
+  /// __gmpz_fits_slong_p
+  pub fn __gmpz_fits_slong_p(a: *mut mpz_s) -> int_t;
+  /// __gmpz_fits_uint_p
+  pub fn __gmpz_fits_uint_p(a: *mut mpz_s) -> int_t;
+  /// __gmpz_fits_sint_p
+  pub fn __gmpz_fits_sint_p(a: *mut mpz_s) -> int_t;
+  /// __gmpz_fits_ushort_p
+  pub fn __gmpz_fits_ushort_p(a: *mut mpz_s) -> int_t;
+  /// __gmpz_fits_sshort_p
+  pub fn __gmpz_fits_sshort_p(a: *mut mpz_s) -> int_t;
+
+  /// __gmpz_urandomb
+  pub fn __gmpz_urandomb(c: *mut mpz_s,
+    r: *mut randstate_s, nbits: mp_bitcnt_t) -> ();
+  /// __gmpz_urandomm
+  pub fn __gmpz_urandomm(c: *mut mpz_s,
+    r: *mut randstate_s, n: *mut mpz_s) -> ();
+  /// __gmpz_rrandomb
+  pub fn __gmpz_rrandomb(c: *mut mpz_s,
+    r: *mut randstate_s, nbits: mp_bitcnt_t) -> ();
+  /// __gmpz_random ***(obsoleted) use mpz_urandomb or mpz_urandomm instead***
+  pub fn __gmpz_random(c: *mut mpz_s, max_size: mp_size_t) -> ();
+  /// __gmpz_random2
+  pub fn __gmpz_random2(c: *mut mpz_s, max_size: mp_size_t) -> ();
+
+  /// __gmpz_and
+  pub fn __gmpz_and(c: *mut mpz_s, a: *mut mpz_s, b: *mut mpz_s) -> ();
+  /// __gmpz_ior
+  pub fn __gmpz_ior(c: *mut mpz_s, a: *mut mpz_s, b: *mut mpz_s) -> ();
+  /// __gmpz_xor
+  pub fn __gmpz_xor(c: *mut mpz_s, a: *mut mpz_s, b: *mut mpz_s) -> ();
+  /// __gmpz_com
+  pub fn __gmpz_com(c: *mut mpz_s, a: *mut mpz_s) -> ();
+  /// __gmpz_popcount
+  pub fn __gmpz_popcount(a: *mut mpz_s) -> mp_bitcnt_t;
+  /// __gmpz_hamdist hamming distance between a and b (both sgn must be same)
+  pub fn __gmpz_hamdist(a: *mut mpz_s, b: *mut mpz_s) -> mp_bitcnt_t;
+  /// __gmpz_scan0 to msb
+  pub fn __gmpz_scan0(a: *mut mpz_s, s: mp_bitcnt_t) -> mp_bitcnt_t;
+  /// __gmpz_scan1 to msb
+  pub fn __gmpz_scan1(a: *mut mpz_s, s: mp_bitcnt_t) -> mp_bitcnt_t;
+  /// __gmpz_clrbit
+  pub fn __gmpz_clrbit(c: *mut mpz_s, n: mp_bitcnt_t) -> ();
+  /// __gmpz_setbit
+  pub fn __gmpz_setbit(c: *mut mpz_s, n: mp_bitcnt_t) -> ();
+  /// __gmpz_combit
+  pub fn __gmpz_combit(c: *mut mpz_s, n: mp_bitcnt_t) -> ();
+  /// __gmpz_tstbit
+  pub fn __gmpz_tstbit(a: *mut mpz_s, n: mp_bitcnt_t) -> int_t;
+
   /// __gmpf_clears *** CAUTION *** (assume just 1 fake parameters after first)
   pub fn __gmpf_clears(f: *mut mpf_s, g: *mut mpf_s) -> ();
   /// __gmpf_clear
@@ -363,6 +423,34 @@ extern "C" {
   /// __gmpf_pow_ui g = f**n
   pub fn __gmpf_pow_ui(g: *mut mpf_s, f: *mut mpf_s, n: ui_t) -> ();
 
+  /// __gmpf_ceil
+  pub fn __gmpf_ceil(g: *mut mpf_s, f: *mut mpf_s) -> ();
+  /// __gmpf_floor
+  pub fn __gmpf_floor(g: *mut mpf_s, f: *mut mpf_s) -> ();
+  /// __gmpf_trunc
+  pub fn __gmpf_trunc(g: *mut mpf_s, f: *mut mpf_s) -> ();
+
+  /// __gmpf_integer_p
+  pub fn __gmpf_integer_p(f: *mut mpf_s) -> int_t;
+  /// __gmpf_fits_ulong_p
+  pub fn __gmpf_fits_ulong_p(f: *mut mpf_s) -> int_t;
+  /// __gmpf_fits_slong_p
+  pub fn __gmpf_fits_slong_p(f: *mut mpf_s) -> int_t;
+  /// __gmpf_fits_uint_p
+  pub fn __gmpf_fits_uint_p(f: *mut mpf_s) -> int_t;
+  /// __gmpf_fits_sint_p
+  pub fn __gmpf_fits_sint_p(f: *mut mpf_s) -> int_t;
+  /// __gmpf_fits_ushort_p
+  pub fn __gmpf_fits_ushort_p(f: *mut mpf_s) -> int_t;
+  /// __gmpf_fits_sshort_p
+  pub fn __gmpf_fits_sshort_p(f: *mut mpf_s) -> int_t;
+
+  /// __gmpf_urandomb (must init random state before)
+  pub fn __gmpf_urandomb(g: *mut mpf_s, state: *mut randstate_s,
+    nbits: mp_bitcnt_t) -> ();
+  /// __gmpf_random2
+  pub fn __gmpf_random2(g: *mut mpf_s, max_size: mp_size_t, e: mp_exp_t) -> ();
+
   /// __gmpf_get_default_prec
   pub fn __gmpf_get_default_prec() -> mp_bitcnt_t;
   /// __gmpf_get_prec
@@ -445,6 +533,33 @@ extern "C" {
   pub fn __gmpq_div(p: *mut mpq_s, q: *mut mpq_s, r: *mut mpq_s) -> ();
   /// __gmpq_div_2exp p = q / 2**n
   pub fn __gmpq_div_2exp(p: *mut mpq_s, q: *mut mpq_s, n: mp_bitcnt_t) -> ();
+
+  /// __gmp_randclear
+  pub fn __gmp_randclear(r: *mut randstate_s) -> ();
+  /// __gmp_randinit ***more than 1 args (obsoleted)***
+  pub fn __gmp_randinit(r: *mut randstate_s, a: gmp_randalg_t, sz: ui_t) -> ();
+  /// __gmp_randinit_set copy
+  pub fn __gmp_randinit_set(r: *mut randstate_s, s: *mut randstate_s) -> ();
+  /// __gmp_randinit_default
+  pub fn __gmp_randinit_default(r: *mut randstate_s) -> ();
+  /// __gmp_randinit_mt
+  pub fn __gmp_randinit_mt(r: *mut randstate_s) -> ();
+  /// __gmp_randinit_lc_2exp x = (a*x + c) mod 2**m2e
+  pub fn __gmp_randinit_lc_2exp(r: *mut randstate_s,
+    a: *mut mpz_s, c: ui_t, m2e: mp_bitcnt_t) -> ();
+  /// __gmp_randinit_lc_2exp_size
+  pub fn __gmp_randinit_lc_2exp_size(r: *mut randstate_s,
+    sz: mp_bitcnt_t) -> int_t;
+
+  /// __gmp_randseed
+  pub fn __gmp_randseed(r: *mut randstate_s, seed: *mut mpz_s) -> ();
+  /// __gmp_randseed_ui
+  pub fn __gmp_randseed_ui(r: *mut randstate_s, seed: ui_t) -> ();
+
+  /// __gmp_urandomb_ui
+  pub fn __gmp_urandomb_ui(r: *mut randstate_s, nbits: ui_t) -> ui_t;
+  /// __gmp_urandomm_ui
+  pub fn __gmp_urandomm_ui(r: *mut randstate_s, n: ui_t) -> ui_t;
 
   /// ___gmp_get_memory_functions
   pub fn __gmp_get_memory_functions(

@@ -3,7 +3,7 @@
 
 use std::collections::HashMap;
 use std::fs;
-use std::io::Read;
+use std::io::{Read, Write, BufWriter};
 
 use crate::*;
 
@@ -46,6 +46,12 @@ pub fn load_digits(fname: &str, digits: mp_size_t, round: bool) -> String {
   }
   let sgn = String::from_utf8(sgn.map_or(vec![], |u| vec![u])).expect("u8");
   format!("{}{}", sgn, String::from_utf8(b).expect("utf8"))
+}
+
+/// fo
+/// pub fn fo&lt;W: Write&gt;(w: &amp;mut BufWriter&lt;W&gt;, o: String)
+pub fn fo(w: &mut dyn Write, o: String) -> () {
+  writeln!(w, "{}", o).expect("write");
 }
 
 /// calc mpz test
@@ -399,6 +405,229 @@ pub fn calc_mpf_prec64_test() {
   assert!(g.get_ui() == 1);
   assert!(g.get_si() == -1);
   assert!(g.get_d_2exp() == (-0.75, 1)); // -0.75 * 2**1
+}
+
+/// calc rand test
+/// expected on the single thread for mpf_set_default_prec
+pub fn calc_rand_test() {
+  mpf_set_default_prec(64); // 64 bits default
+
+  let fo_log = "resources/fo_log.dat";
+  let w = &mut BufWriter::new(fs::File::create(fo_log).expect("create file"));
+//  let w = &mut std::io::stdout();
+
+  // mpf (to be operator)
+  let n = 4;
+  let b = 64;
+  let u: ui_t = 37;
+  let a = &mut mpz_s::init_set_ui(127*65535 + 32767); // 127*65535 + 32767
+  let lc = &mut randstate_s::init_lc_2exp(a, 32767, 64); // a, 257, 63
+  fo(w, format!("seed urandomb lc: {:?}", lc.seed(a.set_ui(u))));
+  (0..n).for_each(|i| {
+    let f = &mut mpf_s::urandomb(lc, b);
+    fo(w, format!("{} mpf_s::urandomb lc: {} {:?}", i, f, lc));
+  });
+
+  let mt = &mut randstate_s::init_mt();
+  fo(w, format!("seed urandomb mt: {:?}", mt.seed_ui(u)));
+  (0..n).for_each(|i| {
+    let f = &mut mpf_s::urandomb(mt, b);
+    fo(w, format!("{} mpf_s::urandomb mt: {} {:?}", i, f, mt));
+  });
+
+  (0..n).for_each(|i| {
+    let f = &mut mpf_s::random2(4, 1);
+    fo(w, format!("{} mpf_s::random2: {}", i, f));
+  });
+
+  // mpz (to be operator)
+  (0..n).for_each(|i| {
+    let c = &mut mpz_s::urandomb(lc, 16);
+    fo(w, format!("{} mpz_s::urandomb lc: {} {:?}", i, c, lc));
+    lc.seed(c.mul_ui(65536));
+  });
+
+  (0..n).for_each(|i| {
+    let c = &mut mpz_s::urandomb(mt, 16);
+    fo(w, format!("{} mpz_s::urandomb mt: {} {:?}", i, c, mt));
+  });
+
+  (0..n).for_each(|i| {
+    let c = &mut mpz_s::urandomm(lc, a.set_ui(65536));
+    fo(w, format!("{} mpz_s::urandomm lc: {} {:?}", i, c, lc));
+    lc.seed(c.mul_ui(65536));
+  });
+
+  (0..n).for_each(|i| {
+    let c = &mut mpz_s::urandomm(mt, a.set_ui(65536));
+    fo(w, format!("{} mpz_s::urandomm mt: {} {:?}", i, c, mt));
+  });
+
+  (0..n).for_each(|i| {
+    let c = &mut mpz_s::rrandomb(lc, 16);
+    fo(w, format!("{} mpz_s::rrandomb lc: {} {:?}", i, c, lc));
+    lc.seed(c.mul_ui(65536));
+  });
+
+  (0..n).for_each(|i| {
+    let c = &mut mpz_s::rrandomb(mt, 16);
+    fo(w, format!("{} mpz_s::rrandomb mt: {} {:?}", i, c, mt));
+  });
+
+  (0..n).for_each(|i| {
+    let c = &mut mpz_s::random(2);
+    fo(w, format!("{} mpz_s::random: {}", i, c));
+  });
+
+  (0..n).for_each(|i| {
+    let c = &mut mpz_s::random2(2);
+    fo(w, format!("{} mpz_s::random2: {}", i, c));
+  });
+
+  // randstate (to be operator)
+  (0..n).for_each(|i| {
+    let u = randstate_s::urandomb_ui(lc, 16);
+    fo(w, format!("{} randstate_s::urandomb lc: {} {:?}", i, u, lc));
+    lc.seed_ui(u * 65536);
+  });
+
+  (0..n).for_each(|i| {
+    let u = randstate_s::urandomb_ui(mt, 16);
+    fo(w, format!("{} randstate_s::urandomb mt: {} {:?}", i, u, mt));
+  });
+
+  (0..n).for_each(|i| {
+    let u = randstate_s::urandomm_ui(lc, 65536);
+    fo(w, format!("{} randstate_s::urandomm lc: {} {:?}", i, u, lc));
+    lc.seed_ui(u * 65536);
+  });
+
+  (0..n).for_each(|i| {
+    let u = randstate_s::urandomm_ui(mt, 65536);
+    fo(w, format!("{} randstate_s::urandomm mt: {} {:?}", i, u, mt));
+  });
+}
+
+/// calc fit test
+/// expected on the single thread for mpf_set_default_prec
+pub fn calc_fit_test() {
+  mpf_set_default_prec(64); // 64 bits default
+
+  let h: ui_t = 65536 * 16384; // quad half of u32 max
+
+  let a = &mut mpz_s::init_set_si(3);
+  a.add_ui(h).add_ui(h); // expand size
+  assert!(a.sizeinbase(10) >= 1); // 10
+  a.sub_ui(h).sub_ui(h);
+  assert!(a.even_p() == false);
+  assert!(a.odd_p() == true);
+  assert!(a.fits_ulong_p() == true);
+  assert!(a.fits_uint_p() == true);
+  assert!(a.fits_ushort_p() == true);
+  assert!(a.fits_slong_p() == true);
+  assert!(a.fits_sint_p() == true);
+  assert!(a.fits_sshort_p() == true);
+
+  let b = &mut mpz_s::init_set_si(-4);
+  b.sub_ui(h).sub_ui(h); // expand size
+  assert!(b.sizeinbase(10) >= 1); // 10
+  b.add_ui(h).add_ui(h);
+  assert!(b.even_p() == true);
+  assert!(b.odd_p() == false);
+  assert!(b.fits_ulong_p() == false);
+  assert!(b.fits_uint_p() == false);
+  assert!(b.fits_ushort_p() == false);
+  assert!(b.fits_slong_p() == true);
+  assert!(b.fits_sint_p() == true);
+  assert!(b.fits_sshort_p() == true);
+
+  let f = &mut mpf_s::init_set_si(11);
+  f.div_ui(10);
+  assert_eq!(format!("{}", f.ceil()), "0.2e+1");
+  assert_eq!(format!("{}", f.floor()), "0.1e+1");
+  assert_eq!(format!("{}", f.trunc()), "0.1e+1");
+
+  assert!(f.integer_p() == false);
+  assert!(f.fits_ulong_p() == true); // ***true truncated***
+  assert!(f.fits_uint_p() == true); // ***true truncated***
+  assert!(f.fits_ushort_p() == true); // ***true truncated***
+  assert!(f.fits_slong_p() == true); // ***true truncated***
+  assert!(f.fits_sint_p() == true); // ***true truncated***
+  assert!(f.fits_sshort_p() == true); // ***true truncated***
+
+  let g = &mut mpf_s::init_set_si(-11);
+  g.div_ui(10);
+  assert_eq!(format!("{}", g.ceil()), "-0.1e+1");
+  assert_eq!(format!("{}", g.floor()), "-0.2e+1");
+  assert_eq!(format!("{}", g.trunc()), "-0.1e+1");
+
+  assert!(g.integer_p() == false);
+  assert!(g.fits_ulong_p() == false);
+  assert!(g.fits_uint_p() == false);
+  assert!(g.fits_ushort_p() == false);
+  assert!(g.fits_slong_p() == true); // ***true truncated***
+  assert!(g.fits_sint_p() == true); // ***true truncated***
+  assert!(g.fits_sshort_p() == true); // ***true truncated***
+
+  let p = &mut mpf_s::init_set_d(3.0);
+  assert!(p.integer_p() == true);
+  assert!(p.fits_ulong_p() == true);
+  assert!(p.fits_uint_p() == true);
+  assert!(p.fits_ushort_p() == true);
+  assert!(p.fits_slong_p() == true);
+  assert!(p.fits_sint_p() == true);
+  assert!(p.fits_sshort_p() == true);
+
+  let n = &mut mpf_s::init_set_d(-3.0);
+  assert!(n.integer_p() == true);
+  assert!(n.fits_ulong_p() == false);
+  assert!(n.fits_uint_p() == false);
+  assert!(n.fits_ushort_p() == false);
+  assert!(n.fits_slong_p() == true);
+  assert!(n.fits_sint_p() == true);
+  assert!(n.fits_sshort_p() == true);
+}
+
+/// calc logical test
+pub fn calc_logical_test() {
+  let a = &mut mpz_s::init_set_ui(10); // 0...1010
+  let b = &mut mpz_s::init_set_ui(6); // 0...0110
+  let c = &mut mpz_s::init_set_ui(12); // 0...1100
+  let e = &mut mpz_s::init_set_ui(14); // 0...1110
+  let f = &mut mpz_s::init_set_ui(15); // 0...1111
+
+  let d = &mut a.and(b);
+  assert!(d.cmp(&mut mpz_s::init_set_ui(2)) == 0);
+  let d = &mut a.ior(b);
+  assert!(d.cmp(e) == 0);
+  let d = &mut a.xor(b);
+  assert!(d.cmp(c) == 0);
+  let d = &mut d.com();
+  assert!(d.cmp(&mut mpz_s::init_set_si(-13)) == 0); // 1...11110011
+  assert!(f.cmp(&mut mpz_s::init_set_si(15)) == 0);
+  let d = &mut f.com();
+  assert!(d.cmp(&mut mpz_s::init_set_si(-16)) == 0); // 1...11110000
+
+  assert!(d.tstbit(31) == true);
+  assert!(d.combit(4).cmp(&mut mpz_s::init_set_si(-32)) == 0); // 1...11100000
+  assert!(d.clrbit(5).cmp(&mut mpz_s::init_set_si(-64)) == 0); // 1...11000000
+  assert!(d.setbit(0).cmp(&mut mpz_s::init_set_si(-63)) == 0); // 1...11000001
+
+  assert_eq!(d.scan0(0), 1);
+  assert_eq!(d.scan1(0), 0);
+  assert_eq!(d.scan1(1), 6);
+  assert_eq!(d.scan0(5), 5);
+  assert_eq!(d.scan0(6), 4294967295); // when not found mp_bitcnt_t max
+
+  assert_eq!(c.popcount(), 2);
+  assert_eq!(e.popcount(), 3);
+  assert_eq!(d.popcount(), 4294967295); // infinite when d<0 (mp_bitcnt_t max)
+
+  assert_eq!(c.hamdist(e), 1);
+  assert_eq!(c.hamdist(f), 2);
+  assert_eq!(c.hamdist(a), 2);
+  assert_eq!(c.hamdist(b), 2);
+  assert_eq!(d.hamdist(c), 4294967295); // neg pos mp_bitcnt_t max == 2**32 - 1
 }
 
 /// calc mpq test

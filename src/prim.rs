@@ -5,9 +5,10 @@ pub mod typ;
 pub mod mpz;
 pub mod mpf;
 pub mod mpq;
+pub mod randstate;
 pub mod gmp;
 
-use crate::prim::{typ::*, gmp::*}; // mpz::*, mpf::*, mpq::*
+use crate::prim::{typ::*, gmp::*}; // mpz::*, mpf::*, mpq::*, randstate::*
 
 /// trait SNew
 pub trait SNew {

@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/mpir/0.2.0")]
+#![doc(html_root_url = "https://docs.rs/mpir/0.2.1")]
 //! partial Rust porting of mpir multiple precision library based on gmp mpfr
 //!
 //! # Requirements
@@ -19,7 +19,8 @@
 //!
 
 pub mod prim;
-pub use crate::prim::{*, typ::*, mpz::*, mpf::*, mpq::*}; // gmp::*
+pub use crate::prim::{*, typ::*, mpz::*, mpf::*, mpq::*, randstate::*};
+// pub use crate::prim::gmp::*;
 
 pub mod minimum;
 
@@ -33,6 +34,9 @@ mod tests {
     calc_gcd_test,
     calc_lcm_test,
     calc_mpf_prec64_test, // single thread
+    calc_rand_test, // single thread
+    calc_fit_test, // single thread
+    calc_logical_test,
     calc_mpq_test,
     compare_test, // single thread
     significant_digits_test, // single thread
@@ -104,6 +108,26 @@ mod tests {
   #[serial] // expected on the single thread for mpf_set_default_prec
   fn test_calc_mpf_prec64() {
     assert_eq!(calc_mpf_prec64_test(), ());
+  }
+
+  /// with [-- --nocapture] or with [-- --show-output]
+  #[test]
+  #[serial] // expected on the single thread for mpf_set_default_prec
+  fn test_calc_rand() {
+    assert_eq!(calc_rand_test(), ());
+  }
+
+  /// with [-- --nocapture] or with [-- --show-output]
+  #[test]
+  #[serial] // expected on the single thread for mpf_set_default_prec
+  fn test_calc_fit() {
+    assert_eq!(calc_fit_test(), ());
+  }
+
+  /// with [-- --nocapture] or with [-- --show-output]
+  #[test]
+  fn test_calc_logical() {
+    assert_eq!(calc_logical_test(), ());
   }
 
   /// with [-- --nocapture] or with [-- --show-output]

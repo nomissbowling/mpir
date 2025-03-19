@@ -5,7 +5,7 @@ use std::fmt;
 use std::error::Error;
 use std::collections::HashMap;
 
-use crate::prim::{*, typ::*, gmp::*}; // mpf::*, mpq::*
+use crate::prim::{*, typ::*, randstate::*, gmp::*}; // mpf::*, mpq::*
 
 /// __mpz_struct
 // not use #[derive(Clone)]
@@ -701,6 +701,157 @@ impl __mpz_struct {
     t
   }
 
+  /// sizeinbase
+  pub fn sizeinbase(&mut self, base: int_t) -> mp_size_t {
+    mpz_sizeinbase(self, base)
+  }
+
+  /// even_p
+  pub fn even_p(&mut self) -> bool {
+    mpz_even_p(self)
+  }
+
+  /// odd_p
+  pub fn odd_p(&mut self) -> bool {
+    mpz_odd_p(self)
+  }
+
+  /// fits_ulong_p
+  pub fn fits_ulong_p(&mut self) -> bool {
+    mpz_fits_ulong_p(self)
+  }
+
+  /// fits_slong_p
+  pub fn fits_slong_p(&mut self) -> bool {
+    mpz_fits_slong_p(self)
+  }
+
+  /// fits_uint_p
+  pub fn fits_uint_p(&mut self) -> bool {
+    mpz_fits_uint_p(self)
+  }
+
+  /// fits_sint_p
+  pub fn fits_sint_p(&mut self) -> bool {
+    mpz_fits_sint_p(self)
+  }
+
+  /// fits_ushort_p
+  pub fn fits_ushort_p(&mut self) -> bool {
+    mpz_fits_ushort_p(self)
+  }
+
+  /// fits_sshort_p
+  pub fn fits_sshort_p(&mut self) -> bool {
+    mpz_fits_sshort_p(self)
+  }
+
+  /// urandomb create new instance
+  pub fn urandomb(r: randstate_t, nbits: mp_bitcnt_t) -> Self {
+    let mut t = mpz_s::init_set_ui(0);
+    mpz_urandomb(&mut t, r, nbits);
+    t
+  }
+
+  /// urandomm create new instance
+  pub fn urandomm(r: randstate_t, n: mpz_t) -> Self {
+    let mut t = mpz_s::init_set_ui(0);
+    mpz_urandomm(&mut t, r, n);
+    t
+  }
+
+  /// rrandomb create new instance
+  pub fn rrandomb(r: randstate_t, nbits: mp_bitcnt_t) -> Self {
+    let mut t = mpz_s::init_set_ui(0);
+    mpz_rrandomb(&mut t, r, nbits);
+    t
+  }
+
+  /// random create new instance ***(obsoleted) urandomb or urandomm instead***
+  pub fn random(max_size: mp_size_t) -> Self {
+    let mut t = mpz_s::init_set_ui(0);
+    mpz_random(&mut t, max_size);
+    t
+  }
+
+  /// random2 create new instance
+  pub fn random2(max_size: mp_size_t) -> Self {
+    let mut t = mpz_s::init_set_ui(0);
+    mpz_random2(&mut t, max_size);
+    t
+  }
+
+  /// and create new instance
+  pub fn and(&mut self, b: mpz_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_and(&mut t, self, b);
+    t
+  }
+
+  /// ior create new instance
+  pub fn ior(&mut self, b: mpz_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_ior(&mut t, self, b);
+    t
+  }
+
+  /// xor create new instance
+  pub fn xor(&mut self, b: mpz_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_xor(&mut t, self, b);
+    t
+  }
+
+  /// com create new instance
+  pub fn com(&mut self) -> Self {
+    let mut t = mpz_s::init();
+    mpz_com(&mut t, self);
+    t
+  }
+
+  /// popcount
+  pub fn popcount(&mut self) -> mp_bitcnt_t {
+    mpz_popcount(self)
+  }
+
+  /// hamdist hamming distance between a and b (both sgn must be same)
+  pub fn hamdist(&mut self, b: mpz_t) -> mp_bitcnt_t {
+    mpz_hamdist(self, b)
+  }
+
+  /// scan0 to msb
+  pub fn scan0(&mut self, s: mp_bitcnt_t) -> mp_bitcnt_t {
+    mpz_scan0(self, s)
+  }
+
+  /// scan1 to msb
+  pub fn scan1(&mut self, s: mp_bitcnt_t) -> mp_bitcnt_t {
+    mpz_scan1(self, s)
+  }
+
+  /// clrbit
+  pub fn clrbit(&mut self, n: mp_bitcnt_t) -> &mut Self {
+    mpz_clrbit(self, n);
+    self
+  }
+
+  /// setbit
+  pub fn setbit(&mut self, n: mp_bitcnt_t) -> &mut Self {
+    mpz_setbit(self, n);
+    self
+  }
+
+  /// combit
+  pub fn combit(&mut self, n: mp_bitcnt_t) -> &mut Self {
+    mpz_combit(self, n);
+    self
+  }
+
+  /// tstbit
+  pub fn tstbit(&mut self, n: mp_bitcnt_t) -> bool {
+    mpz_tstbit(self, n)
+  }
+
   /// fact create new instance (slow without cache)
   pub fn fact(n: ui_t) -> Self {
     let mut t = mpz_s::init_set_ui(1);
@@ -1304,4 +1455,142 @@ pub fn mpz_pow_ui(c: mpz_t, a: mpz_t, n: ui_t) -> () {
 /// mpz_ui_pow_ui c = a**n
 pub fn mpz_ui_pow_ui(c: mpz_t, a: ui_t, n: ui_t) -> () {
   unsafe { __gmpz_ui_pow_ui(c, a, n) }
+}
+
+/// mpz_sizeinbase
+pub fn mpz_sizeinbase(a: mpz_t, base: int_t) -> mp_size_t {
+  unsafe { __gmpz_sizeinbase(a, base) }
+}
+
+/// mpz_even_p
+pub fn mpz_even_p(a: mpz_t) -> bool {
+/*
+  unsafe { __gmpz_even_p(a) != 0 }
+*/
+  !mpz_odd_p(a)
+}
+
+/// mpz_odd_p
+pub fn mpz_odd_p(a: mpz_t) -> bool {
+/*
+  unsafe { __gmpz_odd_p(a) != 0 }
+*/
+unsafe {
+  a._mp_size != 0 && (1 & std::slice::from_raw_parts(a._mp_d, 1)[0]) != 0
+}
+}
+
+/// mpz_fits_ulong_p
+pub fn mpz_fits_ulong_p(a: mpz_t) -> bool {
+  unsafe { __gmpz_fits_ulong_p(a) != 0 }
+}
+
+/// mpz_fits_slong_p
+pub fn mpz_fits_slong_p(a: mpz_t) -> bool {
+  unsafe { __gmpz_fits_slong_p(a) != 0 }
+}
+
+/// mpz_fits_uint_p
+pub fn mpz_fits_uint_p(a: mpz_t) -> bool {
+  unsafe { __gmpz_fits_uint_p(a) != 0 }
+}
+
+/// mpz_fits_sint_p
+pub fn mpz_fits_sint_p(a: mpz_t) -> bool {
+  unsafe { __gmpz_fits_sint_p(a) != 0 }
+}
+
+/// mpz_fits_ushort_p
+pub fn mpz_fits_ushort_p(a: mpz_t) -> bool {
+  unsafe { __gmpz_fits_ushort_p(a) != 0 }
+}
+
+/// mpz_fits_sshort_p
+pub fn mpz_fits_sshort_p(a: mpz_t) -> bool {
+  unsafe { __gmpz_fits_sshort_p(a) != 0 }
+}
+
+/// mpz_urandomb
+pub fn mpz_urandomb(c: mpz_t, r: randstate_t, nbits: mp_bitcnt_t) -> () {
+  unsafe { __gmpz_urandomb(c, r, nbits) }
+}
+
+/// mpz_urandomm
+pub fn mpz_urandomm(c: mpz_t, r: randstate_t, n: mpz_t) -> () {
+  unsafe { __gmpz_urandomm(c, r, n) }
+}
+
+/// mpz_rrandomb
+pub fn mpz_rrandomb(c: mpz_t, r: randstate_t, nbits: mp_bitcnt_t) -> () {
+  unsafe { __gmpz_rrandomb(c, r, nbits) }
+}
+
+/// mpz_random ***(obsoleted) use mpz_urandomb or mpz_urandomm instead***
+pub fn mpz_random(c: mpz_t, max_size: mp_size_t) -> () {
+  unsafe { __gmpz_random(c, max_size) }
+}
+
+/// mpz_random2
+pub fn mpz_random2(c: mpz_t, max_size: mp_size_t) -> () {
+  unsafe { __gmpz_random2(c, max_size) }
+}
+
+/// mpz_and
+pub fn mpz_and(c: mpz_t, a: mpz_t, b: mpz_t) -> () {
+  unsafe { __gmpz_and(c, a, b) }
+}
+
+/// mpz_ior
+pub fn mpz_ior(c: mpz_t, a: mpz_t, b: mpz_t) -> () {
+  unsafe { __gmpz_ior(c, a, b) }
+}
+
+/// mpz_xor
+pub fn mpz_xor(c: mpz_t, a: mpz_t, b: mpz_t) -> () {
+  unsafe { __gmpz_xor(c, a, b) }
+}
+
+/// mpz_com
+pub fn mpz_com(c: mpz_t, a: mpz_t) -> () {
+  unsafe { __gmpz_com(c, a) }
+}
+
+/// mpz_popcount
+pub fn mpz_popcount(a: mpz_t) -> mp_bitcnt_t {
+  unsafe { __gmpz_popcount(a) }
+}
+
+/// mpz_hamdist hamming distance between a and b (both sgn must be same)
+pub fn mpz_hamdist(a: mpz_t, b: mpz_t) -> mp_bitcnt_t {
+  unsafe { __gmpz_hamdist(a, b) }
+}
+
+/// mpz_scan0 to msb
+pub fn mpz_scan0(a: mpz_t, s: mp_bitcnt_t) -> mp_bitcnt_t {
+  unsafe { __gmpz_scan0(a, s) }
+}
+
+/// mpz_scan1 to msb
+pub fn mpz_scan1(a: mpz_t, s: mp_bitcnt_t) -> mp_bitcnt_t {
+  unsafe { __gmpz_scan1(a, s) }
+}
+
+/// mpz_clrbit
+pub fn mpz_clrbit(c: mpz_t, n: mp_bitcnt_t) -> () {
+  unsafe { __gmpz_clrbit(c, n) }
+}
+
+/// mpz_setbit
+pub fn mpz_setbit(c: mpz_t, n: mp_bitcnt_t) -> () {
+  unsafe { __gmpz_setbit(c, n) }
+}
+
+/// mpz_combit
+pub fn mpz_combit(c: mpz_t, n: mp_bitcnt_t) -> () {
+  unsafe { __gmpz_combit(c, n) }
+}
+
+/// mpz_tstbit
+pub fn mpz_tstbit(a: mpz_t, n: mp_bitcnt_t) -> bool {
+  unsafe { __gmpz_tstbit(a, n) != 0 }
 }

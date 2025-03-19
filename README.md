@@ -107,9 +107,16 @@ Misc
 - [mpz *div mod ...](https://gmplib.org/manual/Integer-Division)
 - [mpz pow ...](https://gmplib.org/manual/Integer-Exponentiation)
 
+- [mpz logic bit](https://gmplib.org/manual/Integer-Logic-and-Bit-Fiddling)
+- [mpz misc](https://gmplib.org/manual/Miscellaneous-Integer-Functions)
+- [mpz special](https://gmplib.org/manual/Integer-Special-Functions)
+- [mpz random](https://gmplib.org/manual/Integer-Random-Numbers)
+
 - [mpf ...](https://gmplib.org/manual/Rational-Number-Functions)
 - [mpf cmp ...](https://gmplib.org/manual/Float-Comparison)
 - [mpf sqrt add sub mul div pow ...](https://gmplib.org/manual/Float-Arithmetic)
+
+- [mpf misc](https://gmplib.org/manual/Miscellaneous-Float-Functions)
 
 - [mpq ...](https://gmplib.org/manual/Rational-Number-Functions)
 - [mpq cmp ...](https://gmplib.org/manual/Comparing-Rationals)

@@ -5,7 +5,7 @@ use std::fmt;
 use std::error::Error;
 use std::collections::HashMap;
 
-use crate::prim::{*, typ::*, mpz::*, gmp::*}; // mpq::*
+use crate::prim::{*, typ::*, mpz::*, randstate::*, gmp::*}; // mpq::*
 
 /// __mpf_struct
 // not use #[derive(Clone)]
@@ -318,6 +318,76 @@ impl __mpf_struct {
   pub fn pow_ui(f: mpf_t, n: ui_t) -> Self {
     let mut t = mpf_s::init(); // ***never*** use new();
     mpf_pow_ui(&mut t, f, n);
+    t
+  }
+
+  /// ceil create new instance
+  pub fn ceil(&mut self) -> Self {
+    let mut t = mpf_s::init();
+    mpf_ceil(&mut t, self);
+    t
+  }
+
+  /// floor create new instance
+  pub fn floor(&mut self) -> Self {
+    let mut t = mpf_s::init();
+    mpf_floor(&mut t, self);
+    t
+  }
+
+  /// trunc create new instance
+  pub fn trunc(&mut self) -> Self {
+    let mut t = mpf_s::init();
+    mpf_trunc(&mut t, self);
+    t
+  }
+
+  /// integer_p
+  pub fn integer_p(&mut self) -> bool {
+    mpf_integer_p(self)
+  }
+
+  /// fits_ulong_p
+  pub fn fits_ulong_p(&mut self) -> bool {
+    mpf_fits_ulong_p(self)
+  }
+
+  /// fits_slong_p
+  pub fn fits_slong_p(&mut self) -> bool {
+    mpf_fits_slong_p(self)
+  }
+
+  /// fits_uint_p
+  pub fn fits_uint_p(&mut self) -> bool {
+    mpf_fits_uint_p(self)
+  }
+
+  /// fits_sint_p
+  pub fn fits_sint_p(&mut self) -> bool {
+    mpf_fits_sint_p(self)
+  }
+
+  /// fits_ushort_p
+  pub fn fits_ushort_p(&mut self) -> bool {
+    mpf_fits_ushort_p(self)
+  }
+
+  /// fits_sshort_p
+  pub fn fits_sshort_p(&mut self) -> bool {
+    mpf_fits_sshort_p(self)
+  }
+
+  /// urandomb (must init random state before) create new instance
+  pub fn urandomb(state: randstate_t, nbits: mp_bitcnt_t) -> Self {
+    let mut t = mpf_s::init();
+    mpf_urandomb(&mut t, state, nbits);
+    t
+  }
+
+  /// random2 create new instance
+  pub fn random2(max_size: mp_size_t, e: mp_exp_t) -> Self {
+    let mut t = mpf_s::init();
+    mpf_random2(&mut t, max_size, e);
     t
   }
 
@@ -703,6 +773,66 @@ pub fn mpf_div_2exp(g: mpf_t, f: mpf_t, n: mp_bitcnt_t) -> () {
 /// mpf_pow_ui g = f**n
 pub fn mpf_pow_ui(g: mpf_t, f: mpf_t, n: ui_t) -> () {
   unsafe { __gmpf_pow_ui(g, f, n) }
+}
+
+/// mpf_ceil
+pub fn mpf_ceil(g: mpf_t, f: mpf_t) -> () {
+  unsafe { __gmpf_ceil(g, f) }
+}
+
+/// mpf_floor
+pub fn mpf_floor(g: mpf_t, f: mpf_t) -> () {
+  unsafe { __gmpf_floor(g, f) }
+}
+
+/// mpf_trunc
+pub fn mpf_trunc(g: mpf_t, f: mpf_t) -> () {
+  unsafe { __gmpf_trunc(g, f) }
+}
+
+/// mpf_integer_p
+pub fn mpf_integer_p(f: mpf_t) -> bool {
+  unsafe { __gmpf_integer_p(f) != 0 }
+}
+
+/// mpf_fits_ulong_p
+pub fn mpf_fits_ulong_p(f: mpf_t) -> bool {
+  unsafe { __gmpf_fits_ulong_p(f) != 0 }
+}
+
+/// mpf_fits_slong_p
+pub fn mpf_fits_slong_p(f: mpf_t) -> bool {
+  unsafe { __gmpf_fits_slong_p(f) != 0 }
+}
+
+/// mpf_fits_uint_p
+pub fn mpf_fits_uint_p(f: mpf_t) -> bool {
+  unsafe { __gmpf_fits_uint_p(f) != 0 }
+}
+
+/// mpf_fits_sint_p
+pub fn mpf_fits_sint_p(f: mpf_t) -> bool {
+  unsafe { __gmpf_fits_sint_p(f) != 0 }
+}
+
+/// mpf_fits_ushort_p
+pub fn mpf_fits_ushort_p(f: mpf_t) -> bool {
+  unsafe { __gmpf_fits_ushort_p(f) != 0 }
+}
+
+/// mpf_fits_sshort_p
+pub fn mpf_fits_sshort_p(f: mpf_t) -> bool {
+  unsafe { __gmpf_fits_sshort_p(f) != 0 }
+}
+
+/// mpf_urandomb (must init random state before)
+pub fn mpf_urandomb(g: mpf_t, state: randstate_t, nbits: mp_bitcnt_t) -> () {
+  unsafe { __gmpf_urandomb(g, state, nbits) }
+}
+
+/// mpf_random2
+pub fn mpf_random2(g: mpf_t, max_size: mp_size_t, e: mp_exp_t) -> () {
+  unsafe { __gmpf_random2(g, max_size, e) }
 }
 
 /// mpf_get_default_prec

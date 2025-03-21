@@ -269,6 +269,12 @@ pub fn calc_fact_test() {
     let p = &mut mpz_s::primorial_ui(n as ui_t);
     assert_eq!(format!("P({}) = {}", n, p), format!("P({}) = {}", n, ps[n]));
   });
+
+  // mpz remove
+  let a = &mut mpz_s::init_set_ui(510510);
+  let f = &mut mpz_s::init_set_ui(1001);
+  let (c, n) = a.remove(f);
+  assert_eq!(format!("{}, {}", c, n), "510, 1");
 }
 
 /// calc fib test
@@ -284,6 +290,19 @@ pub fn calc_fib_test() {
 //    println!("{}: {}, {}", i, f_n, f_nsub1);
     assert_eq!(format!("{}, {}", f_n, f_nsub1),
       format!("{}, {}", fibs[i as usize], fibs[i as usize - 1]));
+  });
+
+  let lucs = vec!["2", "1", "3", "4", "7", "11", "18", "29", "47", "76"];
+  (0..lucs.len() as ui_t).for_each(|i| {
+    let l_n = &mut mpz_s::lucnum_ui(i);
+//    println!("{}: {}", i, l_n);
+    assert_eq!(format!("{}", l_n), lucs[i as usize]);
+  });
+  (1..lucs.len() as ui_t).for_each(|i| {
+    let (l_n, l_n_1) = &mut mpz_s::lucnum2_ui(i);
+//    println!("{}: {}, {}", i, l_n, l_n_1);
+    assert_eq!(format!("{}, {}", l_n, l_n_1),
+      format!("{}, {}", lucs[i as usize], lucs[i as usize - 1]));
   });
 }
 
@@ -341,6 +360,46 @@ pub fn calc_mod_prime_test() {
     assert_eq!(s.join(" "), jacobis[i]);
   });
 
+  // test kronecker by jacobi
+  (0..jacobis.len() as ui_t).enumerate().for_each(|(i, k)| {
+    let o = 2 * k + 1;
+    let n = &mut mpz_s::init_set_ui(o);
+    let s = (0..o).map(|a| {
+      format!("{}", mpz_s::init_set_ui(a).kronecker(n))
+    }).collect::<Vec<_>>();
+    assert_eq!(s.join(" "), jacobis[i]);
+  });
+  (0..jacobis.len() as ui_t).enumerate().for_each(|(i, k)| {
+    let o = 2 * k + 1;
+    let s = (0..o).map(|a| {
+      format!("{}", mpz_s::init_set_ui(a).kronecker_ui(o))
+    }).collect::<Vec<_>>();
+    assert_eq!(s.join(" "), jacobis[i]);
+  });
+  (0..jacobis.len() as si_t).enumerate().for_each(|(i, k)| {
+    let o = 2 * k + 1;
+    let s = (0..o).map(|a| {
+      format!("{}", mpz_s::init_set_si(a).kronecker_si(o))
+    }).collect::<Vec<_>>();
+    assert_eq!(s.join(" "), jacobis[i]);
+  });
+  (0..jacobis.len() as ui_t).enumerate().for_each(|(i, k)| {
+    let o = 2 * k + 1;
+    let n = &mut mpz_s::init_set_ui(o);
+    let s = (0..o).map(|a| {
+      format!("{}", mpz_s::ui_kronecker(n, a))
+    }).collect::<Vec<_>>();
+    assert_eq!(s.join(" "), jacobis[i]);
+  });
+  (0..jacobis.len() as si_t).enumerate().for_each(|(i, k)| {
+    let o = 2 * k + 1;
+    let n = &mut mpz_s::init_set_si(o);
+    let s = (0..o).map(|a| {
+      format!("{}", mpz_s::si_kronecker(n, a))
+    }).collect::<Vec<_>>();
+    assert_eq!(s.join(" "), jacobis[i]);
+  });
+
   let a = &mut mpz_s::init_set_ui(3);
   let b = &mut mpz_s::init_set_ui(7);
   assert!(b.modulo(a).cmp(&mut mpz_s::init_set_ui(1)) == 0); // 7 mod 3 == 1
@@ -394,6 +453,19 @@ pub fn calc_mod_prime_test() {
     }
   }) { s.push(format!("{}, {}, {}", a, c, e)); }
   assert_eq!(s.join("\n"), prime_candidates.join("\n"));
+}
+
+/// calc binomial coefficient
+pub fn calc_binomial_coefficient_test() {
+  let n: ui_t = 6;
+
+  let k: ui_t = 3;
+  let c = &mut mpz_s::bin_ui(&mut mpz_s::init_set_ui(n), k);
+  assert_eq!(format!("{}C{} = {}", n, k, c), format!("{}C{} = {}", n, k, 20));
+
+  let k: ui_t = 2;
+  let c = &mut mpz_s::bin_uiui(n, k);
+  assert_eq!(format!("{}C{} = {}", n, k, c), format!("{}C{} = {}", n, k, 15));
 }
 
 /// calc mpf prec64 test

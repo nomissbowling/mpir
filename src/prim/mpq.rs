@@ -387,12 +387,18 @@ pub fn mpq_get_den(den: mpz_t, q: mpq_t) -> () {
 
 /// mpq_numref
 pub fn mpq_numref(q: mpq_t) -> mpz_t {
+/*
   unsafe { &mut std::slice::from_raw_parts_mut(__gmpq_numref(q), 1)[0] }
+*/
+  &mut q._mp_num
 }
 
 /// mpq_denref
 pub fn mpq_denref(q: mpq_t) -> mpz_t {
+/*
   unsafe { &mut std::slice::from_raw_parts_mut(__gmpq_denref(q), 1)[0] }
+*/
+  &mut q._mp_den
 }
 
 /// mpq_swap

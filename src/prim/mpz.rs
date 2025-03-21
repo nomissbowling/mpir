@@ -313,6 +313,13 @@ impl __mpz_struct {
     t
   }
 
+  /// remove create new instance
+  pub fn remove(&mut self, f: mpz_t) -> (Self, mp_bitcnt_t) {
+    let mut t = mpz_s::init();
+    let n = mpz_remove(&mut t, self, f);
+    (t, n)
+  }
+
   /// fib_ui create new instance
   pub fn fib_ui(n: ui_t) -> Self {
     let mut f_n = mpz_s::init_set_ui(1);
@@ -326,6 +333,21 @@ impl __mpz_struct {
     let mut f_nsub1 = mpz_s::init_set_ui(1);
     mpz_fib2_ui(&mut f_n, &mut f_nsub1, n);
     (f_n, f_nsub1)
+  }
+
+  /// lucnum_ui create new instance
+  pub fn lucnum_ui(n: ui_t) -> Self {
+    let mut l_n = mpz_s::init_set_ui(1);
+    mpz_lucnum_ui(&mut l_n, n);
+    l_n
+  }
+
+  /// lucnum2_ui create new instance (l_n, l_n_1)
+  pub fn lucnum2_ui(n: ui_t) -> (Self, Self) {
+    let mut l_n = mpz_s::init_set_ui(1);
+    let mut l_n_1 = mpz_s::init_set_ui(1);
+    mpz_lucnum2_ui(&mut l_n, &mut l_n_1, n);
+    (l_n, l_n_1)
   }
 
   /// gcd create new instance
@@ -404,6 +426,45 @@ impl __mpz_struct {
   /// legendre 0 1 -1 (defined only for p an odd positive prime)
   pub fn legendre(&mut self, p: mpz_t) -> int_t {
     mpz_legendre(self, p)
+  }
+
+  /// kronecker
+  pub fn kronecker(&mut self, n: mpz_t) -> int_t {
+    mpz_kronecker(self, n)
+  }
+
+  /// kronecker_ui
+  pub fn kronecker_ui(&mut self, u: ui_t) -> int_t {
+    mpz_kronecker_ui(self, u)
+  }
+
+  /// kronecker_si
+  pub fn kronecker_si(&mut self, s: si_t) -> int_t {
+    mpz_kronecker_si(self, s)
+  }
+
+  /// ui_kronecker
+  pub fn ui_kronecker(&mut self, u: ui_t) -> int_t {
+    mpz_ui_kronecker(u, self)
+  }
+
+  /// si_kronecker
+  pub fn si_kronecker(&mut self, s: si_t) -> int_t {
+    mpz_si_kronecker(s, self)
+  }
+
+  /// bin_ui nCk create new instance
+  pub fn bin_ui(n: mpz_t, k: ui_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_bin_ui(&mut t, n, k);
+    t
+  }
+
+  /// bin_uiui nCk create new instance
+  pub fn bin_uiui(n: ui_t, k: ui_t) -> Self {
+    let mut t = mpz_s::init();
+    mpz_bin_uiui(&mut t, n, k);
+    t
   }
 
   /// abs create new instance
@@ -1289,6 +1350,11 @@ pub fn mpz_mfac_uiui(c: mpz_t, n: ui_t, m: ui_t) -> () {
   unsafe { __gmpz_mfac_uiui(c, n, m) }
 }
 
+/// mpz_remove
+pub fn mpz_remove(c: mpz_t, a: mpz_t, f: mpz_t) -> mp_bitcnt_t {
+  unsafe { __gmpz_remove(c, a, f) }
+}
+
 /// mpz_fib_ui
 pub fn mpz_fib_ui(f_n: mpz_t, n: ui_t) -> () {
   unsafe { __gmpz_fib_ui(f_n, n) }
@@ -1297,6 +1363,16 @@ pub fn mpz_fib_ui(f_n: mpz_t, n: ui_t) -> () {
 /// mpz_fib2_ui
 pub fn mpz_fib2_ui(f_n: mpz_t, f_nsub1: mpz_t, n: ui_t) -> () {
   unsafe { __gmpz_fib2_ui(f_n, f_nsub1, n) }
+}
+
+/// mpz_lucnum_ui
+pub fn mpz_lucnum_ui(l_n: mpz_t, n: ui_t) -> () {
+  unsafe { __gmpz_lucnum_ui(l_n, n) }
+}
+
+/// mpz_lucnum2_ui
+pub fn mpz_lucnum2_ui(l_n: mpz_t, l_n_1: mpz_t, n: ui_t) -> () {
+  unsafe { __gmpz_lucnum2_ui(l_n, l_n_1, n) }
 }
 
 /// mpz_gcd
@@ -1354,6 +1430,44 @@ pub fn mpz_jacobi(a: mpz_t, n: mpz_t) -> int_t {
 /// mpz_legendre 0 1 -1 (defined only for p an odd positive prime)
 pub fn mpz_legendre(a: mpz_t, p: mpz_t) -> int_t {
   unsafe { __gmpz_legendre(a, p) }
+}
+
+/// mpz_kronecker
+pub fn mpz_kronecker(a: mpz_t, n: mpz_t) -> int_t {
+/*
+  unsafe { __gmpz_kronecker(a, n) }
+*/
+  unsafe { __gmpz_jacobi(a, n) }
+}
+
+/// mpz_kronecker_ui
+pub fn mpz_kronecker_ui(a: mpz_t, u: ui_t) -> int_t {
+  unsafe { __gmpz_kronecker_ui(a, u) }
+}
+
+/// mpz_kronecker_si
+pub fn mpz_kronecker_si(a: mpz_t, s: si_t) -> int_t {
+  unsafe { __gmpz_kronecker_si(a, s) }
+}
+
+/// mpz_ui_kronecker
+pub fn mpz_ui_kronecker(u: ui_t, a: mpz_t) -> int_t {
+  unsafe { __gmpz_ui_kronecker(u, a) }
+}
+
+/// mpz_si_kronecker
+pub fn mpz_si_kronecker(s: si_t, a: mpz_t) -> int_t {
+  unsafe { __gmpz_si_kronecker(s, a) }
+}
+
+/// mpz_bin_ui nCk
+pub fn mpz_bin_ui(c: mpz_t, n: mpz_t, k: ui_t) -> () {
+  unsafe { __gmpz_bin_ui(c, n, k) }
+}
+
+/// mpz_bin_uiui nCk
+pub fn mpz_bin_uiui(c: mpz_t, n: ui_t, k: ui_t) -> () {
+  unsafe { __gmpz_bin_uiui(c, n, k) }
 }
 
 /// mpz_abs

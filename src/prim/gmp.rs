@@ -118,10 +118,19 @@ extern "C" {
   /// __gmpz_mfac_uiui c = n! ** m
   pub fn __gmpz_mfac_uiui(c: *mut mpz_s, n: ui_t, m: ui_t) -> ();
 
+  /// __gmpz_remove
+  pub fn __gmpz_remove(c: *mut mpz_s,
+    a: *mut mpz_s, f: *mut mpz_s) -> mp_bitcnt_t;
+
   /// __gmpz_fib_ui
   pub fn __gmpz_fib_ui(f_n: *mut mpz_s, n: ui_t) -> ();
   /// __gmpz_fib2_ui
   pub fn __gmpz_fib2_ui(f_n: *mut mpz_s, f_nsub1: *mut mpz_s, n: ui_t) -> ();
+
+  /// __gmpz_lucnum_ui
+  pub fn __gmpz_lucnum_ui(l_n: *mut mpz_s, n: ui_t) -> ();
+  /// __gmpz_lucnum2_ui
+  pub fn __gmpz_lucnum2_ui(l_n: *mut mpz_s, l_n_1: *mut mpz_s, n: ui_t) -> ();
 
   /// __gmpz_gcd
   pub fn __gmpz_gcd(g: *mut mpz_s, a: *mut mpz_s, b: *mut mpz_s) -> ();
@@ -152,6 +161,23 @@ extern "C" {
   pub fn __gmpz_jacobi(a: *mut mpz_s, n: *mut mpz_s) -> int_t;
   /// __gmpz_legendre 0 1 -1 (defined only for p an odd positive prime)
   pub fn __gmpz_legendre(a: *mut mpz_s, p: *mut mpz_s) -> int_t;
+/*
+  /// __gmpz_kronecker
+  pub fn __gmpz_kronecker(a: *mut mpz_s, n: *mut mpz_s) -> int_t;
+*/
+  /// __gmpz_kronecker_ui
+  pub fn __gmpz_kronecker_ui(a: *mut mpz_s, u: ui_t) -> int_t;
+  /// __gmpz_kronecker_si
+  pub fn __gmpz_kronecker_si(a: *mut mpz_s, s: si_t) -> int_t;
+  /// __gmpz_ui_kronecker
+  pub fn __gmpz_ui_kronecker(u: ui_t, a: *mut mpz_s) -> int_t;
+  /// __gmpz_si_kronecker
+  pub fn __gmpz_si_kronecker(s: si_t, a: *mut mpz_s) -> int_t;
+
+  /// __gmpz_bin_ui nCk
+  pub fn __gmpz_bin_ui(c: *mut mpz_s, n: *mut mpz_s, k: ui_t) -> ();
+  /// __gmpz_bin_uiui nCk
+  pub fn __gmpz_bin_uiui(c: *mut mpz_s, n: ui_t, k: ui_t) -> ();
 
   /// __gmpz_abs
   pub fn __gmpz_abs(c: *mut mpz_s, a: *mut mpz_s) -> ();
@@ -536,10 +562,12 @@ extern "C" {
   pub fn __gmpq_get_num(num: *mut mpz_s, q: *mut mpq_s) -> ();
   /// __gmpq_get_den
   pub fn __gmpq_get_den(den: *mut mpz_s, q: *mut mpq_s) -> ();
+/*
   /// __gmpq_numref (unsafe)
   pub fn __gmpq_numref(q: *mut mpq_s) -> *mut mpz_s;
   /// __gmpq_denref (unsafe)
   pub fn __gmpq_denref(q: *mut mpq_s) -> *mut mpz_s;
+*/
 
   /// __gmpq_swap
   pub fn __gmpq_swap(q: *mut mpq_s, r: *mut mpq_s) -> ();

@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/mpir/0.2.1")]
+#![doc(html_root_url = "https://docs.rs/mpir/0.2.2")]
 //! partial Rust porting of mpir multiple precision library based on gmp mpfr
 //!
 //! # Requirements
@@ -33,6 +33,7 @@ mod tests {
     calc_fib_test,
     calc_gcd_test,
     calc_lcm_test,
+    calc_mod_prime_test,
     calc_mpf_prec64_test, // single thread
     calc_rand_test, // single thread
     calc_fit_test, // single thread
@@ -101,6 +102,12 @@ mod tests {
   #[test]
   fn test_calc_lcm() {
     assert_eq!(calc_lcm_test(), ());
+  }
+
+  /// with [-- --nocapture] or with [-- --show-output]
+  #[test]
+  fn test_calc_mod_prime() {
+    assert_eq!(calc_mod_prime_test(), ());
   }
 
   /// with [-- --nocapture] or with [-- --show-output]

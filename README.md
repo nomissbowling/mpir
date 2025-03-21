@@ -41,7 +41,7 @@ Sample
     "3628800", "39916800", "479001600", "6227020800", "87178291200", // 10-14
     "1307674368000", "20922789888000", "355687428096000", // 15-17
     "6402373705728000", "121645100408832000", "2432902008176640000"]; // 18-20
-  (0..=20).into_iter().for_each(|n: usize| {
+  (0..=20).for_each(|n: usize| {
     let t = &mut mpz_s::fact(n as ui_t);
     assert_eq!(format!("{}! = {}", n, t), format!("{}! = {}", n, facts[n]));
     let u = &mut mpz_s::fac_ui(n as ui_t);
@@ -50,7 +50,7 @@ Sample
 
   // mpz fact (to be operator) cached
   let m = &mut HashMap::<ui_t, mpz_s>::new();
-  (0..=20).into_iter().for_each(|n: usize| {
+  (0..=20).for_each(|n: usize| {
     let t = &mut mpz_s::fact_cached(n as ui_t, m);
     assert_eq!(format!("{}! = {}", n, t), format!("{}! = {}", n, facts[n]));
   });

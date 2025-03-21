@@ -65,9 +65,9 @@ impl gmp_randstate_struct {
   }
 
   /// init create new instance ***(obsoleted)***
-  pub fn init() -> Self {
+  pub fn init(sz: mp_bitcnt_t) -> Self {
     let mut t = randstate_s::new();
-    gmp_randinit(&mut t, GMP_RAND_ALG_LC, 0);
+    gmp_randinit(&mut t, GMP_RAND_ALG_LC, sz);
     t
   }
 
@@ -159,8 +159,11 @@ pub fn gmp_randclear(r: randstate_t) -> () {
 }
 
 /// gmp_randinit ***(obsoleted)***
-pub fn gmp_randinit(r: randstate_t, a: gmp_randalg_t, sz: ui_t) -> () {
+pub fn gmp_randinit(r: randstate_t, _a: gmp_randalg_t, sz: mp_bitcnt_t) -> () {
+/*
   unsafe { __gmp_randinit(r, a, sz) }
+*/
+  unsafe { __gmp_randinit_lc_2exp_size(r, sz); } // ()
 }
 
 /// gmp_randinit_set copy

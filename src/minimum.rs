@@ -243,7 +243,7 @@ pub fn calc_fact_test() {
     "3628800", "39916800", "479001600", "6227020800", "87178291200", // 10-14
     "1307674368000", "20922789888000", "355687428096000", // 15-17
     "6402373705728000", "121645100408832000", "2432902008176640000"]; // 18-20
-  (0..=20).into_iter().for_each(|n: usize| {
+  (0..=20).for_each(|n: usize| {
     let t = &mut mpz_s::fact(n as ui_t);
     assert_eq!(format!("{}! = {}", n, t), format!("{}! = {}", n, facts[n]));
     let u = &mut mpz_s::fac_ui(n as ui_t);
@@ -252,9 +252,22 @@ pub fn calc_fact_test() {
 
   // mpz fact (to be operator) cached
   let m = &mut HashMap::<ui_t, mpz_s>::new();
-  (0..=20).into_iter().for_each(|n: usize| {
+  (0..=20).for_each(|n: usize| {
     let t = &mut mpz_s::fact_cached(n as ui_t, m);
     assert_eq!(format!("{}! = {}", n, t), format!("{}! = {}", n, facts[n]));
+  });
+
+  // mpz primorial (to be operator)
+  let primorials = vec!["1", "2", "6", "30", "210", "2310", "30030", "510510"];
+  let (ps, _c) = (0..=16).fold((vec![], 0), |(mut v, mut c), k| {
+    let n = &mut mpz_s::init_set_ui(k);
+    if n.probab_prime_p(2) >= 1 { c += 1; } // 1: probably, 2: exactly
+    v.push(primorials[c]);
+    (v, c)
+  });
+  (0..ps.len()).for_each(|n: usize| {
+    let p = &mut mpz_s::primorial_ui(n as ui_t);
+    assert_eq!(format!("P({}) = {}", n, p), format!("P({}) = {}", n, ps[n]));
   });
 }
 
@@ -292,6 +305,95 @@ pub fn calc_lcm_test() {
   let b = &mut mpz_s::init_set_ui(15); // 3 5
   assert_eq!(format!("{}", a.lcm(b)), "30");
   assert_eq!(format!("{}", a.lcm_ui(8)), "24"); // 2 2 2
+}
+
+/// calc mod prime test
+pub fn calc_mod_prime_test() {
+  let legendres = [
+    "0 1 -1", // 3
+    "0 1 -1 -1 1", // 5
+    "0 1 1 -1 1 -1 -1", // 7
+    "0 1 -1 1 1 1 -1 -1 -1 1 -1"]; // 11
+  [3, 5, 7, 11].into_iter().enumerate().for_each(|(i, k)| {
+    let p = &mut mpz_s::init_set_ui(k);
+    let s = (0..k).map(|a| {
+      format!("{}", mpz_s::init_set_ui(a).legendre(p))
+    }).collect::<Vec<_>>();
+    assert_eq!(s.join(" "), legendres[i]);
+  });
+
+  let jacobis = [
+    "1", // 1
+    "0 1 -1", // 3
+    "0 1 -1 -1 1", // 5
+    "0 1 1 -1 1 -1 -1", // 7
+    "0 1 1 0 1 1 0 1 1", // 9
+    "0 1 -1 1 1 1 -1 -1 -1 1 -1", // 11
+    "0 1 -1 1 1 -1 -1 -1 -1 1 1 -1 1", // 13
+    "0 1 1 0 1 0 0 -1 1 0 0 -1 0 -1 -1", // 15
+    "0 1 1 -1 1 -1 -1 -1 1 1 -1 -1 -1 1 -1 1 1"]; // 17
+  (0..jacobis.len() as ui_t).enumerate().for_each(|(i, k)| {
+    let o = 2 * k + 1;
+    let n = &mut mpz_s::init_set_ui(o);
+    let s = (0..o).map(|a| {
+      format!("{}", mpz_s::init_set_ui(a).jacobi(n))
+    }).collect::<Vec<_>>();
+    assert_eq!(s.join(" "), jacobis[i]);
+  });
+
+  let a = &mut mpz_s::init_set_ui(3);
+  let b = &mut mpz_s::init_set_ui(7);
+  assert!(b.modulo(a).cmp(&mut mpz_s::init_set_ui(1)) == 0); // 7 mod 3 == 1
+  let (mut p, q) = mpz_s::invert(b, a); // invert(7 mod 3) = 1
+  assert!(q != 0);
+  assert!(p.cmp(&mut mpz_s::init_set_ui(1)) == 0); // (1*7) mod 3 == 1
+  let (mut p, q) = mpz_s::invert(a, b); // invert(3 mod 7) = 5
+  assert!(q != 0);
+  assert!(p.cmp(&mut mpz_s::init_set_ui(5)) == 0); // (5*3) mod 7 == 1
+
+  let a = &mut mpz_s::init_set_ui(97);
+  let b = &mut mpz_s::init_set_ui(!0);
+  b.add_ui(1);
+  assert!(b.modulo(a).cmp(&mut mpz_s::init_set_ui(35)) == 0); // b mod 97 == 35
+  let (mut p, q) = mpz_s::invert(b, a);
+  assert!(q != 0);
+  assert!(p.cmp(&mut mpz_s::init_set_ui(61)) == 0); // (61*b) mod 97 == 1
+  let (mut p, q) = mpz_s::invert(a, b);
+  assert!(q != 0);
+  assert!(p.cmp(&mut mpz_s::init_set_ui(1594008481)) == 0); // (p*a) mod b == 1
+
+  let m = 97; // mod m for probab_prime_p
+//  assert!(a.prevprime().cmp(&mut mpz_s::init_set_ui(91)) == 0);
+  assert!(a.nextprime().cmp(&mut mpz_s::init_set_ui(101)) == 0);
+  assert_eq!(a.add_ui(4).probab_prime_p(m), 2); // 101 exactly
+  assert_eq!(a.add_ui(2).probab_prime_p(m), 2); // 103 exactly
+  assert_eq!(a.add_ui(2).probab_prime_p(m), 0); // 105 not prime
+  assert_eq!(a.add_ui(2).probab_prime_p(m), 2); // 107 exactly
+  assert_eq!(a.addmul_ui(b, 65536).probab_prime_p(m), 0); // not prime
+  (0..65536).for_each(|_n| { a.addmul_ui(b, 65536); });
+  let prime_candidates = [
+    "18447025548686262421",
+    "18447025548686262439",
+    "18447025548686262487",
+    "18447025548686262599",
+    "18447025548686262617",
+    "18447025548686262623"];
+  let len = prime_candidates.len();
+  let acc = prime_candidates[len - 1];
+  let mut prime_candidates = prime_candidates.iter().map(|s|
+    format!("{} probably", s)).collect::<Vec<_>>();
+  prime_candidates.push(format!("{}, {}, {}", acc, len, 0));
+  let mut s = Vec::<String>::new();
+  if let Some((c, e)) = (0..len).try_fold((0, 0), |(c, e), _n| {
+    b.set(&mut a.nextprime());
+    match a.set(b).probab_prime_p(m) {
+    0 => { Some((c, e)) }, // not prime
+    1 => { s.push(format!("{} probably", a)); Some((c + 1, e)) },
+    2 => { Some((c, e + 1)) }, // exactly
+    _ => { s.push(format!("unknown pattern")); None }
+    }
+  }) { s.push(format!("{}, {}, {}", a, c, e)); }
+  assert_eq!(s.join("\n"), prime_candidates.join("\n"));
 }
 
 /// calc mpf prec64 test
@@ -617,17 +719,17 @@ pub fn calc_logical_test() {
   assert_eq!(d.scan1(0), 0);
   assert_eq!(d.scan1(1), 6);
   assert_eq!(d.scan0(5), 5);
-  assert_eq!(d.scan0(6), 4294967295); // when not found mp_bitcnt_t max
+  assert_eq!(d.scan0(6), !0); // when not found (mp_bitcnt_t max)
 
   assert_eq!(c.popcount(), 2);
   assert_eq!(e.popcount(), 3);
-  assert_eq!(d.popcount(), 4294967295); // infinite when d<0 (mp_bitcnt_t max)
+  assert_eq!(d.popcount(), !0); // infinite when d<0 (mp_bitcnt_t max)
 
   assert_eq!(c.hamdist(e), 1);
   assert_eq!(c.hamdist(f), 2);
   assert_eq!(c.hamdist(a), 2);
   assert_eq!(c.hamdist(b), 2);
-  assert_eq!(d.hamdist(c), 4294967295); // neg pos mp_bitcnt_t max == 2**32 - 1
+  assert_eq!(d.hamdist(c), !0); // neg and pos (mp_bitcnt_t max == ui max - 1)
 }
 
 /// calc mpq test

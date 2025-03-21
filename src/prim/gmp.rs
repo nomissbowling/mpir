@@ -56,6 +56,25 @@ extern "C" {
   pub fn __gmpz_swap(a: *mut mpz_s, b: *mut mpz_s) -> ();
   /// __gmpz_realloc2
   pub fn __gmpz_realloc2(a: *mut mpz_s, n: mp_bitcnt_t) -> ();
+  /// __gmpz_realloc
+  pub fn __gmpz_realloc(a: *mut mpz_s, sz: mp_size_t) -> mp_t;
+  /// __gmpz_array_init ***(obsoleted) do NOT use it***
+  pub fn __gmpz_array_init(a: *mut mpz_s, sz: mp_size_t, fnb: mp_size_t) -> ();
+  /// __gmpz_size
+  pub fn __gmpz_size(a: *mut mpz_s) -> mp_size_t;
+  /// __gmpz_limbs_read (unsafe pointer to array mpz_size elements)
+  pub fn __gmpz_limbs_read(a: *mut mpz_s) -> *mut mp_limb_t;
+  /// __gmpz_getlimbn (single element)
+  pub fn __gmpz_getlimbn(a: *mut mpz_s, n: mp_size_t) -> mp_limb_t;
+  /// __gmpz_limbs_write (unsafe pointer to array sz elements) be reallocated
+  pub fn __gmpz_limbs_write(a: *mut mpz_s, sz: mp_size_t) -> *mut mp_limb_t;
+  /// __gmpz_limbs_modify (unsafe pointer to array sz elements) be reallocated
+  pub fn __gmpz_limbs_modify(a: *mut mpz_s, sz: mp_size_t) -> *mut mp_limb_t;
+  /// __gmpz_limbs_finish (used after write or modify to update internal size)
+  pub fn __gmpz_limbs_finish(a: *mut mpz_s, sz: mp_size_t) -> ();
+  /// __gmpz_roinit_n (unsafe)
+  pub fn __gmpz_roinit_n(a: *mut mpz_s,
+    p: *mut mp_limb_t, sz: mp_size_t) -> *mut mpz_s;
 
   /// __gmpz_cmp
   pub fn __gmpz_cmp(a: *mut mpz_s, b: *mut mpz_s) -> int_t;
@@ -89,6 +108,9 @@ extern "C" {
   /// __gmpz_perfect_square_p
   pub fn __gmpz_perfect_square_p(a: *mut mpz_s) -> int_t;
 
+  /// __gmpz_primorial_ui c = 2*3*5*7*11*...*p(prev)*p(&lt;=n)
+  pub fn __gmpz_primorial_ui(c: *mut mpz_s, n: ui_t) -> ();
+
   /// __gmpz_fac_ui c = n!
   pub fn __gmpz_fac_ui(c: *mut mpz_s, n: ui_t) -> ();
   /// __gmpz_2fac_ui c = n!!
@@ -113,6 +135,23 @@ extern "C" {
   pub fn __gmpz_lcm(c: *mut mpz_s, a: *mut mpz_s, b: *mut mpz_s) -> ();
   /// __gmpz_lcm_ui
   pub fn __gmpz_lcm_ui(c: *mut mpz_s, a: *mut mpz_s, u: ui_t) -> ();
+
+  /// __gmpz_probab_prime_p 2 or 1 or 0
+  pub fn __gmpz_probab_prime_p(a: *mut mpz_s, r: int_t) -> int_t;
+  /// __gmpz_nextprime
+  pub fn __gmpz_nextprime(c: *mut mpz_s, a: *mut mpz_s) -> ();
+/*
+  /// __gmpz_prevprime
+  pub fn __gmpz_prevprime(c: *mut mpz_s, a: *mut mpz_s) -> ();
+*/
+
+  /// __gmpz_invert c = inverse of a mod b ((c*a) mod b == 1)
+  pub fn __gmpz_invert(c: *mut mpz_s, a: *mut mpz_s, b: *mut mpz_s) -> int_t;
+
+  /// __gmpz_jacobi 0 1 -1 (defined only for n odd)
+  pub fn __gmpz_jacobi(a: *mut mpz_s, n: *mut mpz_s) -> int_t;
+  /// __gmpz_legendre 0 1 -1 (defined only for p an odd positive prime)
+  pub fn __gmpz_legendre(a: *mut mpz_s, p: *mut mpz_s) -> int_t;
 
   /// __gmpz_abs
   pub fn __gmpz_abs(c: *mut mpz_s, a: *mut mpz_s) -> ();
@@ -493,6 +532,14 @@ extern "C" {
 
   /// __gmpq_get_d
   pub fn __gmpq_get_d(q: *mut mpq_s) -> double_t;
+  /// __gmpq_get_num
+  pub fn __gmpq_get_num(num: *mut mpz_s, q: *mut mpq_s) -> ();
+  /// __gmpq_get_den
+  pub fn __gmpq_get_den(den: *mut mpz_s, q: *mut mpq_s) -> ();
+  /// __gmpq_numref (unsafe)
+  pub fn __gmpq_numref(q: *mut mpq_s) -> *mut mpz_s;
+  /// __gmpq_denref (unsafe)
+  pub fn __gmpq_denref(q: *mut mpq_s) -> *mut mpz_s;
 
   /// __gmpq_swap
   pub fn __gmpq_swap(q: *mut mpq_s, r: *mut mpq_s) -> ();
@@ -537,7 +584,8 @@ extern "C" {
   /// __gmp_randclear
   pub fn __gmp_randclear(r: *mut randstate_s) -> ();
   /// __gmp_randinit ***more than 1 args (obsoleted)***
-  pub fn __gmp_randinit(r: *mut randstate_s, a: gmp_randalg_t, sz: ui_t) -> ();
+  pub fn __gmp_randinit(r: *mut randstate_s,
+    a: gmp_randalg_t, sz: mp_bitcnt_t) -> ();
   /// __gmp_randinit_set copy
   pub fn __gmp_randinit_set(r: *mut randstate_s, s: *mut randstate_s) -> ();
   /// __gmp_randinit_default

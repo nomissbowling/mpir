@@ -1,18 +1,18 @@
 //! typ
 //!
 
-use std::ffi::{c_ulong, c_long};
+use std::ffi::{c_ulonglong, c_longlong, c_ulong, c_long, c_int};
 
 // assume _WIN64 (_LONG_LONG_LIMB = 1)
-/// c_int or c_long ***must be checked later***
+/// c_int
 #[allow(non_camel_case_types)]
-pub type int_t = i32; // c_int unix also win: i32 ***must be checked later***
+pub type int_t = c_int; // c_int unix also win: i32
 /// unsigned long long (_LONG_LONG_LIMB)
 #[allow(non_camel_case_types)]
-pub type mp_limb_t = u64; // c_ulonglong
+pub type mp_limb_t = c_ulonglong; // c_ulonglong u64
 /// long long (_LONG_LONG_LIMB)
 #[allow(non_camel_case_types)]
-pub type mp_limb_signed_t = i64; // c_longlong
+pub type mp_limb_signed_t = c_longlong; // c_longlong i64
 /// size_t
 #[allow(non_camel_case_types)]
 pub type mp_size_t = usize;

@@ -163,6 +163,48 @@ impl __mpz_struct {
     self
   }
 
+  /// _realloc
+  pub fn _realloc(&mut self, sz: mp_size_t) -> &mut Self {
+    _mpz_realloc(self, sz);
+    self
+  }
+
+  /// size
+  pub fn size(&mut self) -> mp_size_t {
+    mpz_size(self)
+  }
+
+  /// limbs_read slice
+  pub fn limbs_read(&mut self) -> &mut [mp_limb_t] {
+    mpz_limbs_read(self)
+  }
+
+  /// getlimbn (single element)
+  pub fn getlimbn(&mut self, n: mp_size_t) -> mp_limb_t {
+    mpz_getlimbn(self, n)
+  }
+
+  /// limbs_write slice
+  pub fn limbs_write(&mut self, sz: mp_size_t) -> &mut [mp_limb_t] {
+    mpz_limbs_write(self, sz)
+  }
+
+  /// limbs_modify slice
+  pub fn limbs_modify(&mut self, sz: mp_size_t) -> &mut [mp_limb_t] {
+    mpz_limbs_modify(self, sz)
+  }
+
+  /// limbs_finish (used after write or modify to update internal size)
+  pub fn limbs_finish(&mut self, sz: mp_size_t) -> &mut Self {
+    mpz_limbs_finish(self, sz);
+    self
+  }
+
+  /// roinit_n (unsafe) slice single element
+  pub fn roinit_n(&mut self, p: &mut [mp_limb_t], sz: mp_size_t) -> &mut Self {
+    mpz_roinit_n(self, p, sz)
+  }
+
   /// cmp
   pub fn cmp(&mut self, b: mpz_t) -> int_t {
     mpz_cmp(self, b)
@@ -243,6 +285,13 @@ impl __mpz_struct {
     mpz_perfect_square_p(self)
   }
 
+  /// primorial_ui c = 2*3*5*7*11*...*p(prev)*p(&lt;=n) create new instance
+  pub fn primorial_ui(n: ui_t) -> Self {
+    let mut t = mpz_s::init_set_ui(1);
+    mpz_primorial_ui(&mut t, n);
+    t
+  }
+
   /// fac_ui create new instance
   pub fn fac_ui(n: ui_t) -> Self {
     let mut t = mpz_s::init_set_ui(1);
@@ -316,6 +365,45 @@ impl __mpz_struct {
     let mut t = mpz_s::init_set_ui(1);
     mpz_lcm_ui(&mut t, self, u);
     t
+  }
+
+  /// probab_prime_p 2 or 1 or 0
+  pub fn probab_prime_p(&mut self, r: int_t) -> int_t {
+    mpz_probab_prime_p(self, r)
+  }
+
+  /// nextprime create new instance
+  pub fn nextprime(&mut self) -> Self {
+    let mut t = mpz_s::init();
+    mpz_nextprime(&mut t, self);
+    t
+  }
+
+/*
+  /// prevprime create new instance
+  pub fn prevprime(&mut self) -> Self {
+    let mut t = mpz_s::init();
+    mpz_prevprime(&mut t, self);
+    t
+  }
+*/
+
+  /// invert create new instance c = inverse of a mod b ((c*a) mod b == 1)
+  /// returns (undefined, 0) when not exist inverse
+  pub fn invert(a: mpz_t, b: mpz_t) -> (Self, int_t) {
+    let mut t = mpz_s::init();
+    let r = mpz_invert(&mut t, a, b);
+    (t, r)
+  }
+
+  /// jacobi 0 1 -1 (defined only for n odd)
+  pub fn jacobi(&mut self, n: mpz_t) -> int_t {
+    mpz_jacobi(self, n)
+  }
+
+  /// legendre 0 1 -1 (defined only for p an odd positive prime)
+  pub fn legendre(&mut self, p: mpz_t) -> int_t {
+    mpz_legendre(self, p)
   }
 
   /// abs create new instance
@@ -855,7 +943,7 @@ impl __mpz_struct {
   /// fact create new instance (slow without cache)
   pub fn fact(n: ui_t) -> Self {
     let mut t = mpz_s::init_set_ui(1);
-    (1..=n).into_iter().for_each(|i| { t.mul_ui(i); });
+    (1..=n).for_each(|i| { t.mul_ui(i); });
     t
   }
 
@@ -1049,6 +1137,66 @@ pub fn mpz_realloc2(a: mpz_t, n: mp_bitcnt_t) -> () {
   unsafe { __gmpz_realloc2(a, n) }
 }
 
+/// _mpz_realloc
+pub fn _mpz_realloc(a: mpz_t, sz: mp_size_t) -> mp_t {
+  unsafe { __gmpz_realloc(a, sz) }
+}
+
+/// mpz_array_init ***(obsoleted) do NOT use it***
+pub fn mpz_array_init(a: *mut mpz_s, sz: mp_size_t, fnb: mp_size_t) -> () {
+  unsafe { __gmpz_array_init(a, sz, fnb) }
+}
+
+/// mpz_size
+pub fn mpz_size(a: *mut mpz_s) -> mp_size_t {
+  unsafe { __gmpz_size(a) }
+}
+
+/// mpz_limbs_read slice
+pub fn mpz_limbs_read(a: mpz_t) -> &mut [mp_limb_t] {
+  let sz = mpz_size(a);
+  unsafe { std::slice::from_raw_parts_mut(__gmpz_limbs_read(a), sz) }
+}
+
+/// mpz_getlimbn (single element)
+pub fn mpz_getlimbn(a: mpz_t, n: mp_size_t) -> mp_limb_t {
+  unsafe { __gmpz_getlimbn(a, n) }
+}
+
+/// mpz_limbs_write slice
+pub fn mpz_limbs_write(a: mpz_t, sz: mp_size_t) -> &mut [mp_limb_t] {
+  unsafe { std::slice::from_raw_parts_mut(__gmpz_limbs_write(a, sz), sz) }
+}
+
+/// mpz_limbs_modify slice
+pub fn mpz_limbs_modify(a: mpz_t, sz: mp_size_t) -> &mut [mp_limb_t] {
+  unsafe { std::slice::from_raw_parts_mut(__gmpz_limbs_modify(a, sz), sz) }
+}
+
+/// mpz_limbs_finish (used after write or modify to update internal size)
+pub fn mpz_limbs_finish(a: mpz_t, sz: mp_size_t) -> () {
+  unsafe { __gmpz_limbs_finish(a, sz) }
+}
+
+/// mpz_roinit_n (unsafe) slice single element
+pub fn mpz_roinit_n<'a>(a: mpz_t,
+  p: &mut [mp_limb_t], sz: mp_size_t) -> mpz_t<'a> {
+  unsafe {
+    let q = __gmpz_roinit_n(a, p as *mut [mp_limb_t] as *mut mp_limb_t, sz);
+    &mut std::slice::from_raw_parts_mut(q, 1)[0]
+  }
+}
+
+/// MPZ_ROINIT_N (unsafe) create new instance of mpz_s
+#[allow(non_snake_case)]
+pub fn MPZ_ROINIT_N(p: &mut [mp_limb_t], sz: mp_size_t) -> mpz_s {
+  __mpz_struct {
+    _mp_alloc: 0,
+    _mp_size: sz as int_t,
+    _mp_d: p as *mut [mp_limb_t] as *mut mp_limb_t
+  }
+}
+
 /// mpz_cmp
 pub fn mpz_cmp(a: mpz_t, b: mpz_t) -> int_t {
   unsafe { __gmpz_cmp(a, b) }
@@ -1121,6 +1269,11 @@ pub fn mpz_perfect_square_p(a: mpz_t) -> bool {
   unsafe { __gmpz_perfect_square_p(a) != 0 }
 }
 
+/// mpz_primorial_ui c = 2*3*5*7*11*...*p(prev)*p(&lt;=n)
+pub fn mpz_primorial_ui(c: mpz_t, n: ui_t) -> () {
+  unsafe { __gmpz_primorial_ui(c, n) }
+}
+
 /// mpz_fac_ui c = n!
 pub fn mpz_fac_ui(c: mpz_t, n: ui_t) -> () {
   unsafe { __gmpz_fac_ui(c, n) }
@@ -1169,6 +1322,38 @@ pub fn mpz_lcm(c: mpz_t, a: mpz_t, b: mpz_t) -> () {
 /// mpz_lcm_ui
 pub fn mpz_lcm_ui(c: mpz_t, a: mpz_t, u: ui_t) -> () {
   unsafe { __gmpz_lcm_ui(c, a, u) }
+}
+
+/// mpz_probab_prime_p 2 or 1 or 0
+pub fn mpz_probab_prime_p(a: mpz_t, r: int_t) -> int_t {
+  unsafe { __gmpz_probab_prime_p(a, r) }
+}
+
+/// mpz_nextprime
+pub fn mpz_nextprime(c: mpz_t, a: mpz_t) -> () {
+  unsafe { __gmpz_nextprime(c, a) }
+}
+
+/*
+/// mpz_prevprime
+pub fn mpz_prevprime(c: mpz_t, a: mpz_t) -> () {
+  unsafe { __gmpz_prevprime(c, a) }
+}
+*/
+
+/// mpz_invert c = inverse of a mod b ((c*a) mod b == 1)
+pub fn mpz_invert(c: mpz_t, a: mpz_t, b: mpz_t) -> int_t {
+  unsafe { __gmpz_invert(c, a, b) }
+}
+
+/// mpz_jacobi 0 1 -1 (defined only for n odd)
+pub fn mpz_jacobi(a: mpz_t, n: mpz_t) -> int_t {
+  unsafe { __gmpz_jacobi(a, n) }
+}
+
+/// mpz_legendre 0 1 -1 (defined only for p an odd positive prime)
+pub fn mpz_legendre(a: mpz_t, p: mpz_t) -> int_t {
+  unsafe { __gmpz_legendre(a, p) }
 }
 
 /// mpz_abs

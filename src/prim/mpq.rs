@@ -117,6 +117,30 @@ impl __mpq_struct {
     mpq_get_d(self)
   }
 
+  /// get_num create new instance of mpz_s
+  pub fn get_num(&mut self) -> mpz_s {
+    let mut t = mpz_s::init();
+    mpq_get_num(&mut t, self);
+    t
+  }
+
+  /// get_den create new instance of mpz_s
+  pub fn get_den(&mut self) -> mpz_s {
+    let mut t = mpz_s::init();
+    mpq_get_den(&mut t, self);
+    t
+  }
+
+  /// numref (unsafe)
+  pub fn numref(&mut self) -> mpz_t {
+    mpq_numref(self)
+  }
+
+  /// denref (unsafe)
+  pub fn denref(&mut self) -> mpz_t {
+    mpq_denref(self)
+  }
+
   /// swap
   pub fn swap(&mut self, r: mpq_t) -> &mut Self {
     mpq_swap(self, r);
@@ -349,6 +373,26 @@ pub fn mpq_get_str<'a>(s: Option<&mut String>, b: int_t, q: &'a mpq_s) ->
 /// mpq_get_d
 pub fn mpq_get_d(q: mpq_t) -> double_t {
   unsafe { __gmpq_get_d(q) }
+}
+
+/// mpq_get_num
+pub fn mpq_get_num(num: mpz_t, q: mpq_t) -> () {
+  unsafe { __gmpq_get_num(num, q) }
+}
+
+/// mpq_get_den
+pub fn mpq_get_den(den: mpz_t, q: mpq_t) -> () {
+  unsafe { __gmpq_get_den(den, q) }
+}
+
+/// mpq_numref
+pub fn mpq_numref(q: mpq_t) -> mpz_t {
+  unsafe { &mut std::slice::from_raw_parts_mut(__gmpq_numref(q), 1)[0] }
+}
+
+/// mpq_denref
+pub fn mpq_denref(q: mpq_t) -> mpz_t {
+  unsafe { &mut std::slice::from_raw_parts_mut(__gmpq_denref(q), 1)[0] }
 }
 
 /// mpq_swap

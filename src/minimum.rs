@@ -936,11 +936,11 @@ pub fn calc_pi_gauss_legendre_test() {
   });
 }
 
-/// calc pi euler test ***CAUTION too slow digits &gt;= 7***
+/// calc pi euler test ***CAUTION too slow digits &gt;= 9***
 /// expected on the single thread for mpf_set_default_prec
 pub fn calc_pi_euler_test() {
   let pi = "resources/pi.dat"; // has 11001 digits
-  (1..6).for_each(|digits| { // (1..6): &lt; 1s, (1..=6): few seconds
+  (1..8).for_each(|digits| { // (1..8): &lt; 1s, (1..=8): few seconds
     mpf_set_default_prec(mpf_s::calc_bits_from_digits(100)); // not digits + 3
     let pi_euler = &mut mpf_s::calc_pi_euler(digits);
 //    assert_eq!(format!("{}", pi_euler), "0.31415926535897932385e+1");
@@ -980,4 +980,52 @@ pub fn calc_napier_test() {
   2746639193 2003059921 8174135966 2904357290 0334295260
   ...
 */
+}
+
+/// ept test
+pub fn ept_test() {
+  let nc = vec![
+    (10, 4),
+    (100, 25),
+    (1000, 168),
+    (10000, 1229),
+    (100000, 9592),
+    (1000000, 78498),
+    (10000000, 664579),
+    (100000000, 5761455)]; // < 7sec
+  nc.into_iter().for_each(|(n, c)| {
+    let ept = util::EraPrimeTableUI::new(n);
+    assert_eq!(ept.nprimes(), c);
+/*
+    // dummy count loop 3sec for compare speed fast nth_prime slow nextprime
+    let mut cnt = 0;
+    let mut p = mpz_s::init_set_ui(0);
+    let _p = (0..c).fold(&mut p, |p, _k| {
+      let mut q = ept.nth_prime(cnt); // p.nextprime(); // (compare speed)
+      cnt += 1;
+      p.set(&mut q)
+    });
+    assert_eq!(cnt, c);
+*/
+/*
+    // simple count check more 20sec (not mut ept) slow nextprime
+    let mut cnt = 0;
+    let mut p = mpz_s::init_set_ui(0);
+    let _p = (0..=n).try_fold(&mut p, |p, _k| {
+      let mut q = p.nextprime();
+      if q.cmp_ui(n as ui_t) >= 0 { None }
+      else { cnt += 1; Some(p.set(&mut q)) }
+    });
+    assert_eq!(cnt, c);
+*/
+/*
+    // all check more 20sec (now must mut ept) slow nextprime
+    let mut p = mpz_s::init_set_ui(0);
+    let _p = (0..c).fold(&mut p, |p, k| {
+      let mut q = p.nextprime();
+      assert!(ept.nth_prime(k).cmp(&mut q) == 0);
+      p.set(&mut q)
+    });
+*/
+  });
 }

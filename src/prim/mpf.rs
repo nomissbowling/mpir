@@ -6,6 +6,7 @@ use std::error::Error;
 use std::collections::HashMap;
 
 use crate::prim::{*, typ::*, mpz::*, randstate::*, gmp::*}; // mpq::*
+use crate::util;
 
 /// __mpf_struct
 // not use #[derive(Clone)]
@@ -436,14 +437,14 @@ impl __mpf_struct {
     pi
   }
 
-  /// calc_pi_euler create new instance ***CAUTION too slow digits &gt;= 7***
+  /// calc_pi_euler create new instance ***CAUTION too slow digits &gt;= 9***
   pub fn calc_pi_euler(digits: mp_size_t) -> Self {
     let mut pi = mpf_s::init_set_ui(1);
     let g = &mut mpf_s::init_set_ui(0);
-    let prime = &mut mpz_s::init_set_ui(0);
-    let _p = (0..10usize.pow(digits as u32)).fold(&mut pi, |pi: mpf_t, _k| {
-      let np = &mut prime.nextprime();
-      prime.set(np);
+    let d = 10usize.pow(digits as u32);
+    let mut ept = util::EraPrimeTableUI::new(d);
+    let _p = (0..ept.nprimes()).fold(&mut pi, |pi: mpf_t, k| {
+      let np = ept.nth_prime(k);
       let pp = &mut mpz_s::pow_ui(np, 2);
       pi.mul(&mut g.set_z(pp).ui_div(1).ui_sub(1).ui_div(1));
       pi

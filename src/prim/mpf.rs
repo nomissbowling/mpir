@@ -416,7 +416,42 @@ impl __mpf_struct {
     (n as f64 / 10f64.log2()) as mp_size_t
   }
 
-  /// calc_napier
+  /// calc_pi_gauss_legendre create new instance
+  pub fn calc_pi_gauss_legendre(digits: mp_size_t) -> Self {
+    let recursion = digits.ilog2(); // or + 1
+    let a = &mut mpf_s::init_set_ui(1);
+    let b = &mut mpf_s::sqrt_ui(2);
+    let t = &mut mpf_s::init_set_ui(4);
+    let p = &mut mpf_s::init_set_ui(1);
+    let (a, b, t, _p) = (0..recursion).fold((a, b.ui_div(1), t.ui_div(1), p),
+      |(a, b, t, p), _k| {
+      let na = &mut mpf_s::init_set(a); // next a, keep a
+      na.add(b).div_ui(2);
+      let nb = &mut b.mul(a).sqrt(); // next b, b will be broken
+      t.sub(mpf_s::pow_ui(a.sub(na), 2).mul(p)); // modify t, a will be broken
+      (a.set(na), b.set(nb), t, p.mul_ui(2)) // modify p
+    });
+    let mut pi = mpf_s::pow_ui(a.add(b), 2);
+    pi.div_ui(4).div(t);
+    pi
+  }
+
+  /// calc_pi_euler create new instance ***CAUTION too slow digits &gt;= 7***
+  pub fn calc_pi_euler(digits: mp_size_t) -> Self {
+    let mut pi = mpf_s::init_set_ui(1);
+    let g = &mut mpf_s::init_set_ui(0);
+    let prime = &mut mpz_s::init_set_ui(0);
+    let _p = (0..10usize.pow(digits as u32)).fold(&mut pi, |pi: mpf_t, _k| {
+      let np = &mut prime.nextprime();
+      prime.set(np);
+      let pp = &mut mpz_s::pow_ui(np, 2);
+      pi.mul(&mut g.set_z(pp).ui_div(1).ui_sub(1).ui_div(1));
+      pi
+    });
+    pi.mul_ui(6).sqrt()
+  }
+
+  /// calc_napier create new instance
   pub fn calc_napier(x: mpf_t, digits: mp_size_t) -> Self {
     // significant digits of calc napier by Stirling's approximation
     let significant_digits_of_calc_napier = |n: f64| -> f64 {

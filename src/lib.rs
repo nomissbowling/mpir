@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/mpir/0.2.3")]
+#![doc(html_root_url = "https://docs.rs/mpir/0.2.4")]
 //! partial Rust porting of mpir multiple precision library based on gmp mpfr
 //!
 //! # Requirements
@@ -42,6 +42,8 @@ mod tests {
     calc_mpq_test,
     compare_test, // single thread
     significant_digits_test, // single thread
+    calc_pi_gauss_legendre_test, // single thread
+    calc_pi_euler_test, // single thread
     calc_napier_test}; // single thread
   use serial_test::serial;
 
@@ -162,6 +164,20 @@ mod tests {
   #[serial] // expected on the single thread for mpf_set_default_prec
   fn test_significant_digits() {
     assert_eq!(significant_digits_test(), ());
+  }
+
+  /// with [-- --nocapture] or with [-- --show-output]
+  #[test]
+  #[serial] // expected on the single thread for mpf_set_default_prec
+  fn test_calc_pi_gauss_legendre() {
+    assert_eq!(calc_pi_gauss_legendre_test(), ());
+  }
+
+  /// with [-- --nocapture] or with [-- --show-output]
+  #[test]
+  #[serial] // expected on the single thread for mpf_set_default_prec
+  fn test_calc_pi_euler() {
+    assert_eq!(calc_pi_euler_test(), ());
   }
 
   /// with [-- --nocapture] or with [-- --show-output]

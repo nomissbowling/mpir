@@ -923,6 +923,32 @@ pub fn significant_digits_test() {
     "0.10000000000000000000000000000001e-18"); // disp as match with prec
 }
 
+/// calc pi gauss legendre test
+/// expected on the single thread for mpf_set_default_prec
+pub fn calc_pi_gauss_legendre_test() {
+  let pi = "resources/pi.dat"; // has 11001 digits
+  [16, 1000, 10000].into_iter().for_each(|digits| { // loss of digits when < 16
+    mpf_set_default_prec(mpf_s::calc_bits_from_digits(digits + 3));
+    let pi_gauss_legendre = &mut mpf_s::calc_pi_gauss_legendre(digits);
+    assert_eq!(format!("{}", pi_gauss_legendre), "0.31415926535897932385e+1");
+    let o = trim_padding_digits(&pi_gauss_legendre.fmtstr(10, digits), digits);
+    assert_eq!(o, load_digits(pi, digits, true)); // rounded up when need
+  });
+}
+
+/// calc pi euler test ***CAUTION too slow digits &gt;= 7***
+/// expected on the single thread for mpf_set_default_prec
+pub fn calc_pi_euler_test() {
+  let pi = "resources/pi.dat"; // has 11001 digits
+  (1..6).for_each(|digits| { // (1..6): &lt; 1s, (1..=6): few seconds
+    mpf_set_default_prec(mpf_s::calc_bits_from_digits(100)); // not digits + 3
+    let pi_euler = &mut mpf_s::calc_pi_euler(digits);
+//    assert_eq!(format!("{}", pi_euler), "0.31415926535897932385e+1");
+    let o = trim_padding_digits(&pi_euler.fmtstr(10, digits), digits);
+    assert_eq!(o, load_digits(pi, digits, true)); // rounded up when need
+  });
+}
+
 /// calc napier test
 /// expected on the single thread for mpf_set_default_prec
 pub fn calc_napier_test() {
@@ -935,7 +961,7 @@ pub fn calc_napier_test() {
   // digits = 10000 for data file trim (...788 rounded up ...79)
   // digits = 10001 for data file overflow (failure last 788 no digit at 10002)
   let napier = "resources/napier.dat"; // has 10001 digits
-  [21, 22, 26, 150, 114, 331, 1573, 10000].iter().for_each(|&digits| {
+  [21, 22, 26, 150, 114, 331, 1573, 10000].into_iter().for_each(|digits| {
     mpf_set_default_prec(mpf_s::calc_bits_from_digits(digits + 3));
     let e = &mut mpf_s::calc_napier(&mut mpf_s::init_set_d(1.0), digits);
     assert_eq!(format!("{}", e), "0.27182818284590452354e+1");

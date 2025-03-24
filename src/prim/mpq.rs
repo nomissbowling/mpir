@@ -108,7 +108,7 @@ impl __mpq_struct {
   }
 
   /// fmtstr
-  pub fn fmtstr(&mut self, b: int_t) -> String {
+  pub fn fmtstr(&self, b: int_t) -> String {
     mpq_get_str(None, b, self).expect("mpq fmtstr")
   }
 
@@ -173,7 +173,7 @@ impl __mpq_struct {
   }
 
   /// sgn
-  pub fn sgn(&mut self) -> int_t {
+  pub fn sgn(&self) -> int_t {
     mpq_sgn(self)
   }
 
@@ -259,8 +259,7 @@ impl fmt::Debug for __mpq_struct {
 impl fmt::Display for __mpq_struct {
   /// fmt
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-//    write!(f, "{}", self.fmtstr(10)) // cannot be borrowed as mutable
-    write!(f, "{}", mpq_get_str(None, 10, self).expect("mpq str"))
+    write!(f, "{}", self.fmtstr(10))
   }
 }
 
@@ -432,7 +431,7 @@ pub fn mpq_equal(q: mpq_t, r: mpq_t) -> bool {
 }
 
 /// mpq_sgn
-pub fn mpq_sgn(q: mpq_t) -> int_t {
+pub fn mpq_sgn(q: &mpq_s) -> int_t {
 //  unsafe { __gmpq_sgn(q) }
   let t = q._mp_num._mp_size;
   if t < 0 { -1 } else { if t > 0 { 1 } else { 0 } }

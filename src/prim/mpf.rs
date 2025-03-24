@@ -99,7 +99,7 @@ impl __mpf_struct {
   }
 
   /// fmtstr
-  pub fn fmtstr(&mut self, b: int_t, d: mp_size_t) -> String {
+  pub fn fmtstr(&self, b: int_t, d: mp_size_t) -> String {
     mpf_get_fmtstr(self, b, d).expect("mpf fmtstr")
   }
 
@@ -192,7 +192,7 @@ impl __mpf_struct {
   }
 
   /// sgn
-  pub fn sgn(&mut self) -> int_t {
+  pub fn sgn(&self) -> int_t {
     mpf_sgn(self)
   }
 
@@ -444,7 +444,7 @@ impl __mpf_struct {
     let d = 10usize.pow(digits as u32);
     let mut ept = util::EraPrimeTableUI::new(d);
     let _p = (0..ept.nprimes()).fold(&mut pi, |pi: mpf_t, k| {
-      let np = ept.nth_prime(k);
+      let np = ept.nth_prime(k, 0); // must be in the table
       let pp = &mut mpz_s::pow_ui(np, 2);
       pi.mul(&mut g.set_z(pp).ui_div(1).ui_sub(1).ui_div(1));
       pi
@@ -505,8 +505,7 @@ unsafe {
 impl fmt::Display for __mpf_struct {
   /// fmt
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-//    write!(f, "{}", self.fmtstr(10, 20)) // cannot be borrowed as mutable
-    write!(f, "{}", mpf_get_fmtstr(self, 10, 20).expect("mpf fmtstr"))
+    write!(f, "{}", self.fmtstr(10, 20))
   }
 }
 
@@ -715,7 +714,7 @@ pub fn mpf_eq(f: mpf_t, g: mpf_t, n: mp_bitcnt_t) -> int_t {
 }
 
 /// mpf_sgn
-pub fn mpf_sgn(f: mpf_t) -> int_t {
+pub fn mpf_sgn(f: &mpf_s) -> int_t {
 //  unsafe { __gmpf_sgn(f) }
   let t = f._mp_size;
   if t < 0 { -1 } else { if t > 0 { 1 } else { 0 } }

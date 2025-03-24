@@ -802,6 +802,33 @@ pub fn calc_logical_test() {
   assert_eq!(c.hamdist(a), 2);
   assert_eq!(c.hamdist(b), 2);
   assert_eq!(d.hamdist(c), !0); // neg and pos (mp_bitcnt_t max == ui max - 1)
+
+  assert_eq!(d.binstr(), "-111111"); // 1...11000001
+  assert_eq!(d.hexstr(), "-3f"); // 1...11000001
+  assert_eq!(d.hexdump(), "-1 000000000000003f"); // 1...11000001
+//  println!("{:?}", d);
+  d.mul(b.set_ui(!0).add_ui(1)).mul(&mut b.tdiv_q_ui(32).0);
+  assert_eq!(d.hexstr(), "-1f800000000000000"); // 1...110000010...
+  assert_eq!(d.hexdump(), "-2 0000000000000001 f800000000000000");
+//  println!("{:?}", d);
+  c.set(&mut d.tdiv_q_ui(2).0);
+  assert_eq!(c.hexstr(), "-fc00000000000000"); // 1...110000010...
+  assert_eq!(c.hexdump(), "-1 fc00000000000000");
+//  println!("{:?}", c);
+  c.set(&mut d.tdiv_q(b.set_ui(2)));
+  assert_eq!(c.hexstr(), "-fc00000000000000"); // 1...110000010...
+  assert_eq!(c.hexdump(), "-1 fc00000000000000");
+//  println!("{:?}", c);
+
+  assert!(c.tstbit(58) == true); // 1...1100000*0... (*: 58th bit)
+  assert!(c.tstbit(63) == false); // 1...11*000010... (*: 63th bit)
+  assert!(c.tstbit(64) == true); // 1...1*0000010... (*: 64th bit)
+  assert!(c.tstbit(65) == true); // 1...*10000010... (*: 65th bit)
+
+  let z = mpz_s::init_set_ui(0);
+  assert_eq!(z.hexstr(), "0");
+  assert_eq!(z.hexdump(), "0"); // no value when size is 0
+//  assert_eq!(format!("{:?}", z), "1, 0 0000000000000000"); // undefined value
 }
 
 /// calc mpq test
@@ -984,6 +1011,13 @@ pub fn calc_napier_test() {
 
 /// ept test
 pub fn ept_test() {
+  let mut ept = EraPrimeTableUI::new(100);
+  assert_eq!(ept.nprimes(), 25); // 25 primes in 100
+  assert!(ept.nth_prime(24, 0).cmp(&mut mpz_s::init_set_ui(97)) == 0);
+  // skip 101(25), 103(26) and get 107(27) as probably or exactly
+  assert!(ept.nth_prime(27, 1).cmp(&mut mpz_s::init_set_ui(107)) == 0);
+  assert_eq!(ept.nprimes(), 28); // 101(25), 103(26), 107(27) are inserted
+
   let nc = vec![
     (10, 4),
     (100, 25),
@@ -1001,7 +1035,7 @@ pub fn ept_test() {
     let mut cnt = 0;
     let mut p = mpz_s::init_set_ui(0);
     let _p = (0..c).fold(&mut p, |p, _k| {
-      let mut q = ept.nth_prime(cnt); // p.nextprime(); // (compare speed)
+      let mut q = ept.nth_prime(cnt, 0); // p.nextprime(); // (compare speed)
       cnt += 1;
       p.set(&mut q)
     });
@@ -1023,7 +1057,7 @@ pub fn ept_test() {
     let mut p = mpz_s::init_set_ui(0);
     let _p = (0..c).fold(&mut p, |p, k| {
       let mut q = p.nextprime();
-      assert!(ept.nth_prime(k).cmp(&mut q) == 0);
+      assert!(ept.nth_prime(k, 0).cmp(&mut q) == 0);
       p.set(&mut q)
     });
 */

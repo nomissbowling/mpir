@@ -125,8 +125,29 @@ impl __mpz_struct {
   }
 
   /// fmtstr
-  pub fn fmtstr(&mut self, b: int_t) -> String {
+  pub fn fmtstr(&self, b: int_t) -> String {
     mpz_get_str(None, b, self).expect("mpz fmtstr")
+  }
+
+  /// binstr
+  /// - return "-111111" when bin is "1...11000001"
+  pub fn binstr(&self) -> String {
+    mpz_get_str(None, 2, self).expect("mpz binstr")
+  }
+
+  /// hexstr
+  /// - return "-3f" when hex is "f...c1"
+  pub fn hexstr(&self) -> String {
+    mpz_get_str(None, 16, self).expect("mpz hexstr")
+  }
+
+  /// hexdump
+  /// as String dump of limbs
+  pub fn hexdump(&self) -> String {
+    let d = self.limbs_read();
+    let mut s = vec![format!("{}", self.sgn() as i64 * d.len() as i64)];
+    s.extend(d.iter().rev().map(|u| format!("{:016x}", u))); // to big endian
+    s.join(" ")
   }
 
   /// get_d (loss of digits)
@@ -170,12 +191,12 @@ impl __mpz_struct {
   }
 
   /// size
-  pub fn size(&mut self) -> mp_size_t {
+  pub fn size(&self) -> mp_size_t {
     mpz_size(self)
   }
 
   /// limbs_read slice
-  pub fn limbs_read(&mut self) -> &mut [mp_limb_t] {
+  pub fn limbs_read(&self) -> &[mp_limb_t] {
     mpz_limbs_read(self)
   }
 
@@ -184,12 +205,12 @@ impl __mpz_struct {
     mpz_getlimbn(self, n)
   }
 
-  /// limbs_write slice
+  /// limbs_write slice (must call limbs_finish)
   pub fn limbs_write(&mut self, sz: mp_size_t) -> &mut [mp_limb_t] {
     mpz_limbs_write(self, sz)
   }
 
-  /// limbs_modify slice
+  /// limbs_modify slice (same as write)
   pub fn limbs_modify(&mut self, sz: mp_size_t) -> &mut [mp_limb_t] {
     mpz_limbs_modify(self, sz)
   }
@@ -241,7 +262,7 @@ impl __mpz_struct {
   }
 
   /// sgn
-  pub fn sgn(&mut self) -> int_t {
+  pub fn sgn(&self) -> int_t {
     mpz_sgn(self)
   }
 
@@ -1042,8 +1063,7 @@ unsafe {
 impl fmt::Display for __mpz_struct {
   /// fmt
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-//    write!(f, "{}", self.fmtstr(10)) // cannot be borrowed as mutable
-    write!(f, "{}", mpz_get_str(None, 10, self).expect("mpz str"))
+    write!(f, "{}", self.fmtstr(10))
   }
 }
 
@@ -1204,19 +1224,19 @@ pub fn _mpz_realloc(a: mpz_t, sz: mp_size_t) -> mp_t {
 }
 
 /// mpz_array_init ***(obsoleted) do NOT use it***
-pub fn mpz_array_init(a: *mut mpz_s, sz: mp_size_t, fnb: mp_size_t) -> () {
+pub fn mpz_array_init(a: mpz_t, sz: mp_size_t, fnb: mp_size_t) -> () {
   unsafe { __gmpz_array_init(a, sz, fnb) }
 }
 
 /// mpz_size
-pub fn mpz_size(a: *mut mpz_s) -> mp_size_t {
+pub fn mpz_size(a: &mpz_s) -> mp_size_t {
   unsafe { __gmpz_size(a) }
 }
 
 /// mpz_limbs_read slice
-pub fn mpz_limbs_read(a: mpz_t) -> &mut [mp_limb_t] {
+pub fn mpz_limbs_read(a: &mpz_s) -> &[mp_limb_t] {
   let sz = mpz_size(a);
-  unsafe { std::slice::from_raw_parts_mut(__gmpz_limbs_read(a), sz) }
+  unsafe { std::slice::from_raw_parts(__gmpz_limbs_read(a), sz) }
 }
 
 /// mpz_getlimbn (single element)
@@ -1294,7 +1314,7 @@ pub fn mpz_cmpabs_ui(a: mpz_t, u: ui_t) -> int_t {
 }
 
 /// mpz_sgn
-pub fn mpz_sgn(a: mpz_t) -> int_t {
+pub fn mpz_sgn(a: &mpz_s) -> int_t {
 //  unsafe { __gmpz_sgn(a) }
   let t = a._mp_size;
   if t < 0 { -1 } else { if t > 0 { 1 } else { 0 } }

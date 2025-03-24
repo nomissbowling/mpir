@@ -42,8 +42,8 @@ impl EraPrimeTableUI {
   }
 
   /// is_prime
-  pub fn is_prime(&self, n: mp_size_t) -> bool {
-    if n >= self.maxera { false } else { !self.era[n] }
+  pub fn is_prime(&self, n: mp_size_t) -> Option<bool> {
+    if n >= self.maxera { None } else { Some(!self.era[n]) }
   }
 
   /// nprimes
@@ -52,7 +52,27 @@ impl EraPrimeTableUI {
   }
 
   /// nth_prime
-  pub fn nth_prime(&mut self, n: mp_size_t) -> mpz_t {
-    self.tbl.get_mut(&n).expect("tbl does not have nth prime")
+  /// - when not found ***generate too slow***
+  /// - gen = 0: panic
+  /// - gen = not 0: generate nextprime (1: probably, 2: exactly)
+  pub fn nth_prime(&mut self, n: mp_size_t, gen: int_t) -> mpz_t {
+    let mut m = self.tbl.len() - 1;
+    if n <= m { self.tbl.get_mut(&n).expect("prime in the table") }
+    else {
+      match gen {
+      0 => panic!("tbl does not have nth prime"),
+      _ => {
+        while m < n {
+          let p = self.tbl.get_mut(&m).expect("generate next of last prime");
+          let mut q = p.nextprime();
+          if q.probab_prime_p(3) >= gen {
+            m += 1;
+            self.tbl.insert(m, q);
+          }
+        }
+        self.tbl.get_mut(&m).expect("nth prime")
+      }
+      }
+    }
   }
 }

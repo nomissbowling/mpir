@@ -61,9 +61,9 @@ extern "C" {
   /// __gmpz_array_init ***(obsoleted) do NOT use it***
   pub fn __gmpz_array_init(a: *mut mpz_s, sz: mp_size_t, fnb: mp_size_t) -> ();
   /// __gmpz_size
-  pub fn __gmpz_size(a: *mut mpz_s) -> mp_size_t;
+  pub fn __gmpz_size(a: *const mpz_s) -> mp_size_t;
   /// __gmpz_limbs_read (unsafe pointer to array mpz_size elements)
-  pub fn __gmpz_limbs_read(a: *mut mpz_s) -> *mut mp_limb_t;
+  pub fn __gmpz_limbs_read(a: *const mpz_s) -> *const mp_limb_t;
   /// __gmpz_getlimbn (single element)
   pub fn __gmpz_getlimbn(a: *mut mpz_s, n: mp_size_t) -> mp_limb_t;
   /// __gmpz_limbs_write (unsafe pointer to array sz elements) be reallocated
@@ -92,7 +92,7 @@ extern "C" {
   pub fn __gmpz_cmpabs_ui(a: *mut mpz_s, u: ui_t) -> int_t;
 /*
   /// __gmpz_sgn
-  pub fn __gmpz_sgn(a: *mut mpz_s) -> int_t;
+  pub fn __gmpz_sgn(a: *const mpz_s) -> int_t;
 */
 
   /// __gmpz_root r = nth root of a
@@ -443,7 +443,7 @@ extern "C" {
   pub fn __gmpf_eq(f: *mut mpf_s, g: *mut mpf_s, n: mp_bitcnt_t) -> int_t;
 /*
   /// __gmpf_sgn
-  pub fn __gmpf_sgn(f: *mut mpf_s) -> int_t;
+  pub fn __gmpf_sgn(f: *const mpf_s) -> int_t;
 */
   /// __gmpf_reldiff
   pub fn __gmpf_reldiff(g: *mut mpf_s, f: *mut mpf_s, e: *mut mpf_s) -> ();
@@ -584,7 +584,7 @@ extern "C" {
   pub fn __gmpq_equal(q: *mut mpq_s, r: *mut mpq_s) -> int_t;
 /*
   /// __gmpq_sgn
-  pub fn __gmpq_sgn(q: *mut mpq_s) -> int_t;
+  pub fn __gmpq_sgn(q: *const mpq_s) -> int_t;
 */
 
   /// __gmpq_inv p = q**-1

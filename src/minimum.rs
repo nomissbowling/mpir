@@ -81,22 +81,22 @@ pub fn calc_mpz_test() {
   assert_eq!(format!("{}", b), "654");
 
   // mpz (to be operator)
-  let (r3, flg) = &mut c.set_ui(27).root(3);
+  let (r3, flg) = &c.set_ui(27).root(3);
   assert_eq!(format!("{} {}", r3, flg), "3 true"); // 3
-  let (r3, rem) = &mut c.rootrem(3);
+  let (r3, rem) = &c.rootrem(3);
   assert_eq!(format!("{} {}", r3, rem), "3 0"); // 3
-  let r2 = &mut c.set_ui(16).sqrt();
+  let r2 = &c.set_ui(16).sqrt();
   assert_eq!(format!("{}", r2), "4"); // 4
-  let (r2, rem) = &mut c.sqrtrem();
+  let (r2, rem) = &c.sqrtrem();
   assert_eq!(format!("{} {}", r2, rem), "4 0"); // 4
 
-  let (r2, flg) = &mut b.root(2);
+  let (r2, flg) = &b.root(2);
   assert_eq!(format!("{} {}", r2, flg), "25 false"); // 25.5734...
-  let (r3, rem) = &mut b.rootrem(3);
+  let (r3, rem) = &b.rootrem(3);
   assert_eq!(format!("{} {}", r3, rem), "8 142"); // 8.68...
-  let r2 = &mut b.sqrt();
+  let r2 = &b.sqrt();
   assert_eq!(format!("{}", r2), "25"); // 25.5734...
-  let (r2, rem) = &mut b.sqrtrem();
+  let (r2, rem) = &b.sqrtrem();
   assert_eq!(format!("{} {}", r2, rem), "25 29"); // 25.5734...
 
   assert_eq!(b.perfect_power_p(), false);
@@ -123,96 +123,96 @@ pub fn calc_mpz_test() {
   assert_eq!(a.perfect_square_p(), false);
 
   // ceil
-  let q = &mut a.cdiv_q(b.set_ui(33));
+  let q = &a.cdiv_q(b.set_ui(33));
   assert_eq!(format!("{}", q), "31"); // 30.3030...
-  let r = &mut a.cdiv_r(b.set_ui(33));
+  let r = &a.cdiv_r(b.set_ui(33));
   assert_eq!(format!("{}", r), "-23"); // 10 - 33
-  let (q, r) = &mut a.cdiv_qr(b.set_ui(33));
+  let (q, r) = &a.cdiv_qr(b.set_ui(33));
   assert_eq!(format!("{}", q), "31");
   assert_eq!(format!("{}", r), "-23");
 
-  let (q, u) = &mut a.cdiv_q_ui(33);
+  let (q, u) = &a.cdiv_q_ui(33);
   assert_eq!(format!("{}", q), "31");
   assert_eq!(*u, 23);
-  let (r, u) = &mut a.cdiv_r_ui(33);
+  let (r, u) = &a.cdiv_r_ui(33);
   assert_eq!(format!("{}", r), "-23");
   assert_eq!(*u, 23);
-  let (q, r, u) = &mut a.cdiv_qr_ui(33);
+  let (q, r, u) = &a.cdiv_qr_ui(33);
   assert_eq!(format!("{}", q), "31");
   assert_eq!(format!("{}", r), "-23");
   assert_eq!(*u, 23);
 
-  let u = &mut a.cdiv_ui(33);
+  let u = &a.cdiv_ui(33);
   assert_eq!(format!("{}", a), "1000");
   assert_eq!(*u, 23);
 
-  let q = &mut a.cdiv_q_2exp(8);
+  let q = &a.cdiv_q_2exp(8);
   assert_eq!(format!("{}", q), "4"); // 3.90625
-  let r = &mut a.cdiv_r_2exp(8);
+  let r = &a.cdiv_r_2exp(8);
   assert_eq!(format!("{}", r), "-24"); // (1000 - 768) - 256
 
   // floor
-  let q = &mut a.fdiv_q(b.set_ui(33));
+  let q = &a.fdiv_q(b.set_ui(33));
   assert_eq!(format!("{}", q), "30"); // 30.3030...
-  let r = &mut a.fdiv_r(b.set_ui(33));
+  let r = &a.fdiv_r(b.set_ui(33));
   assert_eq!(format!("{}", r), "10"); // 10
-  let (q, r) = &mut a.fdiv_qr(b.set_ui(33));
+  let (q, r) = &a.fdiv_qr(b.set_ui(33));
   assert_eq!(format!("{}", q), "30");
   assert_eq!(format!("{}", r), "10");
 
-  let (q, u) = &mut a.fdiv_q_ui(33);
+  let (q, u) = &a.fdiv_q_ui(33);
   assert_eq!(format!("{}", q), "30");
   assert_eq!(*u, 10);
-  let (r, u) = &mut a.fdiv_r_ui(33);
+  let (r, u) = &a.fdiv_r_ui(33);
   assert_eq!(format!("{}", r), "10");
   assert_eq!(*u, 10);
-  let (q, r, u) = &mut a.fdiv_qr_ui(33);
+  let (q, r, u) = &a.fdiv_qr_ui(33);
   assert_eq!(format!("{}", q), "30");
   assert_eq!(format!("{}", r), "10");
   assert_eq!(*u, 10);
 
-  let u = &mut a.fdiv_ui(33);
+  let u = &a.fdiv_ui(33);
   assert_eq!(format!("{}", a), "1000");
   assert_eq!(*u, 10);
 
-  let q = &mut a.fdiv_q_2exp(8);
+  let q = &a.fdiv_q_2exp(8);
   assert_eq!(format!("{}", q), "3"); // 3.90625
-  let r = &mut a.fdiv_r_2exp(8);
+  let r = &a.fdiv_r_2exp(8);
   assert_eq!(format!("{}", r), "232"); // 1000 - 768
 
   // truncate
-  let q = &mut a.tdiv_q(b.set_ui(33));
+  let q = &a.tdiv_q(b.set_ui(33));
   assert_eq!(format!("{}", q), "30"); // 30.3030...
-  let r = &mut a.tdiv_r(b.set_ui(33));
+  let r = &a.tdiv_r(b.set_ui(33));
   assert_eq!(format!("{}", r), "10"); // 10
-  let (q, r) = &mut a.tdiv_qr(b.set_ui(33));
+  let (q, r) = &a.tdiv_qr(b.set_ui(33));
   assert_eq!(format!("{}", q), "30");
   assert_eq!(format!("{}", r), "10");
 
-  let (q, u) = &mut a.tdiv_q_ui(33);
+  let (q, u) = &a.tdiv_q_ui(33);
   assert_eq!(format!("{}", q), "30");
   assert_eq!(*u, 10);
-  let (r, u) = &mut a.tdiv_r_ui(33);
+  let (r, u) = &a.tdiv_r_ui(33);
   assert_eq!(format!("{}", r), "10");
   assert_eq!(*u, 10);
-  let (q, r, u) = &mut a.tdiv_qr_ui(33);
+  let (q, r, u) = &a.tdiv_qr_ui(33);
   assert_eq!(format!("{}", q), "30");
   assert_eq!(format!("{}", r), "10");
   assert_eq!(*u, 10);
 
-  let u = &mut a.tdiv_ui(33);
+  let u = &a.tdiv_ui(33);
   assert_eq!(format!("{}", a), "1000");
   assert_eq!(*u, 10);
 
-  let q = &mut a.tdiv_q_2exp(8);
+  let q = &a.tdiv_q_2exp(8);
   assert_eq!(format!("{}", q), "3"); // 3.90625
-  let r = &mut a.tdiv_r_2exp(8);
+  let r = &a.tdiv_r_2exp(8);
   assert_eq!(format!("{}", r), "232"); // 1000 - 768
 
   // modulo
-  let m = &mut a.modulo(b.set_ui(7));
+  let m = &a.modulo(b.set_ui(7));
   assert_eq!(format!("{}", m), "6"); // 1000 - 994
-  let (m, u) = &mut a.mod_ui(7);
+  let (m, u) = &a.mod_ui(7);
   assert_eq!(format!("{}", m), "6");
   assert_eq!(*u, 6);
 
@@ -244,35 +244,35 @@ pub fn calc_fact_test() {
     "1307674368000", "20922789888000", "355687428096000", // 15-17
     "6402373705728000", "121645100408832000", "2432902008176640000"]; // 18-20
   (0..=20).for_each(|n: usize| {
-    let t = &mut mpz_s::fact(n as ui_t);
+    let t = &mpz_s::fact(n as ui_t);
     assert_eq!(format!("{}! = {}", n, t), format!("{}! = {}", n, facts[n]));
-    let u = &mut mpz_s::fac_ui(n as ui_t);
+    let u = &mpz_s::fac_ui(n as ui_t);
     assert_eq!(format!("{}! = {}", n, t), format!("{}! = {}", n, u));
   });
 
   // mpz fact (to be operator) cached
   let m = &mut HashMap::<ui_t, mpz_s>::new();
   (0..=20).for_each(|n: usize| {
-    let t = &mut mpz_s::fact_cached(n as ui_t, m);
+    let t = &mpz_s::fact_cached(n as ui_t, m);
     assert_eq!(format!("{}! = {}", n, t), format!("{}! = {}", n, facts[n]));
   });
 
   // mpz primorial (to be operator)
   let primorials = vec!["1", "2", "6", "30", "210", "2310", "30030", "510510"];
   let (ps, _c) = (0..=16).fold((vec![], 0), |(mut v, mut c), k| {
-    let n = &mut mpz_s::init_set_ui(k);
+    let n = &mpz_s::init_set_ui(k);
     if n.probab_prime_p(2) >= 1 { c += 1; } // 1: probably, 2: exactly
     v.push(primorials[c]);
     (v, c)
   });
   (0..ps.len()).for_each(|n: usize| {
-    let p = &mut mpz_s::primorial_ui(n as ui_t);
+    let p = &mpz_s::primorial_ui(n as ui_t);
     assert_eq!(format!("P({}) = {}", n, p), format!("P({}) = {}", n, ps[n]));
   });
 
   // mpz remove
-  let a = &mut mpz_s::init_set_ui(510510);
-  let f = &mut mpz_s::init_set_ui(1001);
+  let a = &mpz_s::init_set_ui(510510);
+  let f = &mpz_s::init_set_ui(1001);
   let (c, n) = a.remove(f);
   assert_eq!(format!("{}, {}", c, n), "510, 1");
 }
@@ -281,12 +281,12 @@ pub fn calc_fact_test() {
 pub fn calc_fib_test() {
   let fibs = vec!["0", "1", "1", "2", "3", "5", "8", "13", "21", "34", "55"];
   (0..fibs.len() as ui_t).for_each(|i| {
-    let f_n = &mut mpz_s::fib_ui(i);
+    let f_n = &mpz_s::fib_ui(i);
 //    println!("{}: {}", i, f_n);
     assert_eq!(format!("{}", f_n), fibs[i as usize]);
   });
   (1..fibs.len() as ui_t).for_each(|i| {
-    let (f_n, f_nsub1) = &mut mpz_s::fib2_ui(i);
+    let (f_n, f_nsub1) = &mpz_s::fib2_ui(i);
 //    println!("{}: {}, {}", i, f_n, f_nsub1);
     assert_eq!(format!("{}, {}", f_n, f_nsub1),
       format!("{}, {}", fibs[i as usize], fibs[i as usize - 1]));
@@ -294,12 +294,12 @@ pub fn calc_fib_test() {
 
   let lucs = vec!["2", "1", "3", "4", "7", "11", "18", "29", "47", "76"];
   (0..lucs.len() as ui_t).for_each(|i| {
-    let l_n = &mut mpz_s::lucnum_ui(i);
+    let l_n = &mpz_s::lucnum_ui(i);
 //    println!("{}: {}", i, l_n);
     assert_eq!(format!("{}", l_n), lucs[i as usize]);
   });
   (1..lucs.len() as ui_t).for_each(|i| {
-    let (l_n, l_n_1) = &mut mpz_s::lucnum2_ui(i);
+    let (l_n, l_n_1) = &mpz_s::lucnum2_ui(i);
 //    println!("{}: {}, {}", i, l_n, l_n_1);
     assert_eq!(format!("{}, {}", l_n, l_n_1),
       format!("{}, {}", lucs[i as usize], lucs[i as usize - 1]));
@@ -308,20 +308,20 @@ pub fn calc_fib_test() {
 
 /// calc gcd test
 pub fn calc_gcd_test() {
-  let a = &mut mpz_s::init_set_ui(12); // 2 2 3
-  let b = &mut mpz_s::init_set_ui(30); // 2 3 5
+  let a = &mpz_s::init_set_ui(12); // 2 2 3
+  let b = &mpz_s::init_set_ui(30); // 2 3 5
   assert_eq!(format!("{}", a.gcd(b)), "6");
   let (g, u) = a.gcd_ui(90); // 2 3 3 5
   assert_eq!(format!("{}", g), "6");
   assert!(u == 6);
-  let (g, s, t) = &mut a.gcdext(b);
+  let (g, s, t) = &a.gcdext(b);
   assert_eq!(format!("{}, {}, {}", g, s, t), "6, -2, 1"); // 6, 3, -1
 }
 
 /// calc lcm test
 pub fn calc_lcm_test() {
-  let a = &mut mpz_s::init_set_ui(6); // 2 3
-  let b = &mut mpz_s::init_set_ui(15); // 3 5
+  let a = &mpz_s::init_set_ui(6); // 2 3
+  let b = &mpz_s::init_set_ui(15); // 3 5
   assert_eq!(format!("{}", a.lcm(b)), "30");
   assert_eq!(format!("{}", a.lcm_ui(8)), "24"); // 2 2 2
 }
@@ -334,7 +334,7 @@ pub fn calc_mod_prime_test() {
     "0 1 1 -1 1 -1 -1", // 7
     "0 1 -1 1 1 1 -1 -1 -1 1 -1"]; // 11
   [3, 5, 7, 11].into_iter().enumerate().for_each(|(i, k)| {
-    let p = &mut mpz_s::init_set_ui(k);
+    let p = &mpz_s::init_set_ui(k);
     let s = (0..k).map(|a| {
       format!("{}", mpz_s::init_set_ui(a).legendre(p))
     }).collect::<Vec<_>>();
@@ -353,7 +353,7 @@ pub fn calc_mod_prime_test() {
     "0 1 1 -1 1 -1 -1 -1 1 1 -1 -1 -1 1 -1 1 1"]; // 17
   (0..jacobis.len() as ui_t).enumerate().for_each(|(i, k)| {
     let o = 2 * k + 1;
-    let n = &mut mpz_s::init_set_ui(o);
+    let n = &mpz_s::init_set_ui(o);
     let s = (0..o).map(|a| {
       format!("{}", mpz_s::init_set_ui(a).jacobi(n))
     }).collect::<Vec<_>>();
@@ -363,7 +363,7 @@ pub fn calc_mod_prime_test() {
   // test kronecker by jacobi
   (0..jacobis.len() as ui_t).enumerate().for_each(|(i, k)| {
     let o = 2 * k + 1;
-    let n = &mut mpz_s::init_set_ui(o);
+    let n = &mpz_s::init_set_ui(o);
     let s = (0..o).map(|a| {
       format!("{}", mpz_s::init_set_ui(a).kronecker(n))
     }).collect::<Vec<_>>();
@@ -385,7 +385,7 @@ pub fn calc_mod_prime_test() {
   });
   (0..jacobis.len() as ui_t).enumerate().for_each(|(i, k)| {
     let o = 2 * k + 1;
-    let n = &mut mpz_s::init_set_ui(o);
+    let n = &mpz_s::init_set_ui(o);
     let s = (0..o).map(|a| {
       format!("{}", mpz_s::ui_kronecker(n, a))
     }).collect::<Vec<_>>();
@@ -393,37 +393,37 @@ pub fn calc_mod_prime_test() {
   });
   (0..jacobis.len() as si_t).enumerate().for_each(|(i, k)| {
     let o = 2 * k + 1;
-    let n = &mut mpz_s::init_set_si(o);
+    let n = &mpz_s::init_set_si(o);
     let s = (0..o).map(|a| {
       format!("{}", mpz_s::si_kronecker(n, a))
     }).collect::<Vec<_>>();
     assert_eq!(s.join(" "), jacobis[i]);
   });
 
-  let a = &mut mpz_s::init_set_ui(3);
-  let b = &mut mpz_s::init_set_ui(7);
-  assert!(b.modulo(a).cmp(&mut mpz_s::init_set_ui(1)) == 0); // 7 mod 3 == 1
-  let (mut p, q) = mpz_s::invert(b, a); // invert(7 mod 3) = 1
+  let a = &mpz_s::init_set_ui(3);
+  let b = &mpz_s::init_set_ui(7);
+  assert!(b.modulo(a).cmp(&mpz_s::init_set_ui(1)) == 0); // 7 mod 3 == 1
+  let (p, q) = mpz_s::invert(b, a); // invert(7 mod 3) = 1
   assert!(q != 0);
-  assert!(p.cmp(&mut mpz_s::init_set_ui(1)) == 0); // (1*7) mod 3 == 1
-  let (mut p, q) = mpz_s::invert(a, b); // invert(3 mod 7) = 5
+  assert!(p.cmp(&mpz_s::init_set_ui(1)) == 0); // (1*7) mod 3 == 1
+  let (p, q) = mpz_s::invert(a, b); // invert(3 mod 7) = 5
   assert!(q != 0);
-  assert!(p.cmp(&mut mpz_s::init_set_ui(5)) == 0); // (5*3) mod 7 == 1
+  assert!(p.cmp(&mpz_s::init_set_ui(5)) == 0); // (5*3) mod 7 == 1
 
   let a = &mut mpz_s::init_set_ui(97);
   let b = &mut mpz_s::init_set_ui(!0);
   b.add_ui(1);
-  assert!(b.modulo(a).cmp(&mut mpz_s::init_set_ui(35)) == 0); // b mod 97 == 35
-  let (mut p, q) = mpz_s::invert(b, a);
+  assert!(b.modulo(a).cmp(&mpz_s::init_set_ui(35)) == 0); // b mod 97 == 35
+  let (p, q) = mpz_s::invert(b, a);
   assert!(q != 0);
-  assert!(p.cmp(&mut mpz_s::init_set_ui(61)) == 0); // (61*b) mod 97 == 1
-  let (mut p, q) = mpz_s::invert(a, b);
+  assert!(p.cmp(&mpz_s::init_set_ui(61)) == 0); // (61*b) mod 97 == 1
+  let (p, q) = mpz_s::invert(a, b);
   assert!(q != 0);
-  assert!(p.cmp(&mut mpz_s::init_set_ui(1594008481)) == 0); // (p*a) mod b == 1
+  assert!(p.cmp(&mpz_s::init_set_ui(1594008481)) == 0); // (p*a) mod b == 1
 
   let m = 97; // mod m for probab_prime_p
-//  assert!(a.prevprime().cmp(&mut mpz_s::init_set_ui(91)) == 0);
-  assert!(a.nextprime().cmp(&mut mpz_s::init_set_ui(101)) == 0);
+//  assert!(a.prevprime().cmp(&mpz_s::init_set_ui(91)) == 0);
+  assert!(a.nextprime().cmp(&mpz_s::init_set_ui(101)) == 0);
   assert_eq!(a.add_ui(4).probab_prime_p(m), 2); // 101 exactly
   assert_eq!(a.add_ui(2).probab_prime_p(m), 2); // 103 exactly
   assert_eq!(a.add_ui(2).probab_prime_p(m), 0); // 105 not prime
@@ -444,7 +444,7 @@ pub fn calc_mod_prime_test() {
   prime_candidates.push(format!("{}, {}, {}", acc, len, 0));
   let mut s = Vec::<String>::new();
   if let Some((c, e)) = (0..len).try_fold((0, 0), |(c, e), _n| {
-    b.set(&mut a.nextprime());
+    b.set(&a.nextprime());
     match a.set(b).probab_prime_p(m) {
     0 => { Some((c, e)) }, // not prime
     1 => { s.push(format!("{} probably", a)); Some((c + 1, e)) },
@@ -460,11 +460,11 @@ pub fn calc_binomial_coefficient_test() {
   let n: ui_t = 6;
 
   let k: ui_t = 3;
-  let c = &mut mpz_s::bin_ui(&mut mpz_s::init_set_ui(n), k);
+  let c = &mpz_s::bin_ui(&mpz_s::init_set_ui(n), k);
   assert_eq!(format!("{}C{} = {}", n, k, c), format!("{}C{} = {}", n, k, 20));
 
   let k: ui_t = 2;
-  let c = &mut mpz_s::bin_uiui(n, k);
+  let c = &mpz_s::bin_uiui(n, k);
   assert_eq!(format!("{}C{} = {}", n, k, c), format!("{}C{} = {}", n, k, 15));
 }
 
@@ -598,19 +598,19 @@ pub fn calc_rand_test() {
   let lc = &mut randstate_s::init_lc_2exp(a, 32767, 64); // a, 257, 63
   fo(w, format!("seed urandomb lc: {:?}", lc.seed(a.set_ui(u))));
   (0..n).for_each(|i| {
-    let f = &mut mpf_s::urandomb(lc, b);
+    let f = &mpf_s::urandomb(lc, b);
     fo(w, format!("{} mpf_s::urandomb lc: {} {:?}", i, f, lc));
   });
 
   let mt = &mut randstate_s::init_mt();
   fo(w, format!("seed urandomb mt: {:?}", mt.seed_ui(u)));
   (0..n).for_each(|i| {
-    let f = &mut mpf_s::urandomb(mt, b);
+    let f = &mpf_s::urandomb(mt, b);
     fo(w, format!("{} mpf_s::urandomb mt: {} {:?}", i, f, mt));
   });
 
   (0..n).for_each(|i| {
-    let f = &mut mpf_s::random2(4, 1);
+    let f = &mpf_s::random2(4, 1);
     fo(w, format!("{} mpf_s::random2: {}", i, f));
   });
 
@@ -622,7 +622,7 @@ pub fn calc_rand_test() {
   });
 
   (0..n).for_each(|i| {
-    let c = &mut mpz_s::urandomb(mt, 16);
+    let c = &mpz_s::urandomb(mt, 16);
     fo(w, format!("{} mpz_s::urandomb mt: {} {:?}", i, c, mt));
   });
 
@@ -633,7 +633,7 @@ pub fn calc_rand_test() {
   });
 
   (0..n).for_each(|i| {
-    let c = &mut mpz_s::urandomm(mt, a.set_ui(65536));
+    let c = &mpz_s::urandomm(mt, a.set_ui(65536));
     fo(w, format!("{} mpz_s::urandomm mt: {} {:?}", i, c, mt));
   });
 
@@ -644,17 +644,17 @@ pub fn calc_rand_test() {
   });
 
   (0..n).for_each(|i| {
-    let c = &mut mpz_s::rrandomb(mt, 16);
+    let c = &mpz_s::rrandomb(mt, 16);
     fo(w, format!("{} mpz_s::rrandomb mt: {} {:?}", i, c, mt));
   });
 
   (0..n).for_each(|i| {
-    let c = &mut mpz_s::random(2);
+    let c = &mpz_s::random(2);
     fo(w, format!("{} mpz_s::random: {}", i, c));
   });
 
   (0..n).for_each(|i| {
-    let c = &mut mpz_s::random2(2);
+    let c = &mpz_s::random2(2);
     fo(w, format!("{} mpz_s::random2: {}", i, c));
   });
 
@@ -743,7 +743,7 @@ pub fn calc_fit_test() {
   assert!(g.fits_sint_p() == true); // ***true truncated***
   assert!(g.fits_sshort_p() == true); // ***true truncated***
 
-  let p = &mut mpf_s::init_set_d(3.0);
+  let p = &mpf_s::init_set_d(3.0);
   assert!(p.integer_p() == true);
   assert!(p.fits_ulong_p() == true);
   assert!(p.fits_uint_p() == true);
@@ -752,7 +752,7 @@ pub fn calc_fit_test() {
   assert!(p.fits_sint_p() == true);
   assert!(p.fits_sshort_p() == true);
 
-  let n = &mut mpf_s::init_set_d(-3.0);
+  let n = &mpf_s::init_set_d(-3.0);
   assert!(n.integer_p() == true);
   assert!(n.fits_ulong_p() == false);
   assert!(n.fits_uint_p() == false);
@@ -764,28 +764,28 @@ pub fn calc_fit_test() {
 
 /// calc logical test
 pub fn calc_logical_test() {
-  let a = &mut mpz_s::init_set_ui(10); // 0...1010
+  let a = &mpz_s::init_set_ui(10); // 0...1010
   let b = &mut mpz_s::init_set_ui(6); // 0...0110
   let c = &mut mpz_s::init_set_ui(12); // 0...1100
-  let e = &mut mpz_s::init_set_ui(14); // 0...1110
-  let f = &mut mpz_s::init_set_ui(15); // 0...1111
+  let e = &mpz_s::init_set_ui(14); // 0...1110
+  let f = &mpz_s::init_set_ui(15); // 0...1111
 
-  let d = &mut a.and(b);
-  assert!(d.cmp(&mut mpz_s::init_set_ui(2)) == 0);
-  let d = &mut a.ior(b);
+  let d = &a.and(b);
+  assert!(d.cmp(&mpz_s::init_set_ui(2)) == 0);
+  let d = &a.ior(b);
   assert!(d.cmp(e) == 0);
-  let d = &mut a.xor(b);
+  let d = &a.xor(b);
   assert!(d.cmp(c) == 0);
-  let d = &mut d.com();
-  assert!(d.cmp(&mut mpz_s::init_set_si(-13)) == 0); // 1...11110011
-  assert!(f.cmp(&mut mpz_s::init_set_si(15)) == 0);
+  let d = &d.com();
+  assert!(d.cmp(&mpz_s::init_set_si(-13)) == 0); // 1...11110011
+  assert!(f.cmp(&mpz_s::init_set_si(15)) == 0);
   let d = &mut f.com();
-  assert!(d.cmp(&mut mpz_s::init_set_si(-16)) == 0); // 1...11110000
+  assert!(d.cmp(&mpz_s::init_set_si(-16)) == 0); // 1...11110000
 
   assert!(d.tstbit(31) == true);
-  assert!(d.combit(4).cmp(&mut mpz_s::init_set_si(-32)) == 0); // 1...11100000
-  assert!(d.clrbit(5).cmp(&mut mpz_s::init_set_si(-64)) == 0); // 1...11000000
-  assert!(d.setbit(0).cmp(&mut mpz_s::init_set_si(-63)) == 0); // 1...11000001
+  assert!(d.combit(4).cmp(&mpz_s::init_set_si(-32)) == 0); // 1...11100000
+  assert!(d.clrbit(5).cmp(&mpz_s::init_set_si(-64)) == 0); // 1...11000000
+  assert!(d.setbit(0).cmp(&mpz_s::init_set_si(-63)) == 0); // 1...11000001
 
   assert_eq!(d.scan0(0), 1);
   assert_eq!(d.scan1(0), 0);
@@ -807,15 +807,15 @@ pub fn calc_logical_test() {
   assert_eq!(d.hexstr(), "-3f"); // 1...11000001
   assert_eq!(d.hexdump(), "-1 000000000000003f"); // 1...11000001
 //  println!("{:?}", d);
-  d.mul(b.set_ui(!0).add_ui(1)).mul(&mut b.tdiv_q_ui(32).0);
+  d.mul(b.set_ui(!0).add_ui(1)).mul(&b.tdiv_q_ui(32).0);
   assert_eq!(d.hexstr(), "-1f800000000000000"); // 1...110000010...
   assert_eq!(d.hexdump(), "-2 0000000000000001 f800000000000000");
 //  println!("{:?}", d);
-  c.set(&mut d.tdiv_q_ui(2).0);
+  c.set(&d.tdiv_q_ui(2).0);
   assert_eq!(c.hexstr(), "-fc00000000000000"); // 1...110000010...
   assert_eq!(c.hexdump(), "-1 fc00000000000000");
 //  println!("{:?}", c);
-  c.set(&mut d.tdiv_q(b.set_ui(2)));
+  c.set(&d.tdiv_q(b.set_ui(2)));
   assert_eq!(c.hexstr(), "-fc00000000000000"); // 1...110000010...
   assert_eq!(c.hexdump(), "-1 fc00000000000000");
 //  println!("{:?}", c);
@@ -825,10 +825,15 @@ pub fn calc_logical_test() {
   assert!(c.tstbit(64) == true); // 1...1*0000010... (*: 64th bit)
   assert!(c.tstbit(65) == true); // 1...*10000010... (*: 65th bit)
 
-  let z = mpz_s::init_set_ui(0);
+  let mut z = mpz_s::init_set_ui(0);
   assert_eq!(z.hexstr(), "0");
   assert_eq!(z.hexdump(), "0"); // no value when size is 0
 //  assert_eq!(format!("{:?}", z), "1, 0 0000000000000000"); // undefined value
+
+  z.setbit(63);
+  assert_eq!(z.hexstr(), "8000000000000000");
+  z.setbit(256);
+  assert_eq!(z.hexstr(), "10000000000000000000000000000000000000000000000008000000000000000");
 }
 
 /// calc mpq test
@@ -871,7 +876,7 @@ pub fn calc_mpq_test() {
   assert_eq!(o.equal(r), false); // ***false*** 2/2 != 1/1
   assert_eq!(o.equal(r.set_ui(2, 2)), true); // true
 
-  assert_eq!(format!("{}", o.set(q).mul(&mut p.inv())), "2/2");
+  assert_eq!(format!("{}", o.set(q).mul(&p.inv())), "2/2");
   assert!(o.cmp(r.set_ui(1, 1)) == 0); // true
 
   assert_eq!(format!("{}", o.set(q).div_2exp(2)), "1/16"); // reduced fraction
@@ -881,7 +886,7 @@ pub fn calc_mpq_test() {
   assert!(o.cmp(r.set_ui(1, 1)) == 0); // true
 
   // loss of digits
-  let t = &mut r.set_si(-2, 3).inv();
+  let t = &r.set_si(-2, 3).inv();
   assert!(t.get_d() == -1.5);
 }
 
@@ -940,7 +945,7 @@ pub fn significant_digits_test() {
   // mpf significant digits (to be operator) test loss of digits on display
   let disp_digits = digits + 3; // set disp_digits to over prec
   let f = &mut mpf_s::init_set_str("1.0e-19", 10);
-  let e = &mut mpf_s::init_set_str("1.0e-50", 10);
+  let e = &mpf_s::init_set_str("1.0e-50", 10);
   assert_eq!(e.fmtstr(10, disp_digits), "0.1e-49");
   assert_eq!(f.fmtstr(10, disp_digits), "0.1e-18");
   // f.add(e) as 0.99999999999999999999e-19 without mpf_set_default_prec(100)
@@ -956,7 +961,7 @@ pub fn calc_pi_gauss_legendre_test() {
   let pi = "resources/pi.dat"; // has 11001 digits
   [16, 1000, 10000].into_iter().for_each(|digits| { // loss of digits when < 16
     mpf_set_default_prec(mpf_s::calc_bits_from_digits(digits + 3));
-    let pi_gauss_legendre = &mut mpf_s::calc_pi_gauss_legendre(digits);
+    let pi_gauss_legendre = &mpf_s::calc_pi_gauss_legendre(digits);
     assert_eq!(format!("{}", pi_gauss_legendre), "0.31415926535897932385e+1");
     let o = trim_padding_digits(&pi_gauss_legendre.fmtstr(10, digits), digits);
     assert_eq!(o, load_digits(pi, digits, true)); // rounded up when need
@@ -969,7 +974,7 @@ pub fn calc_pi_euler_test() {
   let pi = "resources/pi.dat"; // has 11001 digits
   (1..8).for_each(|digits| { // (1..8): &lt; 1s, (1..=8): few seconds
     mpf_set_default_prec(mpf_s::calc_bits_from_digits(100)); // not digits + 3
-    let pi_euler = &mut mpf_s::calc_pi_euler(digits);
+    let pi_euler = &mpf_s::calc_pi_euler(digits);
 //    assert_eq!(format!("{}", pi_euler), "0.31415926535897932385e+1");
     let o = trim_padding_digits(&pi_euler.fmtstr(10, digits), digits);
     assert_eq!(o, load_digits(pi, digits, true)); // rounded up when need
@@ -990,7 +995,7 @@ pub fn calc_napier_test() {
   let napier = "resources/napier.dat"; // has 10001 digits
   [21, 22, 26, 150, 114, 331, 1573, 10000].into_iter().for_each(|digits| {
     mpf_set_default_prec(mpf_s::calc_bits_from_digits(digits + 3));
-    let e = &mut mpf_s::calc_napier(&mut mpf_s::init_set_d(1.0), digits);
+    let e = &mpf_s::calc_napier(&mpf_s::init_set_d(1.0), digits);
     assert_eq!(format!("{}", e), "0.27182818284590452354e+1");
     let o = trim_padding_digits(&e.fmtstr(10, digits), digits); // 0.NN...NNe+1
 /*
@@ -1013,9 +1018,9 @@ pub fn calc_napier_test() {
 pub fn ept_test() {
   let mut ept = EraPrimeTableUI::new(100);
   assert_eq!(ept.nprimes(), 25); // 25 primes in 100
-  assert!(ept.nth_prime(24, 0).cmp(&mut mpz_s::init_set_ui(97)) == 0);
+  assert!(ept.nth_prime(24, 0).cmp(&mpz_s::init_set_ui(97)) == 0);
   // skip 101(25), 103(26) and get 107(27) as probably or exactly
-  assert!(ept.nth_prime(27, 1).cmp(&mut mpz_s::init_set_ui(107)) == 0);
+  assert!(ept.nth_prime(27, 1).cmp(&mpz_s::init_set_ui(107)) == 0);
   assert_eq!(ept.nprimes(), 28); // 101(25), 103(26), 107(27) are inserted
 
   let nc = vec![
@@ -1035,9 +1040,9 @@ pub fn ept_test() {
     let mut cnt = 0;
     let mut p = mpz_s::init_set_ui(0);
     let _p = (0..c).fold(&mut p, |p, _k| {
-      let mut q = ept.nth_prime(cnt, 0); // p.nextprime(); // (compare speed)
+      let q = ept.nth_prime(cnt, 0); // &p.nextprime(); // (to compare speed)
       cnt += 1;
-      p.set(&mut q)
+      p.set(q)
     });
     assert_eq!(cnt, c);
 */
@@ -1046,9 +1051,9 @@ pub fn ept_test() {
     let mut cnt = 0;
     let mut p = mpz_s::init_set_ui(0);
     let _p = (0..=n).try_fold(&mut p, |p, _k| {
-      let mut q = p.nextprime();
+      let q = &p.nextprime();
       if q.cmp_ui(n as ui_t) >= 0 { None }
-      else { cnt += 1; Some(p.set(&mut q)) }
+      else { cnt += 1; Some(p.set(q)) }
     });
     assert_eq!(cnt, c);
 */
@@ -1056,9 +1061,9 @@ pub fn ept_test() {
     // all check more 20sec (now must mut ept) slow nextprime
     let mut p = mpz_s::init_set_ui(0);
     let _p = (0..c).fold(&mut p, |p, k| {
-      let mut q = p.nextprime();
-      assert!(ept.nth_prime(k, 0).cmp(&mut q) == 0);
-      p.set(&mut q)
+      let q = &p.nextprime();
+      assert!(ept.nth_prime(k, 0).cmp(q) == 0);
+      p.set(q)
     });
 */
   });

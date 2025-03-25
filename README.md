@@ -42,16 +42,16 @@ Sample
     "1307674368000", "20922789888000", "355687428096000", // 15-17
     "6402373705728000", "121645100408832000", "2432902008176640000"]; // 18-20
   (0..=20).for_each(|n: usize| {
-    let t = &mut mpz_s::fact(n as ui_t);
+    let t = &mpz_s::fact(n as ui_t);
     assert_eq!(format!("{}! = {}", n, t), format!("{}! = {}", n, facts[n]));
-    let u = &mut mpz_s::fac_ui(n as ui_t);
+    let u = &mpz_s::fac_ui(n as ui_t);
     assert_eq!(format!("{}! = {}", n, t), format!("{}! = {}", n, u));
   });
 
   // mpz fact (to be operator) cached
   let m = &mut HashMap::<ui_t, mpz_s>::new();
   (0..=20).for_each(|n: usize| {
-    let t = &mut mpz_s::fact_cached(n as ui_t, m);
+    let t = &mpz_s::fact_cached(n as ui_t, m);
     assert_eq!(format!("{}! = {}", n, t), format!("{}! = {}", n, facts[n]));
   });
 
@@ -69,7 +69,7 @@ Sample
   // mpf significant digits (to be operator) test loss of digits on display
   let disp_digits = digits + 3; // set disp_digits to over prec
   let f = &mut mpf_s::init_set_str("1.0e-19", 10);
-  let e = &mut mpf_s::init_set_str("1.0e-50", 10);
+  let e = &mpf_s::init_set_str("1.0e-50", 10);
   assert_eq!(e.fmtstr(10, disp_digits), "0.1e-49");
   assert_eq!(f.fmtstr(10, disp_digits), "0.1e-18");
   // f.add(e) as 0.99999999999999999999e-19 without mpf_set_default_prec(100)
@@ -81,7 +81,7 @@ Sample
   // mpf calc napier (to be operator)
   let digits = 150;
   mpf_set_default_prec(mpf_s::calc_bits_from_digits(digits + 3));
-  let e = &mut mpf_s::calc_napier(&mut mpf_s::init_set_d(1.0), digits);
+  let e = &mpf_s::calc_napier(&mpf_s::init_set_d(1.0), digits);
   assert_eq!(format!("{}", e),
     "0.27182818284590452354e+1");
   assert_eq!(e.fmtstr(10, digits),

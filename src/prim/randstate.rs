@@ -72,7 +72,7 @@ impl gmp_randstate_struct {
   }
 
   /// init_set create new instance copy
-  pub fn init_set(s: randstate_t) -> Self {
+  pub fn init_set(s: randstate_r) -> Self {
     let mut t = randstate_s::new();
     gmp_randinit_set(&mut t, s);
     t
@@ -93,7 +93,7 @@ impl gmp_randstate_struct {
   }
 
   /// init_lc_2exp x = (a*x + c) mod 2**m2e create new instance
-  pub fn init_lc_2exp(a: mpz_t, c: ui_t, m2e: mp_bitcnt_t) -> Self {
+  pub fn init_lc_2exp(a: mpz_r, c: ui_t, m2e: mp_bitcnt_t) -> Self {
     let mut t = randstate_s::new();
     gmp_randinit_lc_2exp(&mut t, a, c, m2e);
     t
@@ -152,6 +152,9 @@ pub type randstate_s = gmp_randstate_struct; // [gmp_randstate_struct; 1]
 /// randstate_t
 #[allow(non_camel_case_types)]
 pub type randstate_t<'a> = &'a mut randstate_s; // *mut randstate_s
+/// randstate_r
+#[allow(non_camel_case_types)]
+pub type randstate_r<'a> = &'a randstate_s; // *const randstate_s
 
 /// gmp_randclear
 pub fn gmp_randclear(r: randstate_t) -> () {
@@ -167,7 +170,7 @@ pub fn gmp_randinit(r: randstate_t, _a: gmp_randalg_t, sz: mp_bitcnt_t) -> () {
 }
 
 /// gmp_randinit_set copy
-pub fn gmp_randinit_set(r: randstate_t, s: randstate_t) -> () {
+pub fn gmp_randinit_set(r: randstate_t, s: randstate_r) -> () {
   unsafe { __gmp_randinit_set(r, s) }
 }
 
@@ -183,7 +186,7 @@ pub fn gmp_randinit_mt(r: randstate_t) -> () {
 
 /// gmp_randinit_lc_2exp x = (a*x + c) mod 2**m2e
 pub fn gmp_randinit_lc_2exp(r: randstate_t,
-  a: mpz_t, c: ui_t, m2e: mp_bitcnt_t) -> () {
+  a: mpz_r, c: ui_t, m2e: mp_bitcnt_t) -> () {
   unsafe { __gmp_randinit_lc_2exp(r, a, c, m2e) }
 }
 

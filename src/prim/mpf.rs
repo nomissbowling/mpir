@@ -64,7 +64,7 @@ impl __mpf_struct {
   }
 
   /// init_set create new instance
-  pub fn init_set(f: mpf_t) -> Self {
+  pub fn init_set(f: mpf_r) -> Self {
     let mut t = mpf_s::new();
     mpf_init_set(&mut t, f);
     t
@@ -104,7 +104,7 @@ impl __mpf_struct {
   }
 
   /// set self = f
-  pub fn set(&mut self, f: mpf_t) -> &mut Self {
+  pub fn set(&mut self, f: mpf_r) -> &mut Self {
     mpf_set(self, f);
     self
   }
@@ -128,7 +128,7 @@ impl __mpf_struct {
   }
 
   /// set_z self = a
-  pub fn set_z(&mut self, a: mpz_t) -> &mut Self {
+  pub fn set_z(&mut self, a: mpz_r) -> &mut Self {
     mpf_set_z(self, a);
     self
   }
@@ -140,54 +140,54 @@ impl __mpf_struct {
   }
 
   /// get_d (loss of digits)
-  pub fn get_d(&mut self) -> double_t {
+  pub fn get_d(&self) -> double_t {
     mpf_get_d(self)
   }
 
   /// get_ui (loss of digits)
-  pub fn get_ui(&mut self) -> ui_t {
+  pub fn get_ui(&self) -> ui_t {
     mpf_get_ui(self)
   }
 
   /// get_si (loss of digits)
-  pub fn get_si(&mut self) -> si_t {
+  pub fn get_si(&self) -> si_t {
     mpf_get_si(self)
   }
 
   /// get_d_2exp (loss of digits)
-  pub fn get_d_2exp(&mut self) -> (double_t, si_t) {
+  pub fn get_d_2exp(&self) -> (double_t, si_t) {
     let mut e: si_t = 0;
     let d = mpf_get_d_2exp(&mut e, self);
     (d, e)
   }
 
   /// cmp
-  pub fn cmp(&mut self, g: mpf_t) -> int_t {
+  pub fn cmp(&self, g: mpf_r) -> int_t {
     mpf_cmp(self, g)
   }
 
   /// cmp_d
-  pub fn cmp_d(&mut self, d: double_t) -> int_t {
+  pub fn cmp_d(&self, d: double_t) -> int_t {
     mpf_cmp_d(self, d)
   }
 
   /// cmp_ui
-  pub fn cmp_ui(&mut self, u: ui_t) -> int_t {
+  pub fn cmp_ui(&self, u: ui_t) -> int_t {
     mpf_cmp_ui(self, u)
   }
 
   /// cmp_si
-  pub fn cmp_si(&mut self, s: si_t) -> int_t {
+  pub fn cmp_si(&self, s: si_t) -> int_t {
     mpf_cmp_si(self, s)
   }
 
   /// cmp_z
-  pub fn cmp_z(&mut self, a: mpz_t) -> int_t {
+  pub fn cmp_z(&self, a: mpz_r) -> int_t {
     mpf_cmp_z(self, a)
   }
 
   /// eq ***mathematically ill-defined and should not be used***
-  pub fn eq(&mut self, g: mpf_t, n: mp_bitcnt_t) -> int_t {
+  pub fn eq(&self, g: mpf_r, n: mp_bitcnt_t) -> int_t {
     mpf_eq(self, g, n)
   }
 
@@ -197,14 +197,14 @@ impl __mpf_struct {
   }
 
   /// reldiff returns abs(self - e) / self create new instance
-  pub fn reldiff(&mut self, e: mpf_t) -> Self {
+  pub fn reldiff(&self, e: mpf_r) -> Self {
     let mut t = mpf_s::init(); // new();
     mpf_reldiff(&mut t, self, e);
     t
   }
 
   /// sqrt create new instance
-  pub fn sqrt(&mut self) -> Self {
+  pub fn sqrt(&self) -> Self {
     let mut t = mpf_s::init(); // new();
     mpf_sqrt(&mut t, self);
     t
@@ -218,163 +218,151 @@ impl __mpf_struct {
   }
 
   /// abs create new instance
-  pub fn abs(&mut self) -> Self {
+  pub fn abs(&self) -> Self {
     let mut t = mpf_s::init(); // new();
     mpf_abs(&mut t, self);
     t
   }
 
   /// neg create new instance
-  pub fn neg(&mut self) -> Self {
+  pub fn neg(&self) -> Self {
     let mut t = mpf_s::init(); // new();
     mpf_neg(&mut t, self);
     t
   }
 
   /// sub self -= e
-  pub fn sub(&mut self, e: mpf_t) -> &mut Self {
-    let t = &mut mpf_s::init_set(self);
-    mpf_sub(self, t, e);
+  pub fn sub(&mut self, e: mpf_r) -> &mut Self {
+    mpf_sub(self, &mpf_s::init_set(self), e);
     self
   }
 
   /// sub_ui self -= u
   pub fn sub_ui(&mut self, u: ui_t) -> &mut Self {
-    let t = &mut mpf_s::init_set(self);
-    mpf_sub_ui(self, t, u);
+    mpf_sub_ui(self, &mpf_s::init_set(self), u);
     self
   }
 
   /// ui_sub self = u - self
   pub fn ui_sub(&mut self, u: ui_t) -> &mut Self {
-    let t = &mut mpf_s::init_set(self);
-    mpf_ui_sub(self, u, t);
+    mpf_ui_sub(self, u, &mpf_s::init_set(self));
     self
   }
 
   /// add self += e
-  pub fn add(&mut self, e: mpf_t) -> &mut Self {
-    let t = &mut mpf_s::init_set(self);
-    mpf_add(self, t, e);
+  pub fn add(&mut self, e: mpf_r) -> &mut Self {
+    mpf_add(self, &mpf_s::init_set(self), e);
     self
   }
 
   /// add_ui self += u
   pub fn add_ui(&mut self, u: ui_t) -> &mut Self {
-    let t = &mut mpf_s::init_set(self);
-    mpf_add_ui(self, t, u);
+    mpf_add_ui(self, &mpf_s::init_set(self), u);
     self
   }
 
   /// mul self *= e
-  pub fn mul(&mut self, e: mpf_t) -> &mut Self {
-    let t = &mut mpf_s::init_set(self);
-    mpf_mul(self, t, e);
+  pub fn mul(&mut self, e: mpf_r) -> &mut Self {
+    mpf_mul(self, &mpf_s::init_set(self), e);
     self
   }
 
   /// mul_ui self *= u
   pub fn mul_ui(&mut self, u: ui_t) -> &mut Self {
-    let t = &mut mpf_s::init_set(self);
-    mpf_mul_ui(self, t, u);
+    mpf_mul_ui(self, &mpf_s::init_set(self), u);
     self
   }
 
-  /// mul_2exp g = f * 2**n
+  /// mul_2exp self *= 2**n
   pub fn mul_2exp(&mut self, n: mp_bitcnt_t) -> &mut Self {
-    let t = &mut mpf_s::init_set(self);
-    mpf_mul_2exp(self, t, n);
+    mpf_mul_2exp(self, &mpf_s::init_set(self), n);
     self
   }
 
   /// div self /= e
-  pub fn div(&mut self, e: mpf_t) -> &mut Self {
-    let t = &mut mpf_s::init_set(self);
-    mpf_div(self, t, e);
+  pub fn div(&mut self, e: mpf_r) -> &mut Self {
+    mpf_div(self, &mpf_s::init_set(self), e);
     self
   }
 
   /// div_ui self /= u
   pub fn div_ui(&mut self, u: ui_t) -> &mut Self {
-    let t = &mut mpf_s::init_set(self);
-    mpf_div_ui(self, t, u);
+    mpf_div_ui(self, &mpf_s::init_set(self), u);
     self
   }
 
   /// ui_div self = u / self
   pub fn ui_div(&mut self, u: ui_t) -> &mut Self {
-    let t = &mut mpf_s::init_set(self);
-    mpf_ui_div(self, u, t);
+    mpf_ui_div(self, u, &mpf_s::init_set(self));
     self
   }
 
   /// div_2exp self /= 2**n
   pub fn div_2exp(&mut self, n: mp_bitcnt_t) -> &mut Self {
-    let t = &mut mpf_s::init_set(self);
-    mpf_div_2exp(self, t, n);
+    mpf_div_2exp(self, &mpf_s::init_set(self), n);
     self
   }
 
   /// pow_ui f**n create new instance
-  pub fn pow_ui(f: mpf_t, n: ui_t) -> Self {
+  pub fn pow_ui(f: mpf_r, n: ui_t) -> Self {
     let mut t = mpf_s::init(); // ***never*** use new();
     mpf_pow_ui(&mut t, f, n);
     t
   }
 
   /// ceil create new instance
-  pub fn ceil(&mut self) -> Self {
+  pub fn ceil(&self) -> Self {
     let mut t = mpf_s::init();
     mpf_ceil(&mut t, self);
     t
   }
 
   /// floor create new instance
-  pub fn floor(&mut self) -> Self {
+  pub fn floor(&self) -> Self {
     let mut t = mpf_s::init();
     mpf_floor(&mut t, self);
     t
   }
 
   /// trunc create new instance
-  pub fn trunc(&mut self) -> Self {
+  pub fn trunc(&self) -> Self {
     let mut t = mpf_s::init();
     mpf_trunc(&mut t, self);
     t
   }
 
   /// integer_p
-  pub fn integer_p(&mut self) -> bool {
+  pub fn integer_p(&self) -> bool {
     mpf_integer_p(self)
   }
 
   /// fits_ulong_p
-  pub fn fits_ulong_p(&mut self) -> bool {
+  pub fn fits_ulong_p(&self) -> bool {
     mpf_fits_ulong_p(self)
   }
 
   /// fits_slong_p
-  pub fn fits_slong_p(&mut self) -> bool {
+  pub fn fits_slong_p(&self) -> bool {
     mpf_fits_slong_p(self)
   }
 
   /// fits_uint_p
-  pub fn fits_uint_p(&mut self) -> bool {
+  pub fn fits_uint_p(&self) -> bool {
     mpf_fits_uint_p(self)
   }
 
   /// fits_sint_p
-  pub fn fits_sint_p(&mut self) -> bool {
+  pub fn fits_sint_p(&self) -> bool {
     mpf_fits_sint_p(self)
   }
 
   /// fits_ushort_p
-  pub fn fits_ushort_p(&mut self) -> bool {
+  pub fn fits_ushort_p(&self) -> bool {
     mpf_fits_ushort_p(self)
   }
 
   /// fits_sshort_p
-  pub fn fits_sshort_p(&mut self) -> bool {
+  pub fn fits_sshort_p(&self) -> bool {
     mpf_fits_sshort_p(self)
   }
 
@@ -393,7 +381,7 @@ impl __mpf_struct {
   }
 
   /// get_prec
-  pub fn get_prec(&mut self) -> mp_bitcnt_t {
+  pub fn get_prec(&self) -> mp_bitcnt_t {
     mpf_get_prec(self)
   }
 
@@ -428,7 +416,7 @@ impl __mpf_struct {
       |(a, b, t, p), _k| {
       let na = &mut mpf_s::init_set(a); // next a, keep a
       na.add(b).div_ui(2);
-      let nb = &mut b.mul(a).sqrt(); // next b, b will be broken
+      let nb = &b.mul(a).sqrt(); // next b, b will be broken
       t.sub(mpf_s::pow_ui(a.sub(na), 2).mul(p)); // modify t, a will be broken
       (a.set(na), b.set(nb), t, p.mul_ui(2)) // modify p
     });
@@ -445,7 +433,7 @@ impl __mpf_struct {
     let mut ept = util::EraPrimeTableUI::new(d);
     let _p = (0..ept.nprimes()).fold(&mut pi, |pi: mpf_t, k| {
       let np = ept.nth_prime(k, 0); // must be in the table
-      let pp = &mut mpz_s::pow_ui(np, 2);
+      let pp = &mpz_s::pow_ui(np, 2);
       pi.mul(&mut g.set_z(pp).ui_div(1).ui_sub(1).ui_div(1));
       pi
     });
@@ -453,7 +441,7 @@ impl __mpf_struct {
   }
 
   /// calc_napier create new instance
-  pub fn calc_napier(x: mpf_t, digits: mp_size_t) -> Self {
+  pub fn calc_napier(x: mpf_r, digits: mp_size_t) -> Self {
     // significant digits of calc napier by Stirling's approximation
     let significant_digits_of_calc_napier = |n: f64| -> f64 {
       let p = (2.0 * std::f64::consts::PI * n).sqrt().log10(); // .log(10.0)
@@ -469,7 +457,7 @@ impl __mpf_struct {
       let d = if i == 0 { 0 } // 0.log10() is NaN
         else { significant_digits_of_calc_napier(i as f64) as mp_size_t };
 //      println!("i {}, d {}", i, d);
-      let n = &mut mpz_s::fact_cached(i, m);
+      let n = &mpz_s::fact_cached(i, m);
       let f = &mut mpf_s::pow_ui(x, i);
       e.add(f.div(g.set_z(n)));
 /*
@@ -515,6 +503,9 @@ pub type mpf_s = __mpf_struct; // [__mpf_struct; 1]
 /// mpf_t
 #[allow(non_camel_case_types)]
 pub type mpf_t<'a> = &'a mut mpf_s; // *mut mpf_s
+/// mpf_r
+#[allow(non_camel_case_types)]
+pub type mpf_r<'a> = &'a mpf_s; // *const mpf_s
 
 /// mpf_clears
 pub fn mpf_clears(vf: &mut Vec<mpf_t>) -> () {
@@ -546,7 +537,7 @@ pub fn mpf_init2(f: mpf_t, n: mp_bitcnt_t) -> () {
 }
 
 /// mpf_init_set
-pub fn mpf_init_set(f: mpf_t, g: mpf_t) -> () {
+pub fn mpf_init_set(f: mpf_t, g: mpf_r) -> () {
   unsafe { __gmpf_init_set(f, g) }
 }
 
@@ -576,7 +567,7 @@ pub fn mpf_init_set_str_u8z(f: mpf_t, s: &[u8], b: int_t) -> () {
 }
 
 /// mpf_set
-pub fn mpf_set(f: mpf_t, g: mpf_t) -> () {
+pub fn mpf_set(f: mpf_t, g: mpf_r) -> () {
   unsafe { __gmpf_set(f, g) }
 }
 
@@ -596,7 +587,7 @@ pub fn mpf_set_d(f: mpf_t, d: double_t) -> () {
 }
 
 /// mpf_set_z
-pub fn mpf_set_z(f: mpf_t, a: mpz_t) -> () {
+pub fn mpf_set_z(f: mpf_t, a: mpz_r) -> () {
   unsafe { __gmpf_set_z(f, a) }
 }
 
@@ -664,69 +655,69 @@ pub fn mpf_get_fmtstr<'a>(f: &'a mpf_s, b: int_t, d: mp_size_t) ->
 }
 
 /// mpf_get_d
-pub fn mpf_get_d(f: mpf_t) -> double_t {
+pub fn mpf_get_d(f: mpf_r) -> double_t {
   unsafe { __gmpf_get_d(f) }
 }
 
 /// mpf_get_ui
-pub fn mpf_get_ui(f: mpf_t) -> ui_t {
+pub fn mpf_get_ui(f: mpf_r) -> ui_t {
   unsafe { __gmpf_get_ui(f) }
 }
 
 /// mpf_get_si
-pub fn mpf_get_si(f: mpf_t) -> si_t {
+pub fn mpf_get_si(f: mpf_r) -> si_t {
   unsafe { __gmpf_get_si(f) }
 }
 
 /// mpf_get_d_2exp
-pub fn mpf_get_d_2exp(e: &mut si_t, f: mpf_t) -> double_t {
+pub fn mpf_get_d_2exp(e: &mut si_t, f: mpf_r) -> double_t {
   unsafe { __gmpf_get_d_2exp(e, f) }
 }
 
 /// mpf_cmp
-pub fn mpf_cmp(f: mpf_t, g: mpf_t) -> int_t {
+pub fn mpf_cmp(f: mpf_r, g: mpf_r) -> int_t {
   unsafe { __gmpf_cmp(f, g) }
 }
 
 /// mpf_cmp_d
-pub fn mpf_cmp_d(f: mpf_t, d: double_t) -> int_t {
+pub fn mpf_cmp_d(f: mpf_r, d: double_t) -> int_t {
   unsafe { __gmpf_cmp_d(f, d) }
 }
 
 /// mpf_cmp_ui
-pub fn mpf_cmp_ui(f: mpf_t, u: ui_t) -> int_t {
+pub fn mpf_cmp_ui(f: mpf_r, u: ui_t) -> int_t {
   unsafe { __gmpf_cmp_ui(f, u) }
 }
 
 /// mpf_cmp_si
-pub fn mpf_cmp_si(f: mpf_t, s: si_t) -> int_t {
+pub fn mpf_cmp_si(f: mpf_r, s: si_t) -> int_t {
   unsafe { __gmpf_cmp_si(f, s) }
 }
 
 /// mpf_cmp_z
-pub fn mpf_cmp_z(f: mpf_t, a: mpz_t) -> int_t {
+pub fn mpf_cmp_z(f: mpf_r, a: mpz_r) -> int_t {
   unsafe { __gmpf_cmp_z(f, a) }
 }
 
 /// mpf_eq ***mathematically ill-defined and should not be used***
-pub fn mpf_eq(f: mpf_t, g: mpf_t, n: mp_bitcnt_t) -> int_t {
+pub fn mpf_eq(f: mpf_r, g: mpf_r, n: mp_bitcnt_t) -> int_t {
   unsafe { __gmpf_eq(f, g, n) }
 }
 
 /// mpf_sgn
-pub fn mpf_sgn(f: &mpf_s) -> int_t {
+pub fn mpf_sgn(f: mpf_r) -> int_t {
 //  unsafe { __gmpf_sgn(f) }
   let t = f._mp_size;
   if t < 0 { -1 } else { if t > 0 { 1 } else { 0 } }
 }
 
 /// mpf_reldiff
-pub fn mpf_reldiff(g: mpf_t, f: mpf_t, e: mpf_t) -> () {
+pub fn mpf_reldiff(g: mpf_t, f: mpf_r, e: mpf_r) -> () {
   unsafe { __gmpf_reldiff(g, f, e) }
 }
 
 /// mpf_sqrt
-pub fn mpf_sqrt(g: mpf_t, f: mpf_t) -> () {
+pub fn mpf_sqrt(g: mpf_t, f: mpf_r) -> () {
   unsafe { __gmpf_sqrt(g, f) }
 }
 
@@ -736,127 +727,127 @@ pub fn mpf_sqrt_ui(g: mpf_t, u: ui_t) -> () {
 }
 
 /// mpf_abs
-pub fn mpf_abs(g: mpf_t, f: mpf_t) -> () {
+pub fn mpf_abs(g: mpf_t, f: mpf_r) -> () {
   unsafe { __gmpf_abs(g, f) }
 }
 
 /// mpf_neg
-pub fn mpf_neg(g: mpf_t, f: mpf_t) -> () {
+pub fn mpf_neg(g: mpf_t, f: mpf_r) -> () {
   unsafe { __gmpf_neg(g, f) }
 }
 
 /// mpf_sub g = f - e
-pub fn mpf_sub(g: mpf_t, f: mpf_t, e: mpf_t) -> () {
+pub fn mpf_sub(g: mpf_t, f: mpf_r, e: mpf_r) -> () {
   unsafe { __gmpf_sub(g, f, e) }
 }
 
 /// mpf_sub_ui g = f - u
-pub fn mpf_sub_ui(g: mpf_t, f: mpf_t, u: ui_t) -> () {
+pub fn mpf_sub_ui(g: mpf_t, f: mpf_r, u: ui_t) -> () {
   unsafe { __gmpf_sub_ui(g, f, u) }
 }
 
 /// mpf_ui_sub g = u - f
-pub fn mpf_ui_sub(g: mpf_t, u: ui_t, f: mpf_t) -> () {
+pub fn mpf_ui_sub(g: mpf_t, u: ui_t, f: mpf_r) -> () {
   unsafe { __gmpf_ui_sub(g, u, f) }
 }
 
 /// mpf_add g = f + e
-pub fn mpf_add(g: mpf_t, f: mpf_t, e: mpf_t) -> () {
+pub fn mpf_add(g: mpf_t, f: mpf_r, e: mpf_r) -> () {
   unsafe { __gmpf_add(g, f, e) }
 }
 
 /// mpf_add_ui g = f + u
-pub fn mpf_add_ui(g: mpf_t, f: mpf_t, u: ui_t) -> () {
+pub fn mpf_add_ui(g: mpf_t, f: mpf_r, u: ui_t) -> () {
   unsafe { __gmpf_add_ui(g, f, u) }
 }
 
 /// mpf_mul g = f * e
-pub fn mpf_mul(g: mpf_t, f: mpf_t, e: mpf_t) -> () {
+pub fn mpf_mul(g: mpf_t, f: mpf_r, e: mpf_r) -> () {
   unsafe { __gmpf_mul(g, f, e) }
 }
 
 /// mpf_mul_ui g = f * u
-pub fn mpf_mul_ui(g: mpf_t, f: mpf_t, u: ui_t) -> () {
+pub fn mpf_mul_ui(g: mpf_t, f: mpf_r, u: ui_t) -> () {
   unsafe { __gmpf_mul_ui(g, f, u) }
 }
 
 /// mpf_mul_2exp g = f * 2**n
-pub fn mpf_mul_2exp(g: mpf_t, f: mpf_t, n: mp_bitcnt_t) -> () {
+pub fn mpf_mul_2exp(g: mpf_t, f: mpf_r, n: mp_bitcnt_t) -> () {
   unsafe { __gmpf_mul_2exp(g, f, n) }
 }
 
 /// mpf_div g = f / e
-pub fn mpf_div(g: mpf_t, f: mpf_t, e: mpf_t) -> () {
+pub fn mpf_div(g: mpf_t, f: mpf_r, e: mpf_r) -> () {
   unsafe { __gmpf_div(g, f, e) }
 }
 
 /// mpf_div_ui g = f / u
-pub fn mpf_div_ui(g: mpf_t, f: mpf_t, u: ui_t) -> () {
+pub fn mpf_div_ui(g: mpf_t, f: mpf_r, u: ui_t) -> () {
   unsafe { __gmpf_div_ui(g, f, u) }
 }
 
 /// mpf_ui_div g = u / f
-pub fn mpf_ui_div(g: mpf_t, u: ui_t, f: mpf_t) -> () {
+pub fn mpf_ui_div(g: mpf_t, u: ui_t, f: mpf_r) -> () {
   unsafe { __gmpf_ui_div(g, u, f) }
 }
 
 /// mpf_div_2exp g = f / 2**n
-pub fn mpf_div_2exp(g: mpf_t, f: mpf_t, n: mp_bitcnt_t) -> () {
+pub fn mpf_div_2exp(g: mpf_t, f: mpf_r, n: mp_bitcnt_t) -> () {
   unsafe { __gmpf_div_2exp(g, f, n) }
 }
 
 /// mpf_pow_ui g = f**n
-pub fn mpf_pow_ui(g: mpf_t, f: mpf_t, n: ui_t) -> () {
+pub fn mpf_pow_ui(g: mpf_t, f: mpf_r, n: ui_t) -> () {
   unsafe { __gmpf_pow_ui(g, f, n) }
 }
 
 /// mpf_ceil
-pub fn mpf_ceil(g: mpf_t, f: mpf_t) -> () {
+pub fn mpf_ceil(g: mpf_t, f: mpf_r) -> () {
   unsafe { __gmpf_ceil(g, f) }
 }
 
 /// mpf_floor
-pub fn mpf_floor(g: mpf_t, f: mpf_t) -> () {
+pub fn mpf_floor(g: mpf_t, f: mpf_r) -> () {
   unsafe { __gmpf_floor(g, f) }
 }
 
 /// mpf_trunc
-pub fn mpf_trunc(g: mpf_t, f: mpf_t) -> () {
+pub fn mpf_trunc(g: mpf_t, f: mpf_r) -> () {
   unsafe { __gmpf_trunc(g, f) }
 }
 
 /// mpf_integer_p
-pub fn mpf_integer_p(f: mpf_t) -> bool {
+pub fn mpf_integer_p(f: mpf_r) -> bool {
   unsafe { __gmpf_integer_p(f) != 0 }
 }
 
 /// mpf_fits_ulong_p
-pub fn mpf_fits_ulong_p(f: mpf_t) -> bool {
+pub fn mpf_fits_ulong_p(f: mpf_r) -> bool {
   unsafe { __gmpf_fits_ulong_p(f) != 0 }
 }
 
 /// mpf_fits_slong_p
-pub fn mpf_fits_slong_p(f: mpf_t) -> bool {
+pub fn mpf_fits_slong_p(f: mpf_r) -> bool {
   unsafe { __gmpf_fits_slong_p(f) != 0 }
 }
 
 /// mpf_fits_uint_p
-pub fn mpf_fits_uint_p(f: mpf_t) -> bool {
+pub fn mpf_fits_uint_p(f: mpf_r) -> bool {
   unsafe { __gmpf_fits_uint_p(f) != 0 }
 }
 
 /// mpf_fits_sint_p
-pub fn mpf_fits_sint_p(f: mpf_t) -> bool {
+pub fn mpf_fits_sint_p(f: mpf_r) -> bool {
   unsafe { __gmpf_fits_sint_p(f) != 0 }
 }
 
 /// mpf_fits_ushort_p
-pub fn mpf_fits_ushort_p(f: mpf_t) -> bool {
+pub fn mpf_fits_ushort_p(f: mpf_r) -> bool {
   unsafe { __gmpf_fits_ushort_p(f) != 0 }
 }
 
 /// mpf_fits_sshort_p
-pub fn mpf_fits_sshort_p(f: mpf_t) -> bool {
+pub fn mpf_fits_sshort_p(f: mpf_r) -> bool {
   unsafe { __gmpf_fits_sshort_p(f) != 0 }
 }
 
@@ -876,7 +867,7 @@ pub fn mpf_get_default_prec() -> mp_bitcnt_t {
 }
 
 /// mpf_get_prec
-pub fn mpf_get_prec(f: mpf_t) -> mp_bitcnt_t {
+pub fn mpf_get_prec(f: mpf_r) -> mp_bitcnt_t {
   unsafe { __gmpf_get_prec(f) }
 }
 

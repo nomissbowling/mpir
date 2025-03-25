@@ -19,6 +19,9 @@ pub type mp_size_t = usize;
 /// long
 #[allow(non_camel_case_types)]
 pub type mp_exp_t = c_long; // unix: i64, win: i32
+/// *const c_void
+#[allow(non_camel_case_types)]
+pub type mp_r = *const u8;
 /// *mut c_void
 #[allow(non_camel_case_types)]
 pub type mp_t = *mut u8;

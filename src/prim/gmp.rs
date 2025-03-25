@@ -8,7 +8,7 @@ use crate::prim::{typ::*, mpz::*, mpf::*, mpq::*, randstate::*};
 // #[link(name="libgmp-10")]
 extern "C" {
   /// __gmp_printf *** CAUTION *** (assume just 4 fake parameters after fmt)
-  pub fn __gmp_printf(f: *const u8, a: mp_t, b: mp_t, c: mp_t, d: mp_t) -> ();
+  pub fn __gmp_printf(f: mp_r, a: mp_r, b: mp_r, c: mp_r, d: mp_r) -> ();
 
   /// __gmpz_clears *** CAUTION *** (assume just 1 fake parameters after first)
   pub fn __gmpz_clears(a: *mut mpz_s, b: *mut mpz_s) -> ();

@@ -15,7 +15,9 @@ pub trait SNew {
   /// new
   fn new() -> Self;
   /// as_ptr
-  fn as_ptr(&mut self) -> mp_t { self as *mut Self as mp_t }
+  fn as_ptr(&self) -> mp_r { self as *const Self as mp_r }
+  /// as_ptr_mut
+  fn as_ptr_mut(&mut self) -> mp_t { self as *mut Self as mp_t }
 }
 
 /// to_u8z (&amp;str)
@@ -63,45 +65,43 @@ unsafe {
 }
 
 /// gmp_printf
-pub fn gmp_printf<'a, T: SNew>(f: &str, a: &'a mut T) -> () {
+pub fn gmp_printf<'a, T: SNew>(f: &str, a: &'a T) -> () {
   gmp_printf_u8z(to_u8z!(f), a)
 }
 
 /// gmp_printf_u8z
-pub fn gmp_printf_u8z<'a, T: SNew>(f: &[u8], a: &'a mut T) -> () {
+pub fn gmp_printf_u8z<'a, T: SNew>(f: &[u8], a: &'a T) -> () {
   unsafe {
-    __gmp_printf(f as *const [u8] as *const u8,
-      a.as_ptr(), 0 as mp_t, 0 as mp_t, 0 as mp_t)
+    __gmp_printf(f as *const [u8] as mp_r,
+      a.as_ptr(), 0 as mp_r, 0 as mp_r, 0 as mp_r)
   }
 }
 
 /// gmp_printf_1f
-pub fn gmp_printf_1f<'a, T: SNew>(f: &str,
-  p: int_t, a: &'a mut T) -> () {
+pub fn gmp_printf_1f<'a, T: SNew>(f: &str, p: int_t, a: &'a T) -> () {
   gmp_printf_u8z_1f(to_u8z!(f), p, a)
 }
 
 /// gmp_printf_u8z_1f
-pub fn gmp_printf_u8z_1f<'a, T: SNew>(f: &[u8],
-  p: int_t, a: &'a mut T) -> () {
+pub fn gmp_printf_u8z_1f<'a, T: SNew>(f: &[u8], p: int_t, a: &'a T) -> () {
   unsafe {
-    __gmp_printf(f as *const [u8] as *const u8,
-      p as mp_t, a.as_ptr(), 0 as mp_t, 0 as mp_t)
+    __gmp_printf(f as *const [u8] as mp_r,
+      p as mp_r, a.as_ptr(), 0 as mp_r, 0 as mp_r)
   }
 }
 
 /// gmp_printf_2f
 pub fn gmp_printf_2f<'a, T: SNew>(f: &str,
-  p: int_t, a: &'a mut T, q: int_t, b: &'a mut T) -> () {
+  p: int_t, a: &'a T, q: int_t, b: &'a T) -> () {
   gmp_printf_u8z_2f(to_u8z!(f), p, a, q, b)
 }
 
 /// gmp_printf_u8z_2f
 pub fn gmp_printf_u8z_2f<'a, T: SNew>(f: &[u8],
-  p: int_t, a: &'a mut T, q: int_t, b: &'a mut T) -> () {
+  p: int_t, a: &'a T, q: int_t, b: &'a T) -> () {
   unsafe {
-    __gmp_printf(f as *const [u8] as *const u8,
-      p as mp_t, a.as_ptr(), q as mp_t, b.as_ptr())
+    __gmp_printf(f as *const [u8] as mp_r,
+      p as mp_r, a.as_ptr(), q as mp_r, b.as_ptr())
   }
 }
 

@@ -269,6 +269,7 @@ pub fn mpq_clears(vq: &mut Vec<mpq_t>) -> () {
 }
 
 /// mpq_clear
+#[inline]
 pub fn mpq_clear(q: mpq_t) -> () {
   unsafe { __gmpq_clear(q) }
 }
@@ -281,56 +282,67 @@ pub fn mpq_inits(vq: &mut Vec<mpq_t>) -> () {
 }
 
 /// mpq_init
+#[inline]
 pub fn mpq_init(q: mpq_t) -> () {
   unsafe { __gmpq_init(q) }
 }
 
 /// mpq_set
+#[inline]
 pub fn mpq_set(q: mpq_t, r: mpq_r) -> () {
   unsafe { __gmpq_set(q, r) }
 }
 
 /// mpq_set_ui
+#[inline]
 pub fn mpq_set_ui(q: mpq_t, u: ui_t, f: ui_t) -> () {
   unsafe { __gmpq_set_ui(q, u, f) }
 }
 
 /// mpq_set_si
+#[inline]
 pub fn mpq_set_si(q: mpq_t, s: si_t, f: ui_t) -> () {
   unsafe { __gmpq_set_si(q, s, f) }
 }
 
 /// mpq_set_d
+#[inline]
 pub fn mpq_set_d(q: mpq_t, d: double_t) -> () {
   unsafe { __gmpq_set_d(q, d) }
 }
 
 /// mpq_set_z
+#[inline]
 pub fn mpq_set_z(q: mpq_t, a: mpz_r) -> () {
   unsafe { __gmpq_set_z(q, a) }
 }
 
 /// mpq_set_f
+#[inline]
 pub fn mpq_set_f(q: mpq_t, f: mpf_r) -> () {
   unsafe { __gmpq_set_f(q, f) }
 }
 
 /// mpq_set_num
+#[inline]
 pub fn mpq_set_num(q: mpq_t, num: mpz_r) -> () {
   unsafe { __gmpq_set_num(q, num) }
 }
 
 /// mpq_set_den
+#[inline]
 pub fn mpq_set_den(q: mpq_t, den: mpz_r) -> () {
   unsafe { __gmpq_set_den(q, den) }
 }
 
 /// mpq_set_str
+#[inline]
 pub fn mpq_set_str(q: mpq_t, s: &str, b: int_t) -> () {
   mpq_set_str_u8z(q, to_u8z!(s), b)
 }
 
 /// mpq_set_str_u8z
+#[inline]
 pub fn mpq_set_str_u8z(q: mpq_t, s: &[u8], b: int_t) -> () {
   unsafe { __gmpq_set_str(q, s as *const [u8] as *const u8, b) }
 }
@@ -361,21 +373,25 @@ pub fn mpq_get_str<'a>(s: Option<&mut String>, b: int_t, q: &'a mpq_s) ->
 }
 
 /// mpq_get_d
+#[inline]
 pub fn mpq_get_d(q: mpq_r) -> double_t {
   unsafe { __gmpq_get_d(q) }
 }
 
 /// mpq_get_num
+#[inline]
 pub fn mpq_get_num(num: mpz_t, q: mpq_r) -> () {
   unsafe { __gmpq_get_num(num, q) }
 }
 
 /// mpq_get_den
+#[inline]
 pub fn mpq_get_den(den: mpz_t, q: mpq_r) -> () {
   unsafe { __gmpq_get_den(den, q) }
 }
 
 /// mpq_numref
+#[inline]
 pub fn mpq_numref(q: mpq_r) -> mpz_r {
 /*
   unsafe { &mut std::slice::from_raw_parts(__gmpq_numref(q), 1)[0] }
@@ -384,6 +400,7 @@ pub fn mpq_numref(q: mpq_r) -> mpz_r {
 }
 
 /// mpq_denref
+#[inline]
 pub fn mpq_denref(q: mpq_r) -> mpz_r {
 /*
   unsafe { &mut std::slice::from_raw_parts(__gmpq_denref(q), 1)[0] }
@@ -392,36 +409,43 @@ pub fn mpq_denref(q: mpq_r) -> mpz_r {
 }
 
 /// mpq_swap
+#[inline]
 pub fn mpq_swap(q: mpq_t, r: mpq_t) -> () {
   unsafe { __gmpq_swap(q, r) }
 }
 
 /// mpq_cmp
+#[inline]
 pub fn mpq_cmp(q: mpq_r, r: mpq_r) -> int_t {
   unsafe { __gmpq_cmp(q, r) }
 }
 
 /// mpq_cmp_z
+#[inline]
 pub fn mpq_cmp_z(q: mpq_r, a: mpz_r) -> int_t {
   unsafe { __gmpq_cmp_z(q, a) }
 }
 
 /// mpq_cmp_ui
+#[inline]
 pub fn mpq_cmp_ui(q: mpq_r, u: ui_t) -> int_t {
   unsafe { __gmpq_cmp_ui(q, u) }
 }
 
 /// mpq_cmp_si
+#[inline]
 pub fn mpq_cmp_si(q: mpq_r, s: si_t) -> int_t {
   unsafe { __gmpq_cmp_si(q, s) }
 }
 
 /// mpq_equal
+#[inline]
 pub fn mpq_equal(q: mpq_r, r: mpq_r) -> bool {
   unsafe { __gmpq_equal(q, r) != 0 }
 }
 
 /// mpq_sgn
+#[inline]
 pub fn mpq_sgn(q: mpq_r) -> int_t {
 //  unsafe { __gmpq_sgn(q) }
   let t = q._mp_num._mp_size;
@@ -429,46 +453,55 @@ pub fn mpq_sgn(q: mpq_r) -> int_t {
 }
 
 /// mpq_inv p = q**-1
+#[inline]
 pub fn mpq_inv(p: mpq_t, q: mpq_r) -> () {
   unsafe { __gmpq_inv(p, q) }
 }
 
 /// mpq_abs
+#[inline]
 pub fn mpq_abs(p: mpq_t, q: mpq_r) -> () {
   unsafe { __gmpq_abs(p, q) }
 }
 
 /// mpq_neg
+#[inline]
 pub fn mpq_neg(p: mpq_t, q: mpq_r) -> () {
   unsafe { __gmpq_neg(p, q) }
 }
 
 /// mpq_sub p = q - r
+#[inline]
 pub fn mpq_sub(p: mpq_t, q: mpq_r, r: mpq_r) -> () {
   unsafe { __gmpq_sub(p, q, r) }
 }
 
 /// mpq_add p = q + r
+#[inline]
 pub fn mpq_add(p: mpq_t, q: mpq_r, r: mpq_r) -> () {
   unsafe { __gmpq_add(p, q, r) }
 }
 
 /// mpq_mul p = q * r
+#[inline]
 pub fn mpq_mul(p: mpq_t, q: mpq_r, r: mpq_r) -> () {
   unsafe { __gmpq_mul(p, q, r) }
 }
 
 /// mpq_mul_2exp p = q * 2**n
+#[inline]
 pub fn mpq_mul_2exp(p: mpq_t, q: mpq_r, n: mp_bitcnt_t) -> () {
   unsafe { __gmpq_mul_2exp(p, q, n) }
 }
 
 /// mpq_div p = q / r
+#[inline]
 pub fn mpq_div(p: mpq_t, q: mpq_r, r: mpq_r) -> () {
   unsafe { __gmpq_div(p, q, r) }
 }
 
 /// mpq_div_2exp p = q / 2**n
+#[inline]
 pub fn mpq_div_2exp(p: mpq_t, q: mpq_r, n: mp_bitcnt_t) -> () {
   unsafe { __gmpq_div_2exp(p, q, n) }
 }

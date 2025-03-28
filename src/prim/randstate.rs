@@ -157,11 +157,13 @@ pub type randstate_t<'a> = &'a mut randstate_s; // *mut randstate_s
 pub type randstate_r<'a> = &'a randstate_s; // *const randstate_s
 
 /// gmp_randclear
+#[inline]
 pub fn gmp_randclear(r: randstate_t) -> () {
   unsafe { __gmp_randclear(r) }
 }
 
 /// gmp_randinit ***(obsoleted)***
+#[inline]
 pub fn gmp_randinit(r: randstate_t, _a: gmp_randalg_t, sz: mp_bitcnt_t) -> () {
 /*
   unsafe { __gmp_randinit(r, a, sz) }
@@ -170,47 +172,56 @@ pub fn gmp_randinit(r: randstate_t, _a: gmp_randalg_t, sz: mp_bitcnt_t) -> () {
 }
 
 /// gmp_randinit_set copy
+#[inline]
 pub fn gmp_randinit_set(r: randstate_t, s: randstate_r) -> () {
   unsafe { __gmp_randinit_set(r, s) }
 }
 
 /// gmp_randinit_default
+#[inline]
 pub fn gmp_randinit_default(r: randstate_t) -> () {
   unsafe { __gmp_randinit_default(r) }
 }
 
 /// gmp_randinit_mt
+#[inline]
 pub fn gmp_randinit_mt(r: randstate_t) -> () {
   unsafe { __gmp_randinit_mt(r) }
 }
 
 /// gmp_randinit_lc_2exp x = (a*x + c) mod 2**m2e
+#[inline]
 pub fn gmp_randinit_lc_2exp(r: randstate_t,
   a: mpz_r, c: ui_t, m2e: mp_bitcnt_t) -> () {
   unsafe { __gmp_randinit_lc_2exp(r, a, c, m2e) }
 }
 
 /// gmp_randinit_lc_2exp_size
+#[inline]
 pub fn gmp_randinit_lc_2exp_size(r: randstate_t, sz: mp_bitcnt_t) -> int_t {
   unsafe { __gmp_randinit_lc_2exp_size(r, sz) }
 }
 
 /// gmp_randseed
+#[inline]
 pub fn gmp_randseed(r: randstate_t, seed: mpz_t) -> () {
   unsafe { __gmp_randseed(r, seed) }
 }
 
 /// gmp_randseed_ui
+#[inline]
 pub fn gmp_randseed_ui(r: randstate_t, seed: ui_t) -> () {
   unsafe { __gmp_randseed_ui(r, seed) }
 }
 
 /// gmp_urandomb_ui
+#[inline]
 pub fn gmp_urandomb_ui(r: randstate_t, nbits: ui_t) -> ui_t {
   unsafe { __gmp_urandomb_ui(r, nbits) }
 }
 
 /// gmp_urandomm_ui
+#[inline]
 pub fn gmp_urandomm_ui(r: randstate_t, n: ui_t) -> ui_t {
   unsafe { __gmp_urandomm_ui(r, n) }
 }

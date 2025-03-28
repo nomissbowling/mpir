@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/mpir/0.3.1")]
+#![doc(html_root_url = "https://docs.rs/mpir/0.3.2")]
 //! partial Rust porting of mpir multiple precision library based on gmp mpfr
 //!
 //! # Requirements
@@ -22,6 +22,9 @@ pub mod prim;
 pub use crate::prim::{*, typ::*, mpz::*, mpf::*, mpq::*, randstate::*};
 // pub use crate::prim::gmp::*;
 
+pub mod ops;
+pub use crate::ops::{*};
+
 pub mod util;
 pub use crate::util::{*};
 
@@ -43,6 +46,7 @@ mod tests {
     calc_fit_test, // single thread
     calc_logical_test,
     calc_mpq_test,
+    ops_test, // single thread
     compare_test, // single thread
     significant_digits_test, // single thread
     calc_pi_gauss_legendre_test, // single thread
@@ -154,6 +158,13 @@ mod tests {
   #[test]
   fn test_calc_mpq() {
     assert_eq!(calc_mpq_test(), ());
+  }
+
+  /// with [-- --nocapture] or with [-- --show-output]
+  #[test]
+  #[serial] // expected on the single thread for mpf_set_default_prec
+  fn test_ops() {
+    assert_eq!(ops_test(), ());
   }
 
   /// with [-- --nocapture] or with [-- --show-output]

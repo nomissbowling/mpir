@@ -1,6 +1,6 @@
 [package]
 name = "mpir"
-version = "0.3.1" # change with html_root_url in lib.rs
+version = "0.3.2" # change with html_root_url in lib.rs
 edition = "2021"
 authors = ["nomissbowling <nomissbowling@yahoo.co.jp>"]
 
@@ -23,6 +23,9 @@ readme = "README.md"
 home = { version = "=0.5.5" } # cc(1.0.79)/bindgen(0.65.1) requires home(0.5.5)
 
 once_cell = { version = "=1.20.3" } # skip 1.21.0
+
+# forward_ref = { version = "=1.0.0" }
+# forward_ref_generic = { version = "=0.2.1" }
 
 serial_test = { version = "=3.2.0" }
 

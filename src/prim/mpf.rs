@@ -515,6 +515,7 @@ pub fn mpf_clears(vf: &mut Vec<mpf_t>) -> () {
 }
 
 /// mpf_clear
+#[inline]
 pub fn mpf_clear(f: mpf_t) -> () {
   unsafe { __gmpf_clear(f) }
 }
@@ -527,76 +528,91 @@ pub fn mpf_inits(vf: &mut Vec<mpf_t>) -> () {
 }
 
 /// mpf_init
+#[inline]
 pub fn mpf_init(f: mpf_t) -> () {
   unsafe { __gmpf_init(f) }
 }
 
 /// mpf_init2
+#[inline]
 pub fn mpf_init2(f: mpf_t, n: mp_bitcnt_t) -> () {
   unsafe { __gmpf_init2(f, n) }
 }
 
 /// mpf_init_set
+#[inline]
 pub fn mpf_init_set(f: mpf_t, g: mpf_r) -> () {
   unsafe { __gmpf_init_set(f, g) }
 }
 
 /// mpf_init_set_ui
+#[inline]
 pub fn mpf_init_set_ui(f: mpf_t, u: ui_t) -> () {
   unsafe { __gmpf_init_set_ui(f, u) }
 }
 
 /// mpf_init_set_si
+#[inline]
 pub fn mpf_init_set_si(f: mpf_t, s: si_t) -> () {
   unsafe { __gmpf_init_set_si(f, s) }
 }
 
 /// mpf_init_set_d
+#[inline]
 pub fn mpf_init_set_d(f: mpf_t, d: double_t) -> () {
   unsafe { __gmpf_init_set_d(f, d) }
 }
 
 /// mpf_init_set_str
+#[inline]
 pub fn mpf_init_set_str(f: mpf_t, s: &str, b: int_t) -> () {
   mpf_init_set_str_u8z(f, to_u8z!(s), b)
 }
 
 /// mpf_init_set_str_u8z
+#[inline]
 pub fn mpf_init_set_str_u8z(f: mpf_t, s: &[u8], b: int_t) -> () {
   unsafe { __gmpf_init_set_str(f, s as *const [u8] as *const u8, b) }
 }
 
 /// mpf_set
+#[inline]
 pub fn mpf_set(f: mpf_t, g: mpf_r) -> () {
   unsafe { __gmpf_set(f, g) }
 }
 
 /// mpf_set_ui
+#[inline]
 pub fn mpf_set_ui(f: mpf_t, u: ui_t) -> () {
   unsafe { __gmpf_set_ui(f, u) }
 }
 
 /// mpf_set_si
+#[inline]
 pub fn mpf_set_si(f: mpf_t, s: si_t) -> () {
   unsafe { __gmpf_set_si(f, s) }
 }
 
 /// mpf_set_d
+#[inline]
 pub fn mpf_set_d(f: mpf_t, d: double_t) -> () {
   unsafe { __gmpf_set_d(f, d) }
 }
 
 /// mpf_set_z
+#[inline]
 pub fn mpf_set_z(f: mpf_t, a: mpz_r) -> () {
   unsafe { __gmpf_set_z(f, a) }
 }
 
 /// mpf_set_str
+#[inline]
 pub fn mpf_set_str(f: mpf_t, s: &str, b: int_t) -> () {
   mpf_set_str_u8z(f, to_u8z!(s), b)
 }
 
 /// mpf_set_str_u8z
+#[inline]
 pub fn mpf_set_str_u8z(f: mpf_t, s: &[u8], b: int_t) -> () {
   unsafe { __gmpf_set_str(f, s as *const [u8] as *const u8, b) }
 }
@@ -655,56 +671,67 @@ pub fn mpf_get_fmtstr<'a>(f: &'a mpf_s, b: int_t, d: mp_size_t) ->
 }
 
 /// mpf_get_d
+#[inline]
 pub fn mpf_get_d(f: mpf_r) -> double_t {
   unsafe { __gmpf_get_d(f) }
 }
 
 /// mpf_get_ui
+#[inline]
 pub fn mpf_get_ui(f: mpf_r) -> ui_t {
   unsafe { __gmpf_get_ui(f) }
 }
 
 /// mpf_get_si
+#[inline]
 pub fn mpf_get_si(f: mpf_r) -> si_t {
   unsafe { __gmpf_get_si(f) }
 }
 
 /// mpf_get_d_2exp
+#[inline]
 pub fn mpf_get_d_2exp(e: &mut si_t, f: mpf_r) -> double_t {
   unsafe { __gmpf_get_d_2exp(e, f) }
 }
 
 /// mpf_cmp
+#[inline]
 pub fn mpf_cmp(f: mpf_r, g: mpf_r) -> int_t {
   unsafe { __gmpf_cmp(f, g) }
 }
 
 /// mpf_cmp_d
+#[inline]
 pub fn mpf_cmp_d(f: mpf_r, d: double_t) -> int_t {
   unsafe { __gmpf_cmp_d(f, d) }
 }
 
 /// mpf_cmp_ui
+#[inline]
 pub fn mpf_cmp_ui(f: mpf_r, u: ui_t) -> int_t {
   unsafe { __gmpf_cmp_ui(f, u) }
 }
 
 /// mpf_cmp_si
+#[inline]
 pub fn mpf_cmp_si(f: mpf_r, s: si_t) -> int_t {
   unsafe { __gmpf_cmp_si(f, s) }
 }
 
 /// mpf_cmp_z
+#[inline]
 pub fn mpf_cmp_z(f: mpf_r, a: mpz_r) -> int_t {
   unsafe { __gmpf_cmp_z(f, a) }
 }
 
 /// mpf_eq ***mathematically ill-defined and should not be used***
+#[inline]
 pub fn mpf_eq(f: mpf_r, g: mpf_r, n: mp_bitcnt_t) -> int_t {
   unsafe { __gmpf_eq(f, g, n) }
 }
 
 /// mpf_sgn
+#[inline]
 pub fn mpf_sgn(f: mpf_r) -> int_t {
 //  unsafe { __gmpf_sgn(f) }
   let t = f._mp_size;
@@ -712,176 +739,211 @@ pub fn mpf_sgn(f: mpf_r) -> int_t {
 }
 
 /// mpf_reldiff
+#[inline]
 pub fn mpf_reldiff(g: mpf_t, f: mpf_r, e: mpf_r) -> () {
   unsafe { __gmpf_reldiff(g, f, e) }
 }
 
 /// mpf_sqrt
+#[inline]
 pub fn mpf_sqrt(g: mpf_t, f: mpf_r) -> () {
   unsafe { __gmpf_sqrt(g, f) }
 }
 
 /// mpf_sqrt_ui
+#[inline]
 pub fn mpf_sqrt_ui(g: mpf_t, u: ui_t) -> () {
   unsafe { __gmpf_sqrt_ui(g, u) }
 }
 
 /// mpf_abs
+#[inline]
 pub fn mpf_abs(g: mpf_t, f: mpf_r) -> () {
   unsafe { __gmpf_abs(g, f) }
 }
 
 /// mpf_neg
+#[inline]
 pub fn mpf_neg(g: mpf_t, f: mpf_r) -> () {
   unsafe { __gmpf_neg(g, f) }
 }
 
 /// mpf_sub g = f - e
+#[inline]
 pub fn mpf_sub(g: mpf_t, f: mpf_r, e: mpf_r) -> () {
   unsafe { __gmpf_sub(g, f, e) }
 }
 
 /// mpf_sub_ui g = f - u
+#[inline]
 pub fn mpf_sub_ui(g: mpf_t, f: mpf_r, u: ui_t) -> () {
   unsafe { __gmpf_sub_ui(g, f, u) }
 }
 
 /// mpf_ui_sub g = u - f
+#[inline]
 pub fn mpf_ui_sub(g: mpf_t, u: ui_t, f: mpf_r) -> () {
   unsafe { __gmpf_ui_sub(g, u, f) }
 }
 
 /// mpf_add g = f + e
+#[inline]
 pub fn mpf_add(g: mpf_t, f: mpf_r, e: mpf_r) -> () {
   unsafe { __gmpf_add(g, f, e) }
 }
 
 /// mpf_add_ui g = f + u
+#[inline]
 pub fn mpf_add_ui(g: mpf_t, f: mpf_r, u: ui_t) -> () {
   unsafe { __gmpf_add_ui(g, f, u) }
 }
 
 /// mpf_mul g = f * e
+#[inline]
 pub fn mpf_mul(g: mpf_t, f: mpf_r, e: mpf_r) -> () {
   unsafe { __gmpf_mul(g, f, e) }
 }
 
 /// mpf_mul_ui g = f * u
+#[inline]
 pub fn mpf_mul_ui(g: mpf_t, f: mpf_r, u: ui_t) -> () {
   unsafe { __gmpf_mul_ui(g, f, u) }
 }
 
 /// mpf_mul_2exp g = f * 2**n
+#[inline]
 pub fn mpf_mul_2exp(g: mpf_t, f: mpf_r, n: mp_bitcnt_t) -> () {
   unsafe { __gmpf_mul_2exp(g, f, n) }
 }
 
 /// mpf_div g = f / e
+#[inline]
 pub fn mpf_div(g: mpf_t, f: mpf_r, e: mpf_r) -> () {
   unsafe { __gmpf_div(g, f, e) }
 }
 
 /// mpf_div_ui g = f / u
+#[inline]
 pub fn mpf_div_ui(g: mpf_t, f: mpf_r, u: ui_t) -> () {
   unsafe { __gmpf_div_ui(g, f, u) }
 }
 
 /// mpf_ui_div g = u / f
+#[inline]
 pub fn mpf_ui_div(g: mpf_t, u: ui_t, f: mpf_r) -> () {
   unsafe { __gmpf_ui_div(g, u, f) }
 }
 
 /// mpf_div_2exp g = f / 2**n
+#[inline]
 pub fn mpf_div_2exp(g: mpf_t, f: mpf_r, n: mp_bitcnt_t) -> () {
   unsafe { __gmpf_div_2exp(g, f, n) }
 }
 
 /// mpf_pow_ui g = f**n
+#[inline]
 pub fn mpf_pow_ui(g: mpf_t, f: mpf_r, n: ui_t) -> () {
   unsafe { __gmpf_pow_ui(g, f, n) }
 }
 
 /// mpf_ceil
+#[inline]
 pub fn mpf_ceil(g: mpf_t, f: mpf_r) -> () {
   unsafe { __gmpf_ceil(g, f) }
 }
 
 /// mpf_floor
+#[inline]
 pub fn mpf_floor(g: mpf_t, f: mpf_r) -> () {
   unsafe { __gmpf_floor(g, f) }
 }
 
 /// mpf_trunc
+#[inline]
 pub fn mpf_trunc(g: mpf_t, f: mpf_r) -> () {
   unsafe { __gmpf_trunc(g, f) }
 }
 
 /// mpf_integer_p
+#[inline]
 pub fn mpf_integer_p(f: mpf_r) -> bool {
   unsafe { __gmpf_integer_p(f) != 0 }
 }
 
 /// mpf_fits_ulong_p
+#[inline]
 pub fn mpf_fits_ulong_p(f: mpf_r) -> bool {
   unsafe { __gmpf_fits_ulong_p(f) != 0 }
 }
 
 /// mpf_fits_slong_p
+#[inline]
 pub fn mpf_fits_slong_p(f: mpf_r) -> bool {
   unsafe { __gmpf_fits_slong_p(f) != 0 }
 }
 
 /// mpf_fits_uint_p
+#[inline]
 pub fn mpf_fits_uint_p(f: mpf_r) -> bool {
   unsafe { __gmpf_fits_uint_p(f) != 0 }
 }
 
 /// mpf_fits_sint_p
+#[inline]
 pub fn mpf_fits_sint_p(f: mpf_r) -> bool {
   unsafe { __gmpf_fits_sint_p(f) != 0 }
 }
 
 /// mpf_fits_ushort_p
+#[inline]
 pub fn mpf_fits_ushort_p(f: mpf_r) -> bool {
   unsafe { __gmpf_fits_ushort_p(f) != 0 }
 }
 
 /// mpf_fits_sshort_p
+#[inline]
 pub fn mpf_fits_sshort_p(f: mpf_r) -> bool {
   unsafe { __gmpf_fits_sshort_p(f) != 0 }
 }
 
 /// mpf_urandomb (must init random state before)
+#[inline]
 pub fn mpf_urandomb(g: mpf_t, state: randstate_t, nbits: mp_bitcnt_t) -> () {
   unsafe { __gmpf_urandomb(g, state, nbits) }
 }
 
 /// mpf_random2
+#[inline]
 pub fn mpf_random2(g: mpf_t, max_size: mp_size_t, e: mp_exp_t) -> () {
   unsafe { __gmpf_random2(g, max_size, e) }
 }
 
 /// mpf_get_default_prec
+#[inline]
 pub fn mpf_get_default_prec() -> mp_bitcnt_t {
   unsafe { __gmpf_get_default_prec() }
 }
 
 /// mpf_get_prec
+#[inline]
 pub fn mpf_get_prec(f: mpf_r) -> mp_bitcnt_t {
   unsafe { __gmpf_get_prec(f) }
 }
 
 /// mpf_set_default_prec
+#[inline]
 pub fn mpf_set_default_prec(n: mp_bitcnt_t) -> () {
   unsafe { __gmpf_set_default_prec(n) }
 }
 
 /// mpf_set_prec
+#[inline]
 pub fn mpf_set_prec(f: mpf_t, n: mp_bitcnt_t) -> () {
   unsafe { __gmpf_set_prec(f, n) }
 }
 
 /// mpf_set_prec_raw
+#[inline]
 pub fn mpf_set_prec_raw(f: mpf_t, n: mp_bitcnt_t) -> () {
   unsafe { __gmpf_set_prec_raw(f, n) }
 }

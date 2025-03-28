@@ -65,11 +65,13 @@ unsafe {
 }
 
 /// gmp_printf
+#[inline]
 pub fn gmp_printf<'a, T: SNew>(f: &str, a: &'a T) -> () {
   gmp_printf_u8z(to_u8z!(f), a)
 }
 
 /// gmp_printf_u8z
+#[inline]
 pub fn gmp_printf_u8z<'a, T: SNew>(f: &[u8], a: &'a T) -> () {
   unsafe {
     __gmp_printf(f as *const [u8] as mp_r,
@@ -78,11 +80,13 @@ pub fn gmp_printf_u8z<'a, T: SNew>(f: &[u8], a: &'a T) -> () {
 }
 
 /// gmp_printf_1f
+#[inline]
 pub fn gmp_printf_1f<'a, T: SNew>(f: &str, p: int_t, a: &'a T) -> () {
   gmp_printf_u8z_1f(to_u8z!(f), p, a)
 }
 
 /// gmp_printf_u8z_1f
+#[inline]
 pub fn gmp_printf_u8z_1f<'a, T: SNew>(f: &[u8], p: int_t, a: &'a T) -> () {
   unsafe {
     __gmp_printf(f as *const [u8] as mp_r,
@@ -91,12 +95,14 @@ pub fn gmp_printf_u8z_1f<'a, T: SNew>(f: &[u8], p: int_t, a: &'a T) -> () {
 }
 
 /// gmp_printf_2f
+#[inline]
 pub fn gmp_printf_2f<'a, T: SNew>(f: &str,
   p: int_t, a: &'a T, q: int_t, b: &'a T) -> () {
   gmp_printf_u8z_2f(to_u8z!(f), p, a, q, b)
 }
 
 /// gmp_printf_u8z_2f
+#[inline]
 pub fn gmp_printf_u8z_2f<'a, T: SNew>(f: &[u8],
   p: int_t, a: &'a T, q: int_t, b: &'a T) -> () {
   unsafe {
@@ -106,6 +112,7 @@ pub fn gmp_printf_u8z_2f<'a, T: SNew>(f: &[u8],
 }
 
 /// mp_get_memory_functions
+#[inline]
 pub fn mp_get_memory_functions(
   alloc: &mut FnPtrAllocate,
   realloc: &mut FnPtrReallocate,

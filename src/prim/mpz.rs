@@ -1076,6 +1076,7 @@ pub fn mpz_clears(va: &mut Vec<mpz_t>) -> () {
 }
 
 /// mpz_clear
+#[inline]
 pub fn mpz_clear(a: mpz_t) -> () {
   unsafe { __gmpz_clear(a) }
 }
@@ -1088,71 +1089,85 @@ pub fn mpz_inits(va: &mut Vec<mpz_t>) -> () {
 }
 
 /// mpz_init
+#[inline]
 pub fn mpz_init(a: mpz_t) -> () {
   unsafe { __gmpz_init(a) }
 }
 
 /// mpz_init2
+#[inline]
 pub fn mpz_init2(a: mpz_t, n: mp_bitcnt_t) -> () {
   unsafe { __gmpz_init2(a, n) }
 }
 
 /// mpz_init_set
+#[inline]
 pub fn mpz_init_set(a: mpz_t, b: mpz_r) -> () {
   unsafe { __gmpz_init_set(a, b) }
 }
 
 /// mpz_init_set_ui
+#[inline]
 pub fn mpz_init_set_ui(a: mpz_t, u: ui_t) -> () {
   unsafe { __gmpz_init_set_ui(a, u) }
 }
 
 /// mpz_init_set_si
+#[inline]
 pub fn mpz_init_set_si(a: mpz_t, s: si_t) -> () {
   unsafe { __gmpz_init_set_si(a, s) }
 }
 
 /// mpz_init_set_d
+#[inline]
 pub fn mpz_init_set_d(a: mpz_t, d: double_t) -> () {
   unsafe { __gmpz_init_set_d(a, d) }
 }
 
 /// mpz_init_set_str
+#[inline]
 pub fn mpz_init_set_str(a: mpz_t, s: &str, b: int_t) -> () {
   mpz_init_set_str_u8z(a, to_u8z!(s), b)
 }
 
 /// mpz_init_set_str_u8z
+#[inline]
 pub fn mpz_init_set_str_u8z(a: mpz_t, s: &[u8], b: int_t) -> () {
   unsafe { __gmpz_init_set_str(a, s as *const [u8] as *const u8, b) }
 }
 
 /// mpz_set
+#[inline]
 pub fn mpz_set(a: mpz_t, b: mpz_r) -> () {
   unsafe { __gmpz_set(a, b) }
 }
 
 /// mpz_set_ui
+#[inline]
 pub fn mpz_set_ui(a: mpz_t, u: ui_t) -> () {
   unsafe { __gmpz_set_ui(a, u) }
 }
 
 /// mpz_set_si
+#[inline]
 pub fn mpz_set_si(a: mpz_t, s: si_t) -> () {
   unsafe { __gmpz_set_si(a, s) }
 }
 
 /// mpz_set_d
+#[inline]
 pub fn mpz_set_d(a: mpz_t, d: double_t) -> () {
   unsafe { __gmpz_set_d(a, d) }
 }
 
 /// mpz_set_str
+#[inline]
 pub fn mpz_set_str(a: mpz_t, s: &str, b: int_t) -> () {
   mpz_set_str_u8z(a, to_u8z!(s), b)
 }
 
 /// mpz_set_str_u8z
+#[inline]
 pub fn mpz_set_str_u8z(a: mpz_t, s: &[u8], b: int_t) -> () {
   unsafe { __gmpz_set_str(a, s as *const [u8] as *const u8, b) }
 }
@@ -1183,77 +1198,92 @@ pub fn mpz_get_str<'a>(s: Option<&mut String>, b: int_t, a: &'a mpz_s) ->
 }
 
 /// mpz_get_d
+#[inline]
 pub fn mpz_get_d(a: mpz_r) -> double_t {
   unsafe { __gmpz_get_d(a) }
 }
 
 /// mpz_get_ui
+#[inline]
 pub fn mpz_get_ui(a: mpz_r) -> ui_t {
   unsafe { __gmpz_get_ui(a) }
 }
 
 /// mpz_get_si
+#[inline]
 pub fn mpz_get_si(a: mpz_r) -> si_t {
   unsafe { __gmpz_get_si(a) }
 }
 
 /// mpz_get_d_2exp
+#[inline]
 pub fn mpz_get_d_2exp(e: &mut si_t, a: mpz_r) -> double_t {
   unsafe { __gmpz_get_d_2exp(e, a) }
 }
 
 /// mpz_swap
+#[inline]
 pub fn mpz_swap(a: mpz_t, b: mpz_t) -> () {
   unsafe { __gmpz_swap(a, b) }
 }
 
 /// mpz_realloc2
+#[inline]
 pub fn mpz_realloc2(a: mpz_t, n: mp_bitcnt_t) -> () {
   unsafe { __gmpz_realloc2(a, n) }
 }
 
 /// _mpz_realloc
+#[inline]
 pub fn _mpz_realloc(a: mpz_t, sz: mp_size_t) -> mp_t {
   unsafe { __gmpz_realloc(a, sz) }
 }
 
 /// mpz_array_init ***(obsoleted) do NOT use it***
+#[inline]
 pub fn mpz_array_init(a: mpz_t, sz: mp_size_t, fnb: mp_size_t) -> () {
   unsafe { __gmpz_array_init(a, sz, fnb) }
 }
 
 /// mpz_size
+#[inline]
 pub fn mpz_size(a: mpz_r) -> mp_size_t {
   unsafe { __gmpz_size(a) }
 }
 
 /// mpz_limbs_read slice
+#[inline]
 pub fn mpz_limbs_read(a: mpz_r) -> &[mp_limb_t] {
   let sz = mpz_size(a);
   unsafe { std::slice::from_raw_parts(__gmpz_limbs_read(a), sz) }
 }
 
 /// mpz_getlimbn (single element)
+#[inline]
 pub fn mpz_getlimbn(a: mpz_r, n: mp_size_t) -> mp_limb_t {
   unsafe { __gmpz_getlimbn(a, n) }
 }
 
 /// mpz_limbs_write slice
+#[inline]
 pub fn mpz_limbs_write(a: mpz_t, sz: mp_size_t) -> &mut [mp_limb_t] {
   unsafe { std::slice::from_raw_parts_mut(__gmpz_limbs_write(a, sz), sz) }
 }
 
 /// mpz_limbs_modify slice
+#[inline]
 pub fn mpz_limbs_modify(a: mpz_t, sz: mp_size_t) -> &mut [mp_limb_t] {
   unsafe { std::slice::from_raw_parts_mut(__gmpz_limbs_modify(a, sz), sz) }
 }
 
 /// mpz_limbs_finish (used after write or modify to update internal size)
+#[inline]
 pub fn mpz_limbs_finish(a: mpz_t, sz: mp_size_t) -> () {
   unsafe { __gmpz_limbs_finish(a, sz) }
 }
 
 /// mpz_roinit_n (unsafe) slice single element
+#[inline]
 pub fn mpz_roinit_n<'a>(a: mpz_t,
   p: &[mp_limb_t], sz: mp_size_t) -> mpz_t<'a> {
   unsafe {
@@ -1265,6 +1295,7 @@ pub fn mpz_roinit_n<'a>(a: mpz_t,
 
 /// MPZ_ROINIT_N (unsafe) create new instance of mpz_s ***NOT same as gmp***
 #[allow(non_snake_case)]
+#[inline]
 pub fn MPZ_ROINIT_N(p: &mut [mp_limb_t], sz: mp_size_t) -> mpz_s {
   __mpz_struct {
     _mp_alloc: 0,
@@ -1274,41 +1305,49 @@ pub fn MPZ_ROINIT_N(p: &mut [mp_limb_t], sz: mp_size_t) -> mpz_s {
 }
 
 /// mpz_cmp
+#[inline]
 pub fn mpz_cmp(a: mpz_r, b: mpz_r) -> int_t {
   unsafe { __gmpz_cmp(a, b) }
 }
 
 /// mpz_cmp_d
+#[inline]
 pub fn mpz_cmp_d(a: mpz_r, d: double_t) -> int_t {
   unsafe { __gmpz_cmp_d(a, d) }
 }
 
 /// mpz_cmp_ui
+#[inline]
 pub fn mpz_cmp_ui(a: mpz_r, u: ui_t) -> int_t {
   unsafe { __gmpz_cmp_ui(a, u) }
 }
 
 /// mpz_cmp_si
+#[inline]
 pub fn mpz_cmp_si(a: mpz_r, s: si_t) -> int_t {
   unsafe { __gmpz_cmp_si(a, s) }
 }
 
 /// mpz_cmpabs
+#[inline]
 pub fn mpz_cmpabs(a: mpz_r, b: mpz_r) -> int_t {
   unsafe { __gmpz_cmpabs(a, b) }
 }
 
 /// mpz_cmpabs_d
+#[inline]
 pub fn mpz_cmpabs_d(a: mpz_r, d: double_t) -> int_t {
   unsafe { __gmpz_cmpabs_d(a, d) }
 }
 
 /// mpz_cmpabs_ui
+#[inline]
 pub fn mpz_cmpabs_ui(a: mpz_r, u: ui_t) -> int_t {
   unsafe { __gmpz_cmpabs_ui(a, u) }
 }
 
 /// mpz_sgn
+#[inline]
 pub fn mpz_sgn(a: mpz_r) -> int_t {
 //  unsafe { __gmpz_sgn(a) }
   let t = a._mp_size;
@@ -1316,138 +1355,165 @@ pub fn mpz_sgn(a: mpz_r) -> int_t {
 }
 
 /// mpz_root r = nth root of a
+#[inline]
 pub fn mpz_root(r: mpz_t, a: mpz_r, n: ui_t) -> bool {
   unsafe { __gmpz_root(r, a, n) != 0 }
 }
 
 /// mpz_rootrem r = nth root of u, rem = u - r**n (to the remainder)
+#[inline]
 pub fn mpz_rootrem(r: mpz_t, rem: mpz_t, u: mpz_r, n: ui_t) -> () {
   unsafe { __gmpz_rootrem(r, rem, u, n) }
 }
 
 /// mpz_sqrt r = square root of a
+#[inline]
 pub fn mpz_sqrt(r: mpz_t, a: mpz_r) -> () {
   unsafe { __gmpz_sqrt(r, a) }
 }
 
 /// mpz_sqrtrem r = square root of u, rem = u - r**2 (to the remainder)
+#[inline]
 pub fn mpz_sqrtrem(r: mpz_t, rem: mpz_t, u: mpz_r) -> () {
   unsafe { __gmpz_sqrtrem(r, rem, u) }
 }
 
 /// mpz_perfect_power_p
+#[inline]
 pub fn mpz_perfect_power_p(a: mpz_r) -> bool {
   unsafe { __gmpz_perfect_power_p(a) != 0 }
 }
 
 /// mpz_perfect_square_p
+#[inline]
 pub fn mpz_perfect_square_p(a: mpz_r) -> bool {
   unsafe { __gmpz_perfect_square_p(a) != 0 }
 }
 
 /// mpz_primorial_ui c = 2*3*5*7*11*...*p(prev)*p(&lt;=n)
+#[inline]
 pub fn mpz_primorial_ui(c: mpz_t, n: ui_t) -> () {
   unsafe { __gmpz_primorial_ui(c, n) }
 }
 
 /// mpz_fac_ui c = n!
+#[inline]
 pub fn mpz_fac_ui(c: mpz_t, n: ui_t) -> () {
   unsafe { __gmpz_fac_ui(c, n) }
 }
 
 /// mpz_2fac_ui c = n!!
+#[inline]
 pub fn mpz_2fac_ui(c: mpz_t, n: ui_t) -> () {
   unsafe { __gmpz_2fac_ui(c, n) }
 }
 
 /// mpz_mfac_uiui c = n! ** m
+#[inline]
 pub fn mpz_mfac_uiui(c: mpz_t, n: ui_t, m: ui_t) -> () {
   unsafe { __gmpz_mfac_uiui(c, n, m) }
 }
 
 /// mpz_remove
+#[inline]
 pub fn mpz_remove(c: mpz_t, a: mpz_r, f: mpz_r) -> mp_bitcnt_t {
   unsafe { __gmpz_remove(c, a, f) }
 }
 
 /// mpz_fib_ui
+#[inline]
 pub fn mpz_fib_ui(f_n: mpz_t, n: ui_t) -> () {
   unsafe { __gmpz_fib_ui(f_n, n) }
 }
 
 /// mpz_fib2_ui
+#[inline]
 pub fn mpz_fib2_ui(f_n: mpz_t, f_nsub1: mpz_t, n: ui_t) -> () {
   unsafe { __gmpz_fib2_ui(f_n, f_nsub1, n) }
 }
 
 /// mpz_lucnum_ui
+#[inline]
 pub fn mpz_lucnum_ui(l_n: mpz_t, n: ui_t) -> () {
   unsafe { __gmpz_lucnum_ui(l_n, n) }
 }
 
 /// mpz_lucnum2_ui
+#[inline]
 pub fn mpz_lucnum2_ui(l_n: mpz_t, l_n_1: mpz_t, n: ui_t) -> () {
   unsafe { __gmpz_lucnum2_ui(l_n, l_n_1, n) }
 }
 
 /// mpz_gcd
+#[inline]
 pub fn mpz_gcd(g: mpz_t, a: mpz_r, b: mpz_r) -> () {
   unsafe { __gmpz_gcd(g, a, b) }
 }
 
 /// mpz_gcd_ui return 0 when gcd does not fit to ui_t
+#[inline]
 pub fn mpz_gcd_ui(g: mpz_t, a: mpz_r, u: ui_t) -> ui_t {
   unsafe { __gmpz_gcd_ui(g, a, u) }
 }
 
 /// mpz_gcdext s and t to coefficients satisfying a*s + b*t == gcd
+#[inline]
 pub fn mpz_gcdext(g: mpz_t, s: mpz_t, t: mpz_t, a: mpz_r, b: mpz_r) -> () {
   unsafe { __gmpz_gcdext(g, s, t, a, b) }
 }
 
 /// mpz_lcm
+#[inline]
 pub fn mpz_lcm(c: mpz_t, a: mpz_r, b: mpz_r) -> () {
   unsafe { __gmpz_lcm(c, a, b) }
 }
 
 /// mpz_lcm_ui
+#[inline]
 pub fn mpz_lcm_ui(c: mpz_t, a: mpz_r, u: ui_t) -> () {
   unsafe { __gmpz_lcm_ui(c, a, u) }
 }
 
 /// mpz_probab_prime_p 2 or 1 or 0
+#[inline]
 pub fn mpz_probab_prime_p(a: mpz_r, r: int_t) -> int_t {
   unsafe { __gmpz_probab_prime_p(a, r) }
 }
 
 /// mpz_nextprime
+#[inline]
 pub fn mpz_nextprime(c: mpz_t, a: mpz_r) -> () {
   unsafe { __gmpz_nextprime(c, a) }
 }
 
 /*
 /// mpz_prevprime
+#[inline]
 pub fn mpz_prevprime(c: mpz_t, a: mpz_r) -> () {
   unsafe { __gmpz_prevprime(c, a) }
 }
 */
 
 /// mpz_invert c = inverse of a mod b ((c*a) mod b == 1)
+#[inline]
 pub fn mpz_invert(c: mpz_t, a: mpz_r, b: mpz_r) -> int_t {
   unsafe { __gmpz_invert(c, a, b) }
 }
 
 /// mpz_jacobi 0 1 -1 (defined only for n odd)
+#[inline]
 pub fn mpz_jacobi(a: mpz_r, n: mpz_r) -> int_t {
   unsafe { __gmpz_jacobi(a, n) }
 }
 
 /// mpz_legendre 0 1 -1 (defined only for p an odd positive prime)
+#[inline]
 pub fn mpz_legendre(a: mpz_r, p: mpz_r) -> int_t {
   unsafe { __gmpz_legendre(a, p) }
 }
 
 /// mpz_kronecker
+#[inline]
 pub fn mpz_kronecker(a: mpz_r, n: mpz_r) -> int_t {
 /*
   unsafe { __gmpz_kronecker(a, n) }
@@ -1456,327 +1522,392 @@ pub fn mpz_kronecker(a: mpz_r, n: mpz_r) -> int_t {
 }
 
 /// mpz_kronecker_ui
+#[inline]
 pub fn mpz_kronecker_ui(a: mpz_r, u: ui_t) -> int_t {
   unsafe { __gmpz_kronecker_ui(a, u) }
 }
 
 /// mpz_kronecker_si
+#[inline]
 pub fn mpz_kronecker_si(a: mpz_r, s: si_t) -> int_t {
   unsafe { __gmpz_kronecker_si(a, s) }
 }
 
 /// mpz_ui_kronecker
+#[inline]
 pub fn mpz_ui_kronecker(u: ui_t, a: mpz_r) -> int_t {
   unsafe { __gmpz_ui_kronecker(u, a) }
 }
 
 /// mpz_si_kronecker
+#[inline]
 pub fn mpz_si_kronecker(s: si_t, a: mpz_r) -> int_t {
   unsafe { __gmpz_si_kronecker(s, a) }
 }
 
 /// mpz_bin_ui nCk
+#[inline]
 pub fn mpz_bin_ui(c: mpz_t, n: mpz_r, k: ui_t) -> () {
   unsafe { __gmpz_bin_ui(c, n, k) }
 }
 
 /// mpz_bin_uiui nCk
+#[inline]
 pub fn mpz_bin_uiui(c: mpz_t, n: ui_t, k: ui_t) -> () {
   unsafe { __gmpz_bin_uiui(c, n, k) }
 }
 
 /// mpz_abs
+#[inline]
 pub fn mpz_abs(c: mpz_t, a: mpz_r) -> () {
   unsafe { __gmpz_abs(c, a) }
 }
 
 /// mpz_neg
+#[inline]
 pub fn mpz_neg(c: mpz_t, a: mpz_r) -> () {
   unsafe { __gmpz_neg(c, a) }
 }
 
 /// mpz_sub c = a - b
+#[inline]
 pub fn mpz_sub(c: mpz_t, a: mpz_r, b: mpz_r) -> () {
   unsafe { __gmpz_sub(c, a, b) }
 }
 
 /// mpz_sub_ui c = a - u
+#[inline]
 pub fn mpz_sub_ui(c: mpz_t, a: mpz_r, u: ui_t) -> () {
   unsafe { __gmpz_sub_ui(c, a, u) }
 }
 
 /// mpz_ui_sub c = u - a
+#[inline]
 pub fn mpz_ui_sub(c: mpz_t, u: ui_t, a: mpz_r) -> () {
   unsafe { __gmpz_ui_sub(c, u, a) }
 }
 
 /// mpz_submul c -= a * b
+#[inline]
 pub fn mpz_submul(c: mpz_t, a: mpz_r, b: mpz_r) -> () {
   unsafe { __gmpz_submul(c, a, b) }
 }
 
 /// mpz_submul_ui c -= a * u
+#[inline]
 pub fn mpz_submul_ui(c: mpz_t, a: mpz_r, u: ui_t) -> () {
   unsafe { __gmpz_submul_ui(c, a, u) }
 }
 
 /// mpz_add c = a + b
+#[inline]
 pub fn mpz_add(c: mpz_t, a: mpz_r, b: mpz_r) -> () {
   unsafe { __gmpz_add(c, a, b) }
 }
 
 /// mpz_add_ui c = a + u
+#[inline]
 pub fn mpz_add_ui(c: mpz_t, a: mpz_r, u: ui_t) -> () {
   unsafe { __gmpz_add_ui(c, a, u) }
 }
 
 /// mpz_addmul c += a * b
+#[inline]
 pub fn mpz_addmul(c: mpz_t, a: mpz_r, b: mpz_r) -> () {
   unsafe { __gmpz_addmul(c, a, b) }
 }
 
 /// mpz_addmul_ui c += a * u
+#[inline]
 pub fn mpz_addmul_ui(c: mpz_t, a: mpz_r, u: ui_t) -> () {
   unsafe { __gmpz_addmul_ui(c, a, u) }
 }
 
 /// mpz_mul c = a * b
+#[inline]
 pub fn mpz_mul(c: mpz_t, a: mpz_r, b: mpz_r) -> () {
   unsafe { __gmpz_mul(c, a, b) }
 }
 
 /// mpz_mul_ui c = a * u
+#[inline]
 pub fn mpz_mul_ui(c: mpz_t, a: mpz_r, u: ui_t) -> () {
   unsafe { __gmpz_mul_ui(c, a, u) }
 }
 
 /// mpz_mul_si c = a * s
+#[inline]
 pub fn mpz_mul_si(c: mpz_t, a: mpz_r, s: si_t) -> () {
   unsafe { __gmpz_mul_si(c, a, s) }
 }
 
 /// mpz_mul_2exp c = a * 2**n
+#[inline]
 pub fn mpz_mul_2exp(c: mpz_t, a: mpz_r, n: mp_bitcnt_t) -> () {
   unsafe { __gmpz_mul_2exp(c, a, n) }
 }
 
 /// mpz_cdiv_q
+#[inline]
 pub fn mpz_cdiv_q(q: mpz_t, n: mpz_r, d: mpz_r) -> () {
   unsafe { __gmpz_cdiv_q(q, n, d) }
 }
 
 /// mpz_cdiv_r
+#[inline]
 pub fn mpz_cdiv_r(r: mpz_t, n: mpz_r, d: mpz_r) -> () {
   unsafe { __gmpz_cdiv_r(r, n, d) }
 }
 
 /// mpz_cdiv_qr
+#[inline]
 pub fn mpz_cdiv_qr(q: mpz_t, r: mpz_t, n: mpz_r, d: mpz_r) -> () {
   unsafe { __gmpz_cdiv_qr(q, r, n, d) }
 }
 
 /// mpz_cdiv_q_ui
+#[inline]
 pub fn mpz_cdiv_q_ui(q: mpz_t, n: mpz_r, d: ui_t) -> ui_t {
   unsafe { __gmpz_cdiv_q_ui(q, n, d) }
 }
 
 /// mpz_cdiv_r_ui
+#[inline]
 pub fn mpz_cdiv_r_ui(r: mpz_t, n: mpz_r, d: ui_t) -> ui_t {
   unsafe { __gmpz_cdiv_r_ui(r, n, d) }
 }
 
 /// mpz_cdiv_qr_ui
+#[inline]
 pub fn mpz_cdiv_qr_ui(q: mpz_t, r: mpz_t, n: mpz_r, d: ui_t) -> ui_t {
   unsafe { __gmpz_cdiv_qr_ui(q, r, n, d) }
 }
 
 /// mpz_cdiv_ui
+#[inline]
 pub fn mpz_cdiv_ui(n: mpz_r, d: ui_t) -> ui_t {
   unsafe { __gmpz_cdiv_ui(n, d) }
 }
 
 /// mpz_cdiv_q_2exp
+#[inline]
 pub fn mpz_cdiv_q_2exp(q: mpz_t, n: mpz_r, b: mp_bitcnt_t) -> () {
   unsafe { __gmpz_cdiv_q_2exp(q, n, b) }
 }
 
 /// mpz_cdiv_r_2exp
+#[inline]
 pub fn mpz_cdiv_r_2exp(r: mpz_t, n: mpz_r, b: mp_bitcnt_t) -> () {
   unsafe { __gmpz_cdiv_r_2exp(r, n, b) }
 }
 
 /// mpz_fdiv_q
+#[inline]
 pub fn mpz_fdiv_q(q: mpz_t, n: mpz_r, d: mpz_r) -> () {
   unsafe { __gmpz_fdiv_q(q, n, d) }
 }
 
 /// mpz_fdiv_r
+#[inline]
 pub fn mpz_fdiv_r(r: mpz_t, n: mpz_r, d: mpz_r) -> () {
   unsafe { __gmpz_fdiv_r(r, n, d) }
 }
 
 /// mpz_fdiv_qr
+#[inline]
 pub fn mpz_fdiv_qr(q: mpz_t, r: mpz_t, n: mpz_r, d: mpz_r) -> () {
   unsafe { __gmpz_fdiv_qr(q, r, n, d) }
 }
 
 /// mpz_fdiv_q_ui
+#[inline]
 pub fn mpz_fdiv_q_ui(q: mpz_t, n: mpz_r, d: ui_t) -> ui_t {
   unsafe { __gmpz_fdiv_q_ui(q, n, d) }
 }
 
 /// mpz_fdiv_r_ui
+#[inline]
 pub fn mpz_fdiv_r_ui(r: mpz_t, n: mpz_r, d: ui_t) -> ui_t {
   unsafe { __gmpz_fdiv_r_ui(r, n, d) }
 }
 
 /// mpz_fdiv_qr_ui
+#[inline]
 pub fn mpz_fdiv_qr_ui(q: mpz_t, r: mpz_t, n: mpz_r, d: ui_t) -> ui_t {
   unsafe { __gmpz_fdiv_qr_ui(q, r, n, d) }
 }
 
 /// mpz_fdiv_ui
+#[inline]
 pub fn mpz_fdiv_ui(n: mpz_r, d: ui_t) -> ui_t {
   unsafe { __gmpz_fdiv_ui(n, d) }
 }
 
 /// mpz_fdiv_q_2exp
+#[inline]
 pub fn mpz_fdiv_q_2exp(q: mpz_t, n: mpz_r, b: mp_bitcnt_t) -> () {
   unsafe { __gmpz_fdiv_q_2exp(q, n, b) }
 }
 
 /// mpz_fdiv_r_2exp
+#[inline]
 pub fn mpz_fdiv_r_2exp(r: mpz_t, n: mpz_r, b: mp_bitcnt_t) -> () {
   unsafe { __gmpz_fdiv_r_2exp(r, n, b) }
 }
 
 /// mpz_tdiv_q
+#[inline]
 pub fn mpz_tdiv_q(q: mpz_t, n: mpz_r, d: mpz_r) -> () {
   unsafe { __gmpz_tdiv_q(q, n, d) }
 }
 
 /// mpz_tdiv_r
+#[inline]
 pub fn mpz_tdiv_r(r: mpz_t, n: mpz_r, d: mpz_r) -> () {
   unsafe { __gmpz_tdiv_r(r, n, d) }
 }
 
 /// mpz_tdiv_qr
+#[inline]
 pub fn mpz_tdiv_qr(q: mpz_t, r: mpz_t, n: mpz_r, d: mpz_r) -> () {
   unsafe { __gmpz_tdiv_qr(q, r, n, d) }
 }
 
 /// mpz_tdiv_q_ui
+#[inline]
 pub fn mpz_tdiv_q_ui(q: mpz_t, n: mpz_r, d: ui_t) -> ui_t {
   unsafe { __gmpz_tdiv_q_ui(q, n, d) }
 }
 
 /// mpz_tdiv_r_ui
+#[inline]
 pub fn mpz_tdiv_r_ui(r: mpz_t, n: mpz_r, d: ui_t) -> ui_t {
   unsafe { __gmpz_tdiv_r_ui(r, n, d) }
 }
 
 /// mpz_tdiv_qr_ui
+#[inline]
 pub fn mpz_tdiv_qr_ui(q: mpz_t, r: mpz_t, n: mpz_r, d: ui_t) -> ui_t {
   unsafe { __gmpz_tdiv_qr_ui(q, r, n, d) }
 }
 
 /// mpz_tdiv_ui
+#[inline]
 pub fn mpz_tdiv_ui(n: mpz_r, d: ui_t) -> ui_t {
   unsafe { __gmpz_tdiv_ui(n, d) }
 }
 
 /// mpz_tdiv_q_2exp
+#[inline]
 pub fn mpz_tdiv_q_2exp(q: mpz_t, n: mpz_r, b: mp_bitcnt_t) -> () {
   unsafe { __gmpz_tdiv_q_2exp(q, n, b) }
 }
 
 /// mpz_tdiv_r_2exp
+#[inline]
 pub fn mpz_tdiv_r_2exp(r: mpz_t, n: mpz_r, b: mp_bitcnt_t) -> () {
   unsafe { __gmpz_tdiv_r_2exp(r, n, b) }
 }
 
 /// mpz_mod
+#[inline]
 pub fn mpz_mod(r: mpz_t, n: mpz_r, d: mpz_r) -> () {
   unsafe { __gmpz_mod(r, n, d) }
 }
 
 /// mpz_mod_ui
+#[inline]
 pub fn mpz_mod_ui(r: mpz_t, n: mpz_r, d: ui_t) -> ui_t {
 //  unsafe { __gmpz_mod_ui(r, n, d) }
   unsafe { __gmpz_fdiv_r_ui(r, n, d) }
 }
 
 /// mpz_divexact
+#[inline]
 pub fn mpz_divexact(q: mpz_t, n: mpz_r, d: mpz_r) -> () {
   unsafe { __gmpz_divexact(q, n, d) }
 }
 
 /// mpz_divexact_ui
+#[inline]
 pub fn mpz_divexact_ui(q: mpz_t, n: mpz_r, d: ui_t) -> () {
   unsafe { __gmpz_divexact_ui(q, n, d) }
 }
 
 /// mpz_divisible_p
+#[inline]
 pub fn mpz_divisible_p(n: mpz_r, d: mpz_r) -> bool {
   unsafe { __gmpz_divisible_p(n, d) != 0 }
 }
 
 /// mpz_divisible_ui_p
+#[inline]
 pub fn mpz_divisible_ui_p(n: mpz_r, d: ui_t) -> bool {
   unsafe { __gmpz_divisible_ui_p(n, d) != 0 }
 }
 
 /// mpz_divisible_2exp_p
+#[inline]
 pub fn mpz_divisible_2exp_p(n: mpz_r, b: mp_bitcnt_t) -> bool {
   unsafe { __gmpz_divisible_2exp_p(n, b) != 0 }
 }
 
 /// mpz_congruent_p
+#[inline]
 pub fn mpz_congruent_p(n: mpz_r, c: mpz_r, d: mpz_r) -> bool {
   unsafe { __gmpz_congruent_p(n, c, d) != 0 }
 }
 
 /// mpz_congruent_ui_p
+#[inline]
 pub fn mpz_congruent_ui_p(n: mpz_r, c: ui_t, d: ui_t) -> bool {
   unsafe { __gmpz_congruent_ui_p(n, c, d) != 0 }
 }
 
 /// mpz_congruent_2exp_p
+#[inline]
 pub fn mpz_congruent_2exp_p(n: mpz_r, c: mpz_r, b: mp_bitcnt_t) -> bool {
   unsafe { __gmpz_congruent_2exp_p(n, c, b) != 0 }
 }
 
 /// mpz_powm_sec c = (a**n) mod m ***required n &gt; 0 and m is odd***
+#[inline]
 pub fn mpz_powm_sec(c: mpz_t, a: mpz_r, n: mpz_r, m: mpz_r) -> () {
   unsafe { __gmpz_powm_sec(c, a, n, m) }
 }
 
 /// mpz_powm c = (a**n) mod m ***n &lt; 0 when exists inv a**-1 mod m***
+#[inline]
 pub fn mpz_powm(c: mpz_t, a: mpz_r, n: mpz_r, m: mpz_r) -> () {
   unsafe { __gmpz_powm(c, a, n, m) }
 }
 
 /// mpz_powm_ui c = (a**n) mod m
+#[inline]
 pub fn mpz_powm_ui(c: mpz_t, a: mpz_r, n: ui_t, m: mpz_r) -> () {
   unsafe { __gmpz_powm_ui(c, a, n, m) }
 }
 
 /// mpz_pow_ui c == a**n
+#[inline]
 pub fn mpz_pow_ui(c: mpz_t, a: mpz_r, n: ui_t) -> () {
   unsafe { __gmpz_pow_ui(c, a, n) }
 }
 
 /// mpz_ui_pow_ui c = a**n
+#[inline]
 pub fn mpz_ui_pow_ui(c: mpz_t, a: ui_t, n: ui_t) -> () {
   unsafe { __gmpz_ui_pow_ui(c, a, n) }
 }
 
 /// mpz_sizeinbase
+#[inline]
 pub fn mpz_sizeinbase(a: mpz_r, base: int_t) -> mp_size_t {
   unsafe { __gmpz_sizeinbase(a, base) }
 }
 
 /// mpz_even_p
+#[inline]
 pub fn mpz_even_p(a: mpz_r) -> bool {
 /*
   unsafe { __gmpz_even_p(a) != 0 }
@@ -1785,6 +1916,7 @@ pub fn mpz_even_p(a: mpz_r) -> bool {
 }
 
 /// mpz_odd_p
+#[inline]
 pub fn mpz_odd_p(a: mpz_r) -> bool {
 /*
   unsafe { __gmpz_odd_p(a) != 0 }
@@ -1795,116 +1927,139 @@ unsafe {
 }
 
 /// mpz_fits_ulong_p
+#[inline]
 pub fn mpz_fits_ulong_p(a: mpz_r) -> bool {
   unsafe { __gmpz_fits_ulong_p(a) != 0 }
 }
 
 /// mpz_fits_slong_p
+#[inline]
 pub fn mpz_fits_slong_p(a: mpz_r) -> bool {
   unsafe { __gmpz_fits_slong_p(a) != 0 }
 }
 
 /// mpz_fits_uint_p
+#[inline]
 pub fn mpz_fits_uint_p(a: mpz_r) -> bool {
   unsafe { __gmpz_fits_uint_p(a) != 0 }
 }
 
 /// mpz_fits_sint_p
+#[inline]
 pub fn mpz_fits_sint_p(a: mpz_r) -> bool {
   unsafe { __gmpz_fits_sint_p(a) != 0 }
 }
 
 /// mpz_fits_ushort_p
+#[inline]
 pub fn mpz_fits_ushort_p(a: mpz_r) -> bool {
   unsafe { __gmpz_fits_ushort_p(a) != 0 }
 }
 
 /// mpz_fits_sshort_p
+#[inline]
 pub fn mpz_fits_sshort_p(a: mpz_r) -> bool {
   unsafe { __gmpz_fits_sshort_p(a) != 0 }
 }
 
 /// mpz_urandomb
+#[inline]
 pub fn mpz_urandomb(c: mpz_t, r: randstate_t, nbits: mp_bitcnt_t) -> () {
   unsafe { __gmpz_urandomb(c, r, nbits) }
 }
 
 /// mpz_urandomm
+#[inline]
 pub fn mpz_urandomm(c: mpz_t, r: randstate_t, n: mpz_r) -> () {
   unsafe { __gmpz_urandomm(c, r, n) }
 }
 
 /// mpz_rrandomb
+#[inline]
 pub fn mpz_rrandomb(c: mpz_t, r: randstate_t, nbits: mp_bitcnt_t) -> () {
   unsafe { __gmpz_rrandomb(c, r, nbits) }
 }
 
 /// mpz_random ***(obsoleted) use mpz_urandomb or mpz_urandomm instead***
+#[inline]
 pub fn mpz_random(c: mpz_t, max_size: mp_size_t) -> () {
   unsafe { __gmpz_random(c, max_size) }
 }
 
 /// mpz_random2
+#[inline]
 pub fn mpz_random2(c: mpz_t, max_size: mp_size_t) -> () {
   unsafe { __gmpz_random2(c, max_size) }
 }
 
 /// mpz_and
+#[inline]
 pub fn mpz_and(c: mpz_t, a: mpz_r, b: mpz_r) -> () {
   unsafe { __gmpz_and(c, a, b) }
 }
 
 /// mpz_ior
+#[inline]
 pub fn mpz_ior(c: mpz_t, a: mpz_r, b: mpz_r) -> () {
   unsafe { __gmpz_ior(c, a, b) }
 }
 
 /// mpz_xor
+#[inline]
 pub fn mpz_xor(c: mpz_t, a: mpz_r, b: mpz_r) -> () {
   unsafe { __gmpz_xor(c, a, b) }
 }
 
 /// mpz_com
+#[inline]
 pub fn mpz_com(c: mpz_t, a: mpz_r) -> () {
   unsafe { __gmpz_com(c, a) }
 }
 
 /// mpz_popcount
+#[inline]
 pub fn mpz_popcount(a: mpz_r) -> mp_bitcnt_t {
   unsafe { __gmpz_popcount(a) }
 }
 
 /// mpz_hamdist hamming distance between a and b (both sgn must be same)
+#[inline]
 pub fn mpz_hamdist(a: mpz_r, b: mpz_r) -> mp_bitcnt_t {
   unsafe { __gmpz_hamdist(a, b) }
 }
 
 /// mpz_scan0 to msb
+#[inline]
 pub fn mpz_scan0(a: mpz_r, s: mp_bitcnt_t) -> mp_bitcnt_t {
   unsafe { __gmpz_scan0(a, s) }
 }
 
 /// mpz_scan1 to msb
+#[inline]
 pub fn mpz_scan1(a: mpz_r, s: mp_bitcnt_t) -> mp_bitcnt_t {
   unsafe { __gmpz_scan1(a, s) }
 }
 
 /// mpz_clrbit
+#[inline]
 pub fn mpz_clrbit(c: mpz_t, n: mp_bitcnt_t) -> () {
   unsafe { __gmpz_clrbit(c, n) }
 }
 
 /// mpz_setbit
+#[inline]
 pub fn mpz_setbit(c: mpz_t, n: mp_bitcnt_t) -> () {
   unsafe { __gmpz_setbit(c, n) }
 }
 
 /// mpz_combit
+#[inline]
 pub fn mpz_combit(c: mpz_t, n: mp_bitcnt_t) -> () {
   unsafe { __gmpz_combit(c, n) }
 }
 
 /// mpz_tstbit
+#[inline]
 pub fn mpz_tstbit(a: mpz_r, n: mp_bitcnt_t) -> bool {
   unsafe { __gmpz_tstbit(a, n) != 0 }
 }

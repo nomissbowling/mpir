@@ -39,16 +39,19 @@ impl EraPrimeTableUI {
   }
 
   /// get_maxera
+  #[inline]
   pub fn get_maxera(&self) -> mp_size_t {
     self.maxera
   }
 
   /// is_prime
+  #[inline]
   pub fn is_prime(&self, n: mp_size_t) -> Option<bool> {
     if n >= self.maxera { None } else { Some(!self.era.tstbit(n as ui_t)) }
   }
 
   /// nprimes
+  #[inline]
   pub fn nprimes(&self) -> mp_size_t {
     self.tbl.len()
   }

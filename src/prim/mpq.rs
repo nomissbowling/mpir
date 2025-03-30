@@ -117,26 +117,36 @@ impl __mpq_struct {
     mpq_get_d(self)
   }
 
-  /// get_num create new instance of mpz_s
+  /// get_num create new instance mpz_s (direct use of numref is recommended)
+  #[inline]
   pub fn get_num(&self) -> mpz_s {
+/*
     let mut t = mpz_s::init();
     mpq_get_num(&mut t, self);
     t
+*/
+    mpz_s::init_set(self.numref())
   }
 
-  /// get_den create new instance of mpz_s
+  /// get_den create new instance mpz_s (direct use of denref is recommended)
+  #[inline]
   pub fn get_den(&self) -> mpz_s {
+/*
     let mut t = mpz_s::init();
     mpq_get_den(&mut t, self);
     t
+*/
+    mpz_s::init_set(self.denref())
   }
 
   /// numref
+  #[inline]
   pub fn numref(&self) -> mpz_r {
     mpq_numref(self)
   }
 
   /// denref
+  #[inline]
   pub fn denref(&self) -> mpz_r {
     mpq_denref(self)
   }
@@ -231,6 +241,27 @@ impl __mpq_struct {
   /// div_2exp self /= 2**n
   pub fn div_2exp(&mut self, n: mp_bitcnt_t) -> &mut Self {
     mpq_div_2exp(self, mpq_s::init().set(self), n);
+    self
+  }
+
+  /// frac create new instance
+  #[inline]
+  pub fn frac(a: mpz_r, b: mpz_r) -> Self {
+    let mut t = mpq_s::init();
+    t.set_num(a).set_den(b);
+    t
+  }
+
+  /// reduction of fraction self = (num / gcd) / (den / gcd)
+  #[inline]
+  pub fn reduce(&mut self) -> &mut Self {
+    let gcd = &self.numref().gcd(self.denref());
+    let mut num = mpz_s::init();
+    let mut den = mpz_s::init();
+    mpz_divexact(&mut num, self.numref(), gcd);
+    mpz_divexact(&mut den, self.denref(), gcd);
+    self.set_num(&num);
+    self.set_den(&den);
     self
   }
 }
@@ -378,13 +409,13 @@ pub fn mpq_get_d(q: mpq_r) -> double_t {
   unsafe { __gmpq_get_d(q) }
 }
 
-/// mpq_get_num
+/// mpq_get_num (direct use of numref is recommended) ***may be bug in gmp***
 #[inline]
 pub fn mpq_get_num(num: mpz_t, q: mpq_r) -> () {
   unsafe { __gmpq_get_num(num, q) }
 }
 
-/// mpq_get_den
+/// mpq_get_den (direct use of denref is recommended) ***may be bug in gmp***
 #[inline]
 pub fn mpq_get_den(den: mpz_t, q: mpq_r) -> () {
   unsafe { __gmpq_get_den(den, q) }

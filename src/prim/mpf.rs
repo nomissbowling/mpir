@@ -5,7 +5,7 @@ use std::fmt;
 use std::error::Error;
 use std::collections::HashMap;
 
-use crate::prim::{*, typ::*, mpz::*, randstate::*, gmp::*}; // mpq::*
+use crate::prim::{*, typ::*, mpz::*, mpq::*, randstate::*, gmp::*};
 use crate::util;
 
 /// __mpf_struct
@@ -471,6 +471,20 @@ impl __mpf_struct {
       if d >= digits { None } else { Some(e) }
     }); // skip .ok_or_else(|| {...}) .expect(...) when break by None
     e
+  }
+
+  /// init_set_z create new instance
+  #[inline]
+  pub fn init_set_z(a: mpz_r) -> Self {
+    let mut t = mpf_s::init();
+    mpf_set_z(&mut t, a);
+    t
+  }
+
+  /// init_set_q create new instance
+  #[inline]
+  pub fn init_set_q(q: mpq_r) -> Self {
+    mpf_s::init_set_z(q.numref()) / mpf_s::init_set_z(q.denref())
   }
 }
 

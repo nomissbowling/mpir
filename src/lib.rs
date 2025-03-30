@@ -1,5 +1,8 @@
-#![doc(html_root_url = "https://docs.rs/mpir/0.3.2")]
+#![doc(html_root_url = "https://docs.rs/mpir/0.3.3")]
 //! partial Rust porting of mpir multiple precision library based on gmp mpfr
+//!
+//! Cargo test with [-- --nocapture] or with [-- --show-output]
+//!
 //!
 //! # Requirements
 //!
@@ -46,7 +49,7 @@ mod tests {
     calc_fit_test, // single thread
     calc_logical_test,
     calc_mpq_test,
-    ops_test, // single thread
+    ops, // ops_test for mpz mpf mpq complex (multi thread and single thread)
     compare_test, // single thread
     significant_digits_test, // single thread
     calc_pi_gauss_legendre_test, // single thread
@@ -55,7 +58,6 @@ mod tests {
     ept_test};
   use serial_test::serial;
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   fn test_mpz() {
     let a = &mut mpz_s::new();
@@ -64,7 +66,6 @@ mod tests {
       "1, -1 000000000000007b");
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   #[serial] // expected on the single thread for mpf_set_default_prec
   fn test_mpf() {
@@ -75,7 +76,6 @@ mod tests {
       "2, -2, 0 0000000000000000 4ccccccccccccc00");
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   fn test_mpq() {
     let q = &mut mpq_s::new();
@@ -85,124 +85,121 @@ mod tests {
       "(1, 1 0000000000000002) / (1, 1 0000000000000008)");
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   fn test_calc_mpz() {
     assert_eq!(calc_mpz_test(), ());
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   fn test_calc_fact() {
     assert_eq!(calc_fact_test(), ());
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   fn test_calc_fib() {
     assert_eq!(calc_fib_test(), ());
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   fn test_calc_gcd() {
     assert_eq!(calc_gcd_test(), ());
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   fn test_calc_lcm() {
     assert_eq!(calc_lcm_test(), ());
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   fn test_calc_mod_prime() {
     assert_eq!(calc_mod_prime_test(), ());
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   fn test_calc_binomial_coefficient() {
     assert_eq!(calc_binomial_coefficient_test(), ());
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   #[serial] // expected on the single thread for mpf_set_default_prec
   fn test_calc_mpf_prec64() {
     assert_eq!(calc_mpf_prec64_test(), ());
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   #[serial] // expected on the single thread for mpf_set_default_prec
   fn test_calc_rand() {
     assert_eq!(calc_rand_test(), ());
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   #[serial] // expected on the single thread for mpf_set_default_prec
   fn test_calc_fit() {
     assert_eq!(calc_fit_test(), ());
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   fn test_calc_logical() {
     assert_eq!(calc_logical_test(), ());
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   fn test_calc_mpq() {
     assert_eq!(calc_mpq_test(), ());
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
+  #[test]
+  fn test_ops_mpz() {
+    assert_eq!(ops::mpz::ops_test(), ());
+  }
+
+  #[test]
+  #[serial] // expected on the single thread for mpf_set_default_prec
+  fn test_ops_mpf() {
+    assert_eq!(ops::mpf::ops_test(), ());
+  }
+
+  #[test]
+  fn test_ops_mpq() {
+    assert_eq!(ops::mpq::ops_test(), ());
+  }
+
   #[test]
   #[serial] // expected on the single thread for mpf_set_default_prec
   fn test_ops() {
-    assert_eq!(ops_test(), ());
+    assert_eq!(ops::ops_test(), ());
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   #[serial] // expected on the single thread for mpf_set_default_prec
   fn test_compare() {
     assert_eq!(compare_test(), ());
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   #[serial] // expected on the single thread for mpf_set_default_prec
   fn test_significant_digits() {
     assert_eq!(significant_digits_test(), ());
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   #[serial] // expected on the single thread for mpf_set_default_prec
   fn test_calc_pi_gauss_legendre() {
     assert_eq!(calc_pi_gauss_legendre_test(), ());
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   #[serial] // expected on the single thread for mpf_set_default_prec
   fn test_calc_pi_euler() {
     assert_eq!(calc_pi_euler_test(), ());
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   #[serial] // expected on the single thread for mpf_set_default_prec
   fn test_calc_napier() {
     assert_eq!(calc_napier_test(), ());
   }
 
-  /// with [-- --nocapture] or with [-- --show-output]
   #[test]
   fn test_ept() {
     assert_eq!(ept_test(), ());

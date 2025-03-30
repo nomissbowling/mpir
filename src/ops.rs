@@ -9,140 +9,242 @@ pub use crate::ops::mpz::{*, sub::*, add::*, mul::*, div::*, rem::*, cmp::*};
 pub use crate::ops::mpf::{*, sub::*, add::*, mul::*, div::*, rem::*, cmp::*};
 pub use crate::ops::mpq::{*, sub::*, add::*, mul::*, div::*, rem::*, cmp::*};
 
-/// onforward_ref_unop without Copy trait
-#[macro_export]
-macro_rules! onforward_ref_unop {
-  (impl $imp:ident, $method:ident for $t:ty) => {
-    /// impl '$imp' for '$t'
-    impl $imp for $t {
-      type Output = Self;
+pub use onforward_ref::*;
 
-      /// '$imp' '$t'
-      #[inline]
-      fn $method(self) -> Self {
-        $imp::$method(&self)
-      }
-    }
+use std::ops::{Mul, MulAssign, Div, DivAssign};
+use crate::ops::{onforward_ref_binop, onforward_ref_op_assign};
+use crate::prim::{mpz::*, mpf::*, mpq::*};
 
-    crate::ops::onforward_ref_mut_unop!{impl $imp, $method for $t}
-  };
+onforward_ref_binop!{impl Mul, mul for mpz_s, mpf_s, mpf_s}
+
+/// impl Mul for mpz_r
+impl<'a, 'b> Mul<&'b mpf_s> for &'a mpz_s {
+  type Output = <mpf_s as Mul<mpf_s>>::Output;
+
+  /// mul mpz_r * mpf_r
+  #[inline]
+  fn mul(self, rhs: &'b mpf_s) -> <mpf_s as Mul<mpf_s>>::Output {
+    mpf_s::init().set_z(self) * rhs
+  }
 }
-pub use onforward_ref_unop;
 
-/// onforward_ref_mut_unop without Copy trait
-#[macro_export]
-macro_rules! onforward_ref_mut_unop {
-  (impl $imp:ident, $method:ident for $t:ty) => {
-    /// impl '$imp' for '&amp;mut $t'
-    impl<'a> $imp for &'a mut $t {
-      type Output = <$t as $imp>::Output;
+onforward_ref_binop!{impl Mul, mul for mpf_s, mpz_s, mpf_s}
 
-      /// '$imp' '&amp;mut $t'
-      #[inline]
-      fn $method(self) -> <$t as $imp>::Output {
-        // '&*self' means cast '&mut self' to '&self'
-        // to avoid ***recursive call*** by using $imp::$method(self)
-        $imp::$method(&*self)
-      }
-    }
-  };
+/// impl Mul for mpf_r
+impl<'a, 'b> Mul<&'b mpz_s> for &'a mpf_s {
+  type Output = <mpf_s as Mul<mpz_s>>::Output;
+
+  /// mul mpf_r * mpz_r
+  #[inline]
+  fn mul(self, rhs: &'b mpz_s) -> <mpf_s as Mul<mpz_s>>::Output {
+    self * mpf_s::init().set_z(rhs)
+  }
 }
-pub use onforward_ref_mut_unop;
 
-/// onforward_ref_binop without Copy trait
-#[macro_export]
-macro_rules! onforward_ref_binop {
-  (impl $imp:ident, $method:ident for $t:ty, $u:ty, $o:ty) => {
-    /// impl '$imp'&lt;'$u'$gt; for '$t'
-    impl $imp<$u> for $t {
-      type Output = $o; // <$o as $imp<$u>>::Output;
+onforward_ref_op_assign!{impl MulAssign, mul_assign for mpf_s, mpz_s}
 
-      /// '$imp' '$t' '$u'
-      #[inline]
-      fn $method(self, rhs: $u) -> <$o as $imp<$u>>::Output {
-        $imp::$method(&self, &rhs)
-      }
-    }
-
-    /// impl '$imp'&lt;'&amp;$u'$gt; for '$t'
-    impl<'a> $imp<&'a $u> for $t {
-      type Output = <$o as $imp<$u>>::Output;
-
-      /// '$imp' '$t' '&amp;$u'
-      #[inline]
-      fn $method(self, rhs: &'a $u) -> <$o as $imp<$u>>::Output {
-        $imp::$method(&self, rhs)
-      }
-    }
-
-    /// impl '$imp'&lt;'$u'$gt; for '&amp;$t'
-    impl<'a> $imp<$u> for &'a $t {
-      type Output = <$o as $imp<$u>>::Output;
-
-      /// '$imp' '&amp;$t' '$u'
-      #[inline]
-      fn $method(self, rhs: $u) -> <$o as $imp<$u>>::Output {
-        $imp::$method(self, &rhs)
-      }
-    }
-
-    crate::ops::onforward_ref_mut_binop!{impl $imp, $method for $t, $u, $o}
-  };
+/// impl MulAssign for mpf_s
+impl<'a> MulAssign<&'a mpz_s> for mpf_s {
+  /// mul_assign mpf_s *= mpz_r
+  #[inline]
+  fn mul_assign(&mut self, rhs: &'a mpz_s) -> () {
+    *self *= mpf_s::init().set_z(rhs);
+  }
 }
-pub use onforward_ref_binop;
 
-/// onforward_ref_mut_binop without Copy trait
-#[macro_export]
-macro_rules! onforward_ref_mut_binop {
-  (impl $imp:ident, $method:ident for $t:ty, $u:ty, $o:ty) => {
-    /// impl '$imp'&lt;'&amp;mut $u'$gt; for '&amp;mut $t'
-    impl<'a, 'b> $imp<&'b mut $u> for &'a mut $t {
-      type Output = <$o as $imp<$u>>::Output;
+onforward_ref_binop!{impl Div, div for mpz_s, mpf_s, mpf_s}
 
-      /// '$imp' '&amp;mut $t' '&amp;mut $u'
-      #[inline]
-      fn $method(self, rhs: &'b mut $u) -> <$o as $imp<$u>>::Output {
-        // '&*self' means cast '&mut self' to '&self'
-        // to avoid ***recursive call*** by using $imp::$method(self)
-        $imp::$method(&*self, &*rhs)
-      }
-    }
+/// impl Div for mpz_r
+impl<'a, 'b> Div<&'b mpf_s> for &'a mpz_s {
+  type Output = <mpf_s as Div<mpf_s>>::Output;
 
-  };
+  /// div mpz_r / mpf_r
+  #[inline]
+  fn div(self, rhs: &'b mpf_s) -> <mpf_s as Div<mpf_s>>::Output {
+    mpf_s::init().set_z(self) / rhs
+  }
 }
-pub use onforward_ref_mut_binop;
 
-/// onforward_ref_op_assign without Copy trait
-#[macro_export]
-macro_rules! onforward_ref_op_assign {
-  (impl $imp:ident, $method:ident for $t:ty, $u:ty) => {
-    /// impl '$imp'&lt;'$u'&gt; for '$t'
-    impl $imp<$u> for $t {
-      /// '$imp' '$t' '$u'
-      #[inline]
-      fn $method(&mut self, rhs: $u) -> () {
-        $imp::$method(self, &rhs);
-      }
-    }
+onforward_ref_binop!{impl Div, div for mpf_s, mpz_s, mpf_s}
 
-    crate::ops::onforward_ref_mut_op_assign!{impl $imp, $method for $t, $u}
-  };
+/// impl Div for mpf_r
+impl<'a, 'b> Div<&'b mpz_s> for &'a mpf_s {
+  type Output = <mpf_s as Div<mpz_s>>::Output;
+
+  /// div mpf_r / mpz_r
+  #[inline]
+  fn div(self, rhs: &'b mpz_s) -> <mpf_s as Div<mpz_s>>::Output {
+    self / mpf_s::init().set_z(rhs)
+  }
 }
-pub use onforward_ref_op_assign;
 
-/// onforward_ref_mut_op_assign without Copy trait
-#[macro_export]
-macro_rules! onforward_ref_mut_op_assign {
-  (impl $imp:ident, $method:ident for $t:ty, $u:ty) => {
-    /// impl '$imp'&lt;'$u'&gt; for &amp;mut '$t'
-    impl<'a> $imp<$u> for &'a mut $t {
-      /// '$imp' &amp;mut '$t' '$u'
-      #[inline]
-      fn $method(&mut self, rhs: $u) -> () {
-        $imp::$method(*self, &rhs);
-      }
-    }
+onforward_ref_op_assign!{impl DivAssign, div_assign for mpf_s, mpz_s}
 
-  };
+/// impl DivAssign for mpf_s
+impl<'a> DivAssign<&'a mpz_s> for mpf_s {
+  /// div_assign mpf_s /= mpz_r
+  #[inline]
+  fn div_assign(&mut self, rhs: &'a mpz_s) -> () {
+    *self /= mpf_s::init().set_z(rhs);
+  }
 }
-pub use onforward_ref_mut_op_assign;
+
+onforward_ref_binop!{impl Mul, mul for mpz_s, mpq_s, mpq_s}
+
+/// impl Mul for mpz_r
+impl<'a, 'b> Mul<&'b mpq_s> for &'a mpz_s {
+  type Output = <mpq_s as Mul<mpq_s>>::Output;
+
+  /// mul mpz_r * mpq_r
+  #[inline]
+  fn mul(self, rhs: &'b mpq_s) -> <mpq_s as Mul<mpq_s>>::Output {
+//    mpq_s::frac(&(self * &rhs.get_num()), &rhs.get_den())
+    mpq_s::init().set_z(self) * rhs
+  }
+}
+
+onforward_ref_binop!{impl Mul, mul for mpq_s, mpz_s, mpq_s}
+
+/// impl Mul for mpq_r
+impl<'a, 'b> Mul<&'b mpz_s> for &'a mpq_s {
+  type Output = <mpq_s as Mul<mpz_s>>::Output;
+
+  /// mul mpq_r * mpz_r
+  #[inline]
+  fn mul(self, rhs: &'b mpz_s) -> <mpq_s as Mul<mpz_s>>::Output {
+//    mpq_s::frac(&(&self.get_num() * rhs), &self.get_den())
+    self * mpq_s::init().set_z(rhs)
+  }
+}
+
+onforward_ref_op_assign!{impl MulAssign, mul_assign for mpq_s, mpz_s}
+
+/// impl MulAssign for mpq_s
+impl<'a> MulAssign<&'a mpz_s> for mpq_s {
+  /// mul_assign mpq_s *= mpz_r
+  #[inline]
+  fn mul_assign(&mut self, rhs: &'a mpz_s) -> () {
+//    self.set_num(&(&self.get_num() * rhs));
+    *self *= mpq_s::init().set_z(rhs);
+  }
+}
+
+onforward_ref_binop!{impl Div, div for mpz_s, mpq_s, mpq_s}
+
+/// impl Div for mpz_r
+impl<'a, 'b> Div<&'b mpq_s> for &'a mpz_s {
+  type Output = <mpq_s as Div<mpq_s>>::Output;
+
+  /// div mpz_r / mpq_r
+  #[inline]
+  fn div(self, rhs: &'b mpq_s) -> <mpq_s as Div<mpq_s>>::Output {
+//    mpq_s::frac(&(self * &rhs.get_den()), &rhs.get_num())
+    mpq_s::init().set_z(self) / rhs
+  }
+}
+
+onforward_ref_binop!{impl Div, div for mpq_s, mpz_s, mpq_s}
+
+/// impl Div for mpq_r
+impl<'a, 'b> Div<&'b mpz_s> for &'a mpq_s {
+  type Output = <mpq_s as Div<mpz_s>>::Output;
+
+  /// div mpq_r / mpz_r
+  #[inline]
+  fn div(self, rhs: &'b mpz_s) -> <mpq_s as Div<mpz_s>>::Output {
+//    mpq_s::frac(&self.get_num(), &(&self.get_den() * rhs))
+    self / mpq_s::init().set_z(rhs)
+  }
+}
+
+onforward_ref_op_assign!{impl DivAssign, div_assign for mpq_s, mpz_s}
+
+/// impl DivAssign for mpq_s
+impl<'a> DivAssign<&'a mpz_s> for mpq_s {
+  /// div_assign mpq_s /= mpz_r
+  #[inline]
+  fn div_assign(&mut self, rhs: &'a mpz_s) -> () {
+//    self.set_den(&(&self.get_den() * rhs));
+    *self /= mpq_s::init().set_z(rhs);
+  }
+}
+
+onforward_ref_binop!{impl Mul, mul for mpq_s, mpf_s, mpf_s}
+
+/// impl Mul for mpq_r
+impl<'a, 'b> Mul<&'b mpf_s> for &'a mpq_s {
+  type Output = <mpf_s as Mul<mpf_s>>::Output;
+
+  /// mul mpq_r * mpf_r
+  #[inline]
+  fn mul(self, rhs: &'b mpf_s) -> <mpf_s as Mul<mpf_s>>::Output {
+//    mpf_s::init_set_q(self) * rhs
+    self.numref() * rhs / self.denref()
+  }
+}
+
+onforward_ref_binop!{impl Mul, mul for mpf_s, mpq_s, mpf_s}
+
+/// impl Mul for mpf_r
+impl<'a, 'b> Mul<&'b mpq_s> for &'a mpf_s {
+  type Output = <mpf_s as Mul<mpq_s>>::Output;
+
+  /// mul mpf_r * mpq_r
+  #[inline]
+  fn mul(self, rhs: &'b mpq_s) -> <mpf_s as Mul<mpq_s>>::Output {
+//    self * mpf_s::init_set_q(rhs)
+    self * rhs.numref() / rhs.denref()
+  }
+}
+
+onforward_ref_op_assign!{impl MulAssign, mul_assign for mpf_s, mpq_s}
+
+/// impl MulAssign for mpf_s
+impl<'a> MulAssign<&'a mpq_s> for mpf_s {
+  /// mul_assign mpf_s *= mpq_r
+  #[inline]
+  fn mul_assign(&mut self, rhs: &'a mpq_s) -> () {
+//    *self *= mpf_s::init_set_q(rhs);
+    self.set(&(&*self * rhs)); // first mul last div
+  }
+}
+
+onforward_ref_binop!{impl Div, div for mpq_s, mpf_s, mpf_s}
+
+/// impl Div for mpq_r
+impl<'a, 'b> Div<&'b mpf_s> for &'a mpq_s {
+  type Output = <mpf_s as Div<mpf_s>>::Output;
+
+  /// div mpq_r / mpf_r
+  #[inline]
+  fn div(self, rhs: &'b mpf_s) -> <mpf_s as Div<mpf_s>>::Output {
+//    mpf_s::init_set_q(self) / rhs
+    self.numref() / (self.denref() * rhs)
+  }
+}
+
+onforward_ref_binop!{impl Div, div for mpf_s, mpq_s, mpf_s}
+
+/// impl Div for mpf_r
+impl<'a, 'b> Div<&'b mpq_s> for &'a mpf_s {
+  type Output = <mpf_s as Div<mpq_s>>::Output;
+
+  /// div mpf_r / mpq_r
+  #[inline]
+  fn div(self, rhs: &'b mpq_s) -> <mpf_s as Div<mpq_s>>::Output {
+//    self / mpf_s::init_set_q(rhs)
+    self * rhs.denref() / rhs.numref()
+  }
+}
+
+onforward_ref_op_assign!{impl DivAssign, div_assign for mpf_s, mpq_s}
+
+/// impl DivAssign for mpf_s
+impl<'a> DivAssign<&'a mpq_s> for mpf_s {
+  /// div_assign mpf_s /= mpq_r
+  #[inline]
+  fn div_assign(&mut self, rhs: &'a mpq_s) -> () {
+//    *self /= mpf_s::init_set_q(rhs);
+    self.set(&(&*self / rhs)); // first mul last div
+  }
+}

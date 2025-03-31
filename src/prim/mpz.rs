@@ -5,7 +5,7 @@ use std::fmt;
 use std::error::Error;
 use std::collections::HashMap;
 
-use crate::prim::{*, typ::*, randstate::*, gmp::*}; // mpf::*, mpq::*
+use crate::prim::{*, typ::*, mpf::*, mpq::*, randstate::*, gmp::*};
 
 /// __mpz_struct
 // not use #[derive(Clone)]
@@ -22,6 +22,7 @@ pub struct __mpz_struct {
 /// impl SNew
 impl SNew for __mpz_struct {
   /// new
+  #[inline]
   fn new() -> Self {
     __mpz_struct {
       _mp_alloc: 0,
@@ -41,11 +42,13 @@ impl Drop for __mpz_struct {
 /// impl mpz_s
 impl __mpz_struct {
   /// clear
+  #[inline]
   pub fn clear(&mut self) -> () {
     mpz_clear(self)
   }
 
   /// init create new instance
+  #[inline]
   pub fn init() -> Self {
     let mut t = mpz_s::new();
     mpz_init(&mut t);
@@ -53,6 +56,7 @@ impl __mpz_struct {
   }
 
   /// init2 with prec create new instance
+  #[inline]
   pub fn init2(n: mp_bitcnt_t) -> Self {
     let mut t = mpz_s::new();
     mpz_init2(&mut t, n);
@@ -60,6 +64,7 @@ impl __mpz_struct {
   }
 
   /// init_set create new instance
+  #[inline]
   pub fn init_set(a: mpz_r) -> Self {
     let mut t = mpz_s::new();
     mpz_init_set(&mut t, a);
@@ -67,6 +72,7 @@ impl __mpz_struct {
   }
 
   /// init_set_ui create new instance
+  #[inline]
   pub fn init_set_ui(u: ui_t) -> Self {
     let mut t = mpz_s::new();
     mpz_init_set_ui(&mut t, u);
@@ -74,6 +80,7 @@ impl __mpz_struct {
   }
 
   /// init_set_si create new instance
+  #[inline]
   pub fn init_set_si(s: si_t) -> Self {
     let mut t = mpz_s::new();
     mpz_init_set_si(&mut t, s);
@@ -81,6 +88,7 @@ impl __mpz_struct {
   }
 
   /// init_set_d create new instance
+  #[inline]
   pub fn init_set_d(d: double_t) -> Self {
     let mut t = mpz_s::new();
     mpz_init_set_d(&mut t, d);
@@ -88,6 +96,7 @@ impl __mpz_struct {
   }
 
   /// init_set_str create new instance
+  #[inline]
   pub fn init_set_str(s: &str, b: int_t) -> Self {
     let mut t = mpz_s::new();
     mpz_init_set_str(&mut t, s, b);
@@ -95,48 +104,56 @@ impl __mpz_struct {
   }
 
   /// set self = a
+  #[inline]
   pub fn set(&mut self, a: mpz_r) -> &mut Self {
     mpz_set(self, a);
     self
   }
 
   /// set_ui self = u
+  #[inline]
   pub fn set_ui(&mut self, u: ui_t) -> &mut Self {
     mpz_set_ui(self, u);
     self
   }
 
   /// set_si self = s
+  #[inline]
   pub fn set_si(&mut self, s: si_t) -> &mut Self {
     mpz_set_si(self, s);
     self
   }
 
   /// set_d self = d
+  #[inline]
   pub fn set_d(&mut self, d: double_t) -> &mut Self {
     mpz_set_d(self, d);
     self
   }
 
   /// set_str self from str
+  #[inline]
   pub fn set_str(&mut self, s: &str, b: int_t) -> &mut Self {
     mpz_set_str(self, s, b);
     self
   }
 
   /// fmtstr
+  #[inline]
   pub fn fmtstr(&self, b: int_t) -> String {
     mpz_get_str(None, b, self).expect("mpz fmtstr")
   }
 
   /// binstr
   /// - return "-111111" when bin is "1...11000001"
+  #[inline]
   pub fn binstr(&self) -> String {
     mpz_get_str(None, 2, self).expect("mpz binstr")
   }
 
   /// hexstr
   /// - return "-3f" when hex is "f...c1"
+  #[inline]
   pub fn hexstr(&self) -> String {
     mpz_get_str(None, 16, self).expect("mpz hexstr")
   }
@@ -151,21 +168,25 @@ impl __mpz_struct {
   }
 
   /// get_d (loss of digits)
+  #[inline]
   pub fn get_d(&self) -> double_t {
     mpz_get_d(self)
   }
 
   /// get_ui (loss of digits)
+  #[inline]
   pub fn get_ui(&self) -> ui_t {
     mpz_get_ui(self)
   }
 
   /// get_si (loss of digits)
+  #[inline]
   pub fn get_si(&self) -> si_t {
     mpz_get_si(self)
   }
 
   /// get_d_2exp (loss of digits)
+  #[inline]
   pub fn get_d_2exp(&self) -> (double_t, si_t) {
     let mut e: si_t = 0;
     let d = mpz_get_d_2exp(&mut e, self);
@@ -173,100 +194,119 @@ impl __mpz_struct {
   }
 
   /// swap
+  #[inline]
   pub fn swap(&mut self, b: mpz_t) -> &mut Self {
     mpz_swap(self, b);
     self
   }
 
   /// realloc2
+  #[inline]
   pub fn realloc2(&mut self, n: mp_bitcnt_t) -> &mut Self {
     mpz_realloc2(self, n);
     self
   }
 
   /// _realloc
+  #[inline]
   pub fn _realloc(&mut self, sz: mp_size_t) -> &mut Self {
     _mpz_realloc(self, sz);
     self
   }
 
   /// size
+  #[inline]
   pub fn size(&self) -> mp_size_t {
     mpz_size(self)
   }
 
   /// limbs_read slice
+  #[inline]
   pub fn limbs_read(&self) -> &[mp_limb_t] {
     mpz_limbs_read(self)
   }
 
   /// getlimbn (single element)
+  #[inline]
   pub fn getlimbn(&self, n: mp_size_t) -> mp_limb_t {
     mpz_getlimbn(self, n)
   }
 
   /// limbs_write slice (must call limbs_finish)
+  #[inline]
   pub fn limbs_write(&mut self, sz: mp_size_t) -> &mut [mp_limb_t] {
     mpz_limbs_write(self, sz)
   }
 
   /// limbs_modify slice (same as write)
+  #[inline]
   pub fn limbs_modify(&mut self, sz: mp_size_t) -> &mut [mp_limb_t] {
     mpz_limbs_modify(self, sz)
   }
 
   /// limbs_finish (used after write or modify to update internal size)
+  #[inline]
   pub fn limbs_finish(&mut self, sz: mp_size_t) -> &mut Self {
     mpz_limbs_finish(self, sz);
     self
   }
 
   /// roinit_n (unsafe) slice single element
+  #[inline]
   pub fn roinit_n(&mut self, p: &[mp_limb_t], sz: mp_size_t) -> &mut Self {
     mpz_roinit_n(self, p, sz)
   }
 
   /// cmp
+  #[inline]
   pub fn cmp(&self, b: mpz_r) -> int_t {
     mpz_cmp(self, b)
   }
 
   /// cmp_d
+  #[inline]
   pub fn cmp_d(&self, d: double_t) -> int_t {
     mpz_cmp_d(self, d)
   }
 
   /// cmp_ui
+  #[inline]
   pub fn cmp_ui(&self, u: ui_t) -> int_t {
     mpz_cmp_ui(self, u)
   }
 
   /// cmp_si
+  #[inline]
   pub fn cmp_si(&self, s: si_t) -> int_t {
     mpz_cmp_si(self, s)
   }
 
   /// cmpabs
+  #[inline]
   pub fn cmpabs(&self, b: mpz_r) -> int_t {
     mpz_cmpabs(self, b)
   }
 
   /// cmpabs_d
+  #[inline]
   pub fn cmpabs_d(&self, d: double_t) -> int_t {
     mpz_cmpabs_d(self, d)
   }
 
   /// cmpabs_ui
+  #[inline]
   pub fn cmpabs_ui(&self, u: ui_t) -> int_t {
     mpz_cmpabs_ui(self, u)
   }
 
   /// sgn
+  #[inline]
   pub fn sgn(&self) -> int_t {
     mpz_sgn(self)
   }
 
   /// root nth root of self create new instance
+  #[inline]
   pub fn root(&self, n: ui_t) -> (Self, bool) {
     let mut t = mpz_s::init();
     let f = mpz_root(&mut t, self, n);
@@ -274,6 +314,7 @@ impl __mpz_struct {
   }
 
   /// rootrem (nth root of self, self - root**n) create new instance
+  #[inline]
   pub fn rootrem(&self, n: ui_t) -> (Self, Self) {
     let mut t = mpz_s::init();
     let mut rem = mpz_s::init();
@@ -282,6 +323,7 @@ impl __mpz_struct {
   }
 
   /// sqrt square root of self create new instance
+  #[inline]
   pub fn sqrt(&self) -> Self {
     let mut t = mpz_s::init();
     mpz_sqrt(&mut t, self);
@@ -289,6 +331,7 @@ impl __mpz_struct {
   }
 
   /// sqrtrem (square root of self, self - root**2) create new instance
+  #[inline]
   pub fn sqrtrem(&self) -> (Self, Self) {
     let mut t = mpz_s::init();
     let mut rem = mpz_s::init();
@@ -297,16 +340,19 @@ impl __mpz_struct {
   }
 
   /// perfect_power_p
+  #[inline]
   pub fn perfect_power_p(&self) -> bool {
     mpz_perfect_power_p(self)
   }
 
   /// perfect_square_p
+  #[inline]
   pub fn perfect_square_p(&self) -> bool {
     mpz_perfect_square_p(self)
   }
 
   /// primorial_ui c = 2*3*5*7*11*...*p(prev)*p(&lt;=n) create new instance
+  #[inline]
   pub fn primorial_ui(n: ui_t) -> Self {
     let mut t = mpz_s::init_set_ui(1);
     mpz_primorial_ui(&mut t, n);
@@ -314,6 +360,7 @@ impl __mpz_struct {
   }
 
   /// fac_ui create new instance
+  #[inline]
   pub fn fac_ui(n: ui_t) -> Self {
     let mut t = mpz_s::init_set_ui(1);
     mpz_fac_ui(&mut t, n);
@@ -321,6 +368,7 @@ impl __mpz_struct {
   }
 
   /// fac2_ui create new instance
+  #[inline]
   pub fn fac2_ui(n: ui_t) -> Self {
     let mut t = mpz_s::init_set_ui(1);
     mpz_2fac_ui(&mut t, n);
@@ -328,6 +376,7 @@ impl __mpz_struct {
   }
 
   /// mfac_uiui create new instance
+  #[inline]
   pub fn mfac_uiui(n: ui_t, m: ui_t) -> Self {
     let mut t = mpz_s::init_set_ui(1);
     mpz_mfac_uiui(&mut t, n, m);
@@ -335,6 +384,7 @@ impl __mpz_struct {
   }
 
   /// remove create new instance
+  #[inline]
   pub fn remove(&self, f: mpz_r) -> (Self, mp_bitcnt_t) {
     let mut t = mpz_s::init();
     let n = mpz_remove(&mut t, self, f);
@@ -342,6 +392,7 @@ impl __mpz_struct {
   }
 
   /// fib_ui create new instance
+  #[inline]
   pub fn fib_ui(n: ui_t) -> Self {
     let mut f_n = mpz_s::init_set_ui(1);
     mpz_fib_ui(&mut f_n, n);
@@ -349,6 +400,7 @@ impl __mpz_struct {
   }
 
   /// fib2_ui create new instance (f_n, f_nsub1)
+  #[inline]
   pub fn fib2_ui(n: ui_t) -> (Self, Self) {
     let mut f_n = mpz_s::init_set_ui(1);
     let mut f_nsub1 = mpz_s::init_set_ui(1);
@@ -357,6 +409,7 @@ impl __mpz_struct {
   }
 
   /// lucnum_ui create new instance
+  #[inline]
   pub fn lucnum_ui(n: ui_t) -> Self {
     let mut l_n = mpz_s::init_set_ui(1);
     mpz_lucnum_ui(&mut l_n, n);
@@ -364,6 +417,7 @@ impl __mpz_struct {
   }
 
   /// lucnum2_ui create new instance (l_n, l_n_1)
+  #[inline]
   pub fn lucnum2_ui(n: ui_t) -> (Self, Self) {
     let mut l_n = mpz_s::init_set_ui(1);
     let mut l_n_1 = mpz_s::init_set_ui(1);
@@ -372,6 +426,7 @@ impl __mpz_struct {
   }
 
   /// gcd create new instance
+  #[inline]
   pub fn gcd(&self, b: mpz_r) -> Self {
     let mut gcd = mpz_s::init_set_ui(1);
     mpz_gcd(&mut gcd, self, b);
@@ -380,6 +435,7 @@ impl __mpz_struct {
 
   /// gcd_ui create new instance (gcd, gcd: ui_t)
   /// return 0 when gcd does not fit to ui_t
+  #[inline]
   pub fn gcd_ui(&self, u: ui_t) -> (Self, ui_t) {
     let mut gcd = mpz_s::init_set_ui(1);
     let u = mpz_gcd_ui(&mut gcd, self, u);
@@ -388,6 +444,7 @@ impl __mpz_struct {
 
   /// gcdext create new instance (gcd, s, t)
   /// s and t to coefficients satisfying a*s + b*t == gcd
+  #[inline]
   pub fn gcdext(&self, b: mpz_r) -> (Self, Self, Self) {
     let mut gcd = mpz_s::init_set_ui(1);
     let mut s = mpz_s::init_set_ui(1);
@@ -397,6 +454,7 @@ impl __mpz_struct {
   }
 
   /// lcm create new instance
+  #[inline]
   pub fn lcm(&self, b: mpz_r) -> Self {
     let mut t = mpz_s::init_set_ui(1);
     mpz_lcm(&mut t, self, b);
@@ -404,6 +462,7 @@ impl __mpz_struct {
   }
 
   /// lcm_ui create new instance
+  #[inline]
   pub fn lcm_ui(&self, u: ui_t) -> Self {
     let mut t = mpz_s::init_set_ui(1);
     mpz_lcm_ui(&mut t, self, u);
@@ -411,11 +470,13 @@ impl __mpz_struct {
   }
 
   /// probab_prime_p 2 or 1 or 0
+  #[inline]
   pub fn probab_prime_p(&self, r: int_t) -> int_t {
     mpz_probab_prime_p(self, r)
   }
 
   /// nextprime create new instance
+  #[inline]
   pub fn nextprime(&self) -> Self {
     let mut t = mpz_s::init();
     mpz_nextprime(&mut t, self);
@@ -424,6 +485,7 @@ impl __mpz_struct {
 
 /*
   /// prevprime create new instance
+  #[inline]
   pub fn prevprime(&self) -> Self {
     let mut t = mpz_s::init();
     mpz_prevprime(&mut t, self);
@@ -433,6 +495,7 @@ impl __mpz_struct {
 
   /// invert create new instance c = inverse of a mod b ((c*a) mod b == 1)
   /// returns (undefined, 0) when not exist inverse
+  #[inline]
   pub fn invert(a: mpz_r, b: mpz_r) -> (Self, int_t) {
     let mut t = mpz_s::init();
     let r = mpz_invert(&mut t, a, b);
@@ -440,41 +503,49 @@ impl __mpz_struct {
   }
 
   /// jacobi 0 1 -1 (defined only for n odd)
+  #[inline]
   pub fn jacobi(&self, n: mpz_r) -> int_t {
     mpz_jacobi(self, n)
   }
 
   /// legendre 0 1 -1 (defined only for p an odd positive prime)
+  #[inline]
   pub fn legendre(&self, p: mpz_r) -> int_t {
     mpz_legendre(self, p)
   }
 
   /// kronecker
+  #[inline]
   pub fn kronecker(&self, n: mpz_r) -> int_t {
     mpz_kronecker(self, n)
   }
 
   /// kronecker_ui
+  #[inline]
   pub fn kronecker_ui(&self, u: ui_t) -> int_t {
     mpz_kronecker_ui(self, u)
   }
 
   /// kronecker_si
+  #[inline]
   pub fn kronecker_si(&self, s: si_t) -> int_t {
     mpz_kronecker_si(self, s)
   }
 
   /// ui_kronecker
+  #[inline]
   pub fn ui_kronecker(&self, u: ui_t) -> int_t {
     mpz_ui_kronecker(u, self)
   }
 
   /// si_kronecker
+  #[inline]
   pub fn si_kronecker(&self, s: si_t) -> int_t {
     mpz_si_kronecker(s, self)
   }
 
   /// bin_ui nCk create new instance
+  #[inline]
   pub fn bin_ui(n: mpz_r, k: ui_t) -> Self {
     let mut t = mpz_s::init();
     mpz_bin_ui(&mut t, n, k);
@@ -482,6 +553,7 @@ impl __mpz_struct {
   }
 
   /// bin_uiui nCk create new instance
+  #[inline]
   pub fn bin_uiui(n: ui_t, k: ui_t) -> Self {
     let mut t = mpz_s::init();
     mpz_bin_uiui(&mut t, n, k);
@@ -489,6 +561,7 @@ impl __mpz_struct {
   }
 
   /// abs create new instance
+  #[inline]
   pub fn abs(&self) -> Self {
     let mut t = mpz_s::new();
     mpz_abs(&mut t, self);
@@ -496,6 +569,7 @@ impl __mpz_struct {
   }
 
   /// neg create new instance
+  #[inline]
   pub fn neg(&self) -> Self {
     let mut t = mpz_s::new();
     mpz_neg(&mut t, self);
@@ -503,84 +577,98 @@ impl __mpz_struct {
   }
 
   /// sub self -= b
+  #[inline]
   pub fn sub(&mut self, b: mpz_r) -> &mut Self {
     mpz_sub(self, &mpz_s::init_set(self), b);
     self
   }
 
   /// sub_ui self -= u
+  #[inline]
   pub fn sub_ui(&mut self, u: ui_t) -> &mut Self {
     mpz_sub_ui(self, &mpz_s::init_set(self), u);
     self
   }
 
   /// ui_sub self = u - self
+  #[inline]
   pub fn ui_sub(&mut self, u: ui_t) -> &mut Self {
     mpz_ui_sub(self, u, &mpz_s::init_set(self));
     self
   }
 
   /// submul self -= a * b
+  #[inline]
   pub fn submul(&mut self, a: mpz_r, b: mpz_r) -> &mut Self {
     mpz_submul(self, a, b);
     self
   }
 
   /// submul_ui self -= a * u
+  #[inline]
   pub fn submul_ui(&mut self, a: mpz_r, u: ui_t) -> &mut Self {
     mpz_submul_ui(self, a, u);
     self
   }
 
   /// add self += b
+  #[inline]
   pub fn add(&mut self, b: mpz_r) -> &mut Self {
     mpz_add(self, &mpz_s::init_set(self), b);
     self
   }
 
   /// add_ui self += u
+  #[inline]
   pub fn add_ui(&mut self, u: ui_t) -> &mut Self {
     mpz_add_ui(self, &mpz_s::init_set(self), u);
     self
   }
 
   /// addmul self += a * b
+  #[inline]
   pub fn addmul(&mut self, a: mpz_r, b: mpz_r) -> &mut Self {
     mpz_addmul(self, a, b);
     self
   }
 
   /// addmul_ui self += a * u
+  #[inline]
   pub fn addmul_ui(&mut self, a: mpz_r, u: ui_t) -> &mut Self {
     mpz_addmul_ui(self, a, u);
     self
   }
 
   /// mul self *= b
+  #[inline]
   pub fn mul(&mut self, b: mpz_r) -> &mut Self {
     mpz_mul(self, &mpz_s::init_set(self), b);
     self
   }
 
   /// mul_ui self *= u
+  #[inline]
   pub fn mul_ui(&mut self, u: ui_t) -> &mut Self {
     mpz_mul_ui(self, &mpz_s::init_set(self), u);
     self
   }
 
   /// mul_si self *= s
+  #[inline]
   pub fn mul_si(&mut self, s: si_t) -> &mut Self {
     mpz_mul_si(self, &mpz_s::init_set(self), s);
     self
   }
 
   /// mul_2exp self *= 2**n
+  #[inline]
   pub fn mul_2exp(&mut self, n: mp_bitcnt_t) -> &mut Self {
     mpz_mul_2exp(self, &mpz_s::init_set(self), n);
     self
   }
 
   /// cdiv_q create new instance
+  #[inline]
   pub fn cdiv_q(&self, d: mpz_r) -> Self {
     let mut t = mpz_s::init();
     mpz_cdiv_q(&mut t, self, d);
@@ -588,6 +676,7 @@ impl __mpz_struct {
   }
 
   /// cdiv_r create new instance
+  #[inline]
   pub fn cdiv_r(&self, d: mpz_r) -> Self {
     let mut t = mpz_s::init();
     mpz_cdiv_r(&mut t, self, d);
@@ -595,6 +684,7 @@ impl __mpz_struct {
   }
 
   /// cdiv_qr create new instance
+  #[inline]
   pub fn cdiv_qr(&self, d: mpz_r) -> (Self, Self) {
     let mut t = mpz_s::init();
     let mut r = mpz_s::init();
@@ -603,6 +693,7 @@ impl __mpz_struct {
   }
 
   /// cdiv_q_ui create new instance
+  #[inline]
   pub fn cdiv_q_ui(&self, d: ui_t) -> (Self, ui_t) {
     let mut t = mpz_s::init();
     let u = mpz_cdiv_q_ui(&mut t, self, d);
@@ -610,6 +701,7 @@ impl __mpz_struct {
   }
 
   /// cdiv_r_ui create new instance
+  #[inline]
   pub fn cdiv_r_ui(&self, d: ui_t) -> (Self, ui_t) {
     let mut t = mpz_s::init();
     let u = mpz_cdiv_r_ui(&mut t, self, d);
@@ -617,6 +709,7 @@ impl __mpz_struct {
   }
 
   /// cdiv_qr_ui create new instance
+  #[inline]
   pub fn cdiv_qr_ui(&self, d: ui_t) -> (Self, Self, ui_t) {
     let mut t = mpz_s::init();
     let mut r = mpz_s::init();
@@ -625,11 +718,13 @@ impl __mpz_struct {
   }
 
   /// cdiv_ui
+  #[inline]
   pub fn cdiv_ui(&self, d: ui_t) -> ui_t {
     mpz_cdiv_ui(self, d)
   }
 
   /// cdiv_q_2exp create new instance
+  #[inline]
   pub fn cdiv_q_2exp(&self, b: mp_bitcnt_t) -> Self {
     let mut t = mpz_s::init();
     mpz_cdiv_q_2exp(&mut t, self, b);
@@ -637,6 +732,7 @@ impl __mpz_struct {
   }
 
   /// cdiv_r_2exp create new instance
+  #[inline]
   pub fn cdiv_r_2exp(&self, b: mp_bitcnt_t) -> Self {
     let mut t = mpz_s::init();
     mpz_cdiv_r_2exp(&mut t, self, b);
@@ -644,6 +740,7 @@ impl __mpz_struct {
   }
 
   /// fdiv_q create new instance
+  #[inline]
   pub fn fdiv_q(&self, d: mpz_r) -> Self {
     let mut t = mpz_s::init();
     mpz_fdiv_q(&mut t, self, d);
@@ -651,6 +748,7 @@ impl __mpz_struct {
   }
 
   /// fdiv_r create new instance
+  #[inline]
   pub fn fdiv_r(&self, d: mpz_r) -> Self {
     let mut t = mpz_s::init();
     mpz_fdiv_r(&mut t, self, d);
@@ -658,6 +756,7 @@ impl __mpz_struct {
   }
 
   /// fdiv_qr create new instance
+  #[inline]
   pub fn fdiv_qr(&self, d: mpz_r) -> (Self, Self) {
     let mut t = mpz_s::init();
     let mut r = mpz_s::init();
@@ -666,6 +765,7 @@ impl __mpz_struct {
   }
 
   /// fdiv_q_ui create new instance
+  #[inline]
   pub fn fdiv_q_ui(&self, d: ui_t) -> (Self, ui_t) {
     let mut t = mpz_s::init();
     let u = mpz_fdiv_q_ui(&mut t, self, d);
@@ -673,6 +773,7 @@ impl __mpz_struct {
   }
 
   /// fdiv_r_ui create new instance
+  #[inline]
   pub fn fdiv_r_ui(&self, d: ui_t) -> (Self, ui_t) {
     let mut t = mpz_s::init();
     let u = mpz_fdiv_r_ui(&mut t, self, d);
@@ -680,6 +781,7 @@ impl __mpz_struct {
   }
 
   /// fdiv_qr_ui create new instance
+  #[inline]
   pub fn fdiv_qr_ui(&self, d: ui_t) -> (Self, Self, ui_t) {
     let mut t = mpz_s::init();
     let mut r = mpz_s::init();
@@ -688,11 +790,13 @@ impl __mpz_struct {
   }
 
   /// fdiv_ui
+  #[inline]
   pub fn fdiv_ui(&self, d: ui_t) -> ui_t {
     mpz_fdiv_ui(self, d)
   }
 
   /// fdiv_q_2exp create new instance
+  #[inline]
   pub fn fdiv_q_2exp(&self, b: mp_bitcnt_t) -> Self {
     let mut t = mpz_s::init();
     mpz_fdiv_q_2exp(&mut t, self, b);
@@ -700,6 +804,7 @@ impl __mpz_struct {
   }
 
   /// fdiv_r_2exp create new instance
+  #[inline]
   pub fn fdiv_r_2exp(&self, b: mp_bitcnt_t) -> Self {
     let mut t = mpz_s::init();
     mpz_fdiv_r_2exp(&mut t, self, b);
@@ -707,6 +812,7 @@ impl __mpz_struct {
   }
 
   /// tdiv_q create new instance
+  #[inline]
   pub fn tdiv_q(&self, d: mpz_r) -> Self {
     let mut t = mpz_s::init();
     mpz_tdiv_q(&mut t, self, d);
@@ -714,6 +820,7 @@ impl __mpz_struct {
   }
 
   /// tdiv_r create new instance
+  #[inline]
   pub fn tdiv_r(&self, d: mpz_r) -> Self {
     let mut t = mpz_s::init();
     mpz_tdiv_r(&mut t, self, d);
@@ -721,6 +828,7 @@ impl __mpz_struct {
   }
 
   /// tdiv_qr create new instance
+  #[inline]
   pub fn tdiv_qr(&self, d: mpz_r) -> (Self, Self) {
     let mut t = mpz_s::init();
     let mut r = mpz_s::init();
@@ -729,6 +837,7 @@ impl __mpz_struct {
   }
 
   /// tdiv_q_ui create new instance
+  #[inline]
   pub fn tdiv_q_ui(&self, d: ui_t) -> (Self, ui_t) {
     let mut t = mpz_s::init();
     let u = mpz_tdiv_q_ui(&mut t, self, d);
@@ -736,6 +845,7 @@ impl __mpz_struct {
   }
 
   /// tdiv_r_ui create new instance
+  #[inline]
   pub fn tdiv_r_ui(&self, d: ui_t) -> (Self, ui_t) {
     let mut t = mpz_s::init();
     let u = mpz_tdiv_r_ui(&mut t, self, d);
@@ -743,6 +853,7 @@ impl __mpz_struct {
   }
 
   /// tdiv_qr_ui create new instance
+  #[inline]
   pub fn tdiv_qr_ui(&self, d: ui_t) -> (Self, Self, ui_t) {
     let mut t = mpz_s::init();
     let mut r = mpz_s::init();
@@ -751,11 +862,13 @@ impl __mpz_struct {
   }
 
   /// tdiv_ui
+  #[inline]
   pub fn tdiv_ui(&self, d: ui_t) -> ui_t {
     mpz_tdiv_ui(self, d)
   }
 
   /// tdiv_q_2exp create new instance
+  #[inline]
   pub fn tdiv_q_2exp(&self, b: mp_bitcnt_t) -> Self {
     let mut t = mpz_s::init();
     mpz_tdiv_q_2exp(&mut t, self, b);
@@ -763,6 +876,7 @@ impl __mpz_struct {
   }
 
   /// tdiv_r_2exp create new instance
+  #[inline]
   pub fn tdiv_r_2exp(&self, b: mp_bitcnt_t) -> Self {
     let mut t = mpz_s::init();
     mpz_tdiv_r_2exp(&mut t, self, b);
@@ -770,6 +884,7 @@ impl __mpz_struct {
   }
 
   /// modulo create new instance
+  #[inline]
   pub fn modulo(&self, d: mpz_r) -> Self {
     let mut t = mpz_s::init();
     mpz_mod(&mut t, self, d);
@@ -777,6 +892,7 @@ impl __mpz_struct {
   }
 
   /// mod_ui (the result is always non-negative) create new instance
+  #[inline]
   pub fn mod_ui(&self, d: ui_t) -> (Self, ui_t) {
     let mut t = mpz_s::init();
     let m = mpz_mod_ui(&mut t, self, d);
@@ -784,6 +900,7 @@ impl __mpz_struct {
   }
 
   /// divexact create new instance
+  #[inline]
   pub fn divexact(&self, d: mpz_r) -> Self {
     let mut t = mpz_s::init();
     mpz_divexact(&mut t, self, d);
@@ -791,6 +908,7 @@ impl __mpz_struct {
   }
 
   /// divexact_ui create new instance
+  #[inline]
   pub fn divexact_ui(&self, d: ui_t) -> Self {
     let mut t = mpz_s::init();
     mpz_divexact_ui(&mut t, self, d);
@@ -798,36 +916,43 @@ impl __mpz_struct {
   }
 
   /// divisible_p
+  #[inline]
   pub fn divisible_p(&self, d: mpz_r) -> bool {
     mpz_divisible_p(self, d)
   }
 
   /// divisible_ui_p
+  #[inline]
   pub fn divisible_ui_p(&self, d: ui_t) -> bool {
     mpz_divisible_ui_p(self, d)
   }
 
   /// divisible_2exp_p
+  #[inline]
   pub fn divisible_2exp_p(&self, b: mp_bitcnt_t) -> bool {
     mpz_divisible_2exp_p(self, b)
   }
 
   /// congruent_p
+  #[inline]
   pub fn congruent_p(&self, c: mpz_r, d: mpz_r) -> bool {
     mpz_congruent_p(self, c, d)
   }
 
   /// congruent_ui_p
+  #[inline]
   pub fn congruent_ui_p(&self, c: ui_t, d: ui_t) -> bool {
     mpz_congruent_ui_p(self, c, d)
   }
 
   /// congruent_2exp_p
+  #[inline]
   pub fn congruent_2exp_p(&self, c: mpz_r, b: mp_bitcnt_t) -> bool {
     mpz_congruent_2exp_p(self, c, b)
   }
 
   /// powm_sec (a**n) mod m ***required n &gt; 0 and m is odd*** create new instance
+  #[inline]
   pub fn powm_sec(a: mpz_r, n: mpz_r, m: mpz_r) -> Self {
     let mut t = mpz_s::new();
     mpz_powm_sec(&mut t, a, n, m);
@@ -835,6 +960,7 @@ impl __mpz_struct {
   }
 
   /// powm (a**n) mod m ***n &lt; 0 when exists inv a**-1 mod m*** create new instance
+  #[inline]
   pub fn powm(a: mpz_r, n: mpz_r, m: mpz_r) -> Self {
     let mut t = mpz_s::new();
     mpz_powm(&mut t, a, n, m);
@@ -842,6 +968,7 @@ impl __mpz_struct {
   }
 
   /// powm_ui (a**n) mod m create new instance
+  #[inline]
   pub fn powm_ui(a: mpz_r, n: ui_t, m: mpz_r) -> Self {
     let mut t = mpz_s::new();
     mpz_powm_ui(&mut t, a, n, m);
@@ -849,6 +976,7 @@ impl __mpz_struct {
   }
 
   /// pow_ui a**n create new instance
+  #[inline]
   pub fn pow_ui(a: mpz_r, n: ui_t) -> Self {
     let mut t = mpz_s::new();
     mpz_pow_ui(&mut t, a, n);
@@ -856,6 +984,7 @@ impl __mpz_struct {
   }
 
   /// ui_pow_ui a**n create new instance
+  #[inline]
   pub fn ui_pow_ui(a: ui_t, n: ui_t) -> Self {
     let mut t = mpz_s::new();
     mpz_ui_pow_ui(&mut t, a, n);
@@ -863,51 +992,61 @@ impl __mpz_struct {
   }
 
   /// sizeinbase
+  #[inline]
   pub fn sizeinbase(&self, base: int_t) -> mp_size_t {
     mpz_sizeinbase(self, base)
   }
 
   /// even_p
+  #[inline]
   pub fn even_p(&self) -> bool {
     mpz_even_p(self)
   }
 
   /// odd_p
+  #[inline]
   pub fn odd_p(&self) -> bool {
     mpz_odd_p(self)
   }
 
   /// fits_ulong_p
+  #[inline]
   pub fn fits_ulong_p(&self) -> bool {
     mpz_fits_ulong_p(self)
   }
 
   /// fits_slong_p
+  #[inline]
   pub fn fits_slong_p(&self) -> bool {
     mpz_fits_slong_p(self)
   }
 
   /// fits_uint_p
+  #[inline]
   pub fn fits_uint_p(&self) -> bool {
     mpz_fits_uint_p(self)
   }
 
   /// fits_sint_p
+  #[inline]
   pub fn fits_sint_p(&self) -> bool {
     mpz_fits_sint_p(self)
   }
 
   /// fits_ushort_p
+  #[inline]
   pub fn fits_ushort_p(&self) -> bool {
     mpz_fits_ushort_p(self)
   }
 
   /// fits_sshort_p
+  #[inline]
   pub fn fits_sshort_p(&self) -> bool {
     mpz_fits_sshort_p(self)
   }
 
   /// urandomb create new instance
+  #[inline]
   pub fn urandomb(r: randstate_t, nbits: mp_bitcnt_t) -> Self {
     let mut t = mpz_s::init_set_ui(0);
     mpz_urandomb(&mut t, r, nbits);
@@ -915,6 +1054,7 @@ impl __mpz_struct {
   }
 
   /// urandomm create new instance
+  #[inline]
   pub fn urandomm(r: randstate_t, n: mpz_r) -> Self {
     let mut t = mpz_s::init_set_ui(0);
     mpz_urandomm(&mut t, r, n);
@@ -922,6 +1062,7 @@ impl __mpz_struct {
   }
 
   /// rrandomb create new instance
+  #[inline]
   pub fn rrandomb(r: randstate_t, nbits: mp_bitcnt_t) -> Self {
     let mut t = mpz_s::init_set_ui(0);
     mpz_rrandomb(&mut t, r, nbits);
@@ -929,6 +1070,7 @@ impl __mpz_struct {
   }
 
   /// random create new instance ***(obsoleted) urandomb or urandomm instead***
+  #[inline]
   pub fn random(max_size: mp_size_t) -> Self {
     let mut t = mpz_s::init_set_ui(0);
     mpz_random(&mut t, max_size);
@@ -936,6 +1078,7 @@ impl __mpz_struct {
   }
 
   /// random2 create new instance
+  #[inline]
   pub fn random2(max_size: mp_size_t) -> Self {
     let mut t = mpz_s::init_set_ui(0);
     mpz_random2(&mut t, max_size);
@@ -943,6 +1086,7 @@ impl __mpz_struct {
   }
 
   /// and create new instance
+  #[inline]
   pub fn and(&self, b: mpz_r) -> Self {
     let mut t = mpz_s::init();
     mpz_and(&mut t, self, b);
@@ -950,6 +1094,7 @@ impl __mpz_struct {
   }
 
   /// ior create new instance
+  #[inline]
   pub fn ior(&self, b: mpz_r) -> Self {
     let mut t = mpz_s::init();
     mpz_ior(&mut t, self, b);
@@ -957,6 +1102,7 @@ impl __mpz_struct {
   }
 
   /// xor create new instance
+  #[inline]
   pub fn xor(&self, b: mpz_r) -> Self {
     let mut t = mpz_s::init();
     mpz_xor(&mut t, self, b);
@@ -964,6 +1110,7 @@ impl __mpz_struct {
   }
 
   /// com create new instance
+  #[inline]
   pub fn com(&self) -> Self {
     let mut t = mpz_s::init();
     mpz_com(&mut t, self);
@@ -971,44 +1118,52 @@ impl __mpz_struct {
   }
 
   /// popcount
+  #[inline]
   pub fn popcount(&self) -> mp_bitcnt_t {
     mpz_popcount(self)
   }
 
   /// hamdist hamming distance between a and b (both sgn must be same)
+  #[inline]
   pub fn hamdist(&self, b: mpz_r) -> mp_bitcnt_t {
     mpz_hamdist(self, b)
   }
 
   /// scan0 to msb
+  #[inline]
   pub fn scan0(&self, s: mp_bitcnt_t) -> mp_bitcnt_t {
     mpz_scan0(self, s)
   }
 
   /// scan1 to msb
+  #[inline]
   pub fn scan1(&self, s: mp_bitcnt_t) -> mp_bitcnt_t {
     mpz_scan1(self, s)
   }
 
   /// clrbit
+  #[inline]
   pub fn clrbit(&mut self, n: mp_bitcnt_t) -> &mut Self {
     mpz_clrbit(self, n);
     self
   }
 
   /// setbit
+  #[inline]
   pub fn setbit(&mut self, n: mp_bitcnt_t) -> &mut Self {
     mpz_setbit(self, n);
     self
   }
 
   /// combit
+  #[inline]
   pub fn combit(&mut self, n: mp_bitcnt_t) -> &mut Self {
     mpz_combit(self, n);
     self
   }
 
   /// tstbit
+  #[inline]
   pub fn tstbit(&self, n: mp_bitcnt_t) -> bool {
     mpz_tstbit(self, n)
   }
@@ -1034,6 +1189,18 @@ impl __mpz_struct {
       else { let mut t = mpz_s::fact_cached(n - 1, m); t.mul_ui(n); t };
     m.insert(n, mpz_s::init_set(&mut e)); // as clone
     e
+  }
+
+  /// inv_f create new instance
+  #[inline]
+  pub fn inv_f(&self) -> mpf_s {
+    mpf_s::init_set_z(self).inv()
+  }
+
+  /// inv_q create new instance
+  #[inline]
+  pub fn inv_q(&self) -> mpq_s {
+    mpq_s::frac(&mpz_s::init_set_ui(1), self)
   }
 }
 

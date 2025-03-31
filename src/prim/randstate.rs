@@ -38,6 +38,7 @@ pub struct gmp_randstate_struct {
 /// impl SNew
 impl SNew for gmp_randstate_struct {
   /// new
+  #[inline]
   fn new() -> Self {
     gmp_randstate_struct {
       _mp_seed: mpz_s::new(), // init_set_ui(0),
@@ -60,11 +61,13 @@ impl Drop for gmp_randstate_struct {
 /// impl randstate_s
 impl gmp_randstate_struct {
   /// clear
+  #[inline]
   pub fn clear(&mut self) -> () {
     gmp_randclear(self)
   }
 
   /// init create new instance ***(obsoleted)***
+  #[inline]
   pub fn init(sz: mp_bitcnt_t) -> Self {
     let mut t = randstate_s::new();
     gmp_randinit(&mut t, GMP_RAND_ALG_LC, sz);
@@ -72,6 +75,7 @@ impl gmp_randstate_struct {
   }
 
   /// init_set create new instance copy
+  #[inline]
   pub fn init_set(s: randstate_r) -> Self {
     let mut t = randstate_s::new();
     gmp_randinit_set(&mut t, s);
@@ -79,6 +83,7 @@ impl gmp_randstate_struct {
   }
 
   /// init_default create new instance
+  #[inline]
   pub fn init_default() -> Self {
     let mut t = randstate_s::new();
     gmp_randinit_default(&mut t);
@@ -86,6 +91,7 @@ impl gmp_randstate_struct {
   }
 
   /// init_mt create new instance
+  #[inline]
   pub fn init_mt() -> Self {
     let mut t = randstate_s::new();
     gmp_randinit_mt(&mut t);
@@ -93,6 +99,7 @@ impl gmp_randstate_struct {
   }
 
   /// init_lc_2exp x = (a*x + c) mod 2**m2e create new instance
+  #[inline]
   pub fn init_lc_2exp(a: mpz_r, c: ui_t, m2e: mp_bitcnt_t) -> Self {
     let mut t = randstate_s::new();
     gmp_randinit_lc_2exp(&mut t, a, c, m2e);
@@ -100,6 +107,7 @@ impl gmp_randstate_struct {
   }
 
   /// init_lc_2exp_size create new instance
+  #[inline]
   pub fn init_lc_2exp_size(sz: mp_bitcnt_t) -> (Self, int_t) {
     let mut t = randstate_s::new();
     let i = gmp_randinit_lc_2exp_size(&mut t, sz);
@@ -107,23 +115,27 @@ impl gmp_randstate_struct {
   }
 
   /// seed
+  #[inline]
   pub fn seed(&mut self, seed: mpz_t) -> &mut Self {
     gmp_randseed(self, seed);
     self
   }
 
   /// seed_ui
+  #[inline]
   pub fn seed_ui(&mut self, seed: ui_t) -> &mut Self {
     gmp_randseed_ui(self, seed);
     self
   }
 
   /// urandomb_ui
+  #[inline]
   pub fn urandomb_ui(r: randstate_t, nbits: ui_t) -> ui_t {
     gmp_urandomb_ui(r, nbits)
   }
 
   /// urandomm_ui
+  #[inline]
   pub fn urandomm_ui(r: randstate_t, n: ui_t) -> ui_t {
     gmp_urandomm_ui(r, n)
   }

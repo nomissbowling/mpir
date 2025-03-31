@@ -19,6 +19,7 @@ pub struct __mpq_struct {
 /// impl SNew
 impl SNew for __mpq_struct {
   /// new
+  #[inline]
   fn new() -> Self {
     __mpq_struct {
       _mp_num: mpz_s::new(), // init_set_ui(0),
@@ -42,11 +43,13 @@ impl Drop for __mpq_struct {
 /// impl mpq_s
 impl __mpq_struct {
   /// clear
+  #[inline]
   pub fn clear(&mut self) -> () {
     mpq_clear(self)
   }
 
   /// init create new instance
+  #[inline]
   pub fn init() -> Self {
     let mut t = mpq_s::new();
     mpq_init(&mut t);
@@ -54,65 +57,76 @@ impl __mpq_struct {
   }
 
   /// set self = q
+  #[inline]
   pub fn set(&mut self, q: mpq_r) -> &mut Self {
     mpq_set(self, q);
     self
   }
 
   /// set_ui self = u
+  #[inline]
   pub fn set_ui(&mut self, u: ui_t, f: ui_t) -> &mut Self {
     mpq_set_ui(self, u, f);
     self
   }
 
   /// set_si self = s
+  #[inline]
   pub fn set_si(&mut self, s: si_t, f: ui_t) -> &mut Self {
     mpq_set_si(self, s, f);
     self
   }
 
   /// set_d self = d
+  #[inline]
   pub fn set_d(&mut self, d: double_t) -> &mut Self {
     mpq_set_d(self, d);
     self
   }
 
   /// set_z self = a
+  #[inline]
   pub fn set_z(&mut self, a: mpz_r) -> &mut Self {
     mpq_set_z(self, a);
     self
   }
 
   /// set_f self = f
+  #[inline]
   pub fn set_f(&mut self, f: mpf_r) -> &mut Self {
     mpq_set_f(self, f);
     self
   }
 
   /// set_num
+  #[inline]
   pub fn set_num(&mut self, num: mpz_r) -> &mut Self {
     mpq_set_num(self, num);
     self
   }
 
   /// set_den
+  #[inline]
   pub fn set_den(&mut self, den: mpz_r) -> &mut Self {
     mpq_set_den(self, den);
     self
   }
 
   /// set_str self from str
+  #[inline]
   pub fn set_str(&mut self, s: &str, b: int_t) -> &mut Self {
     mpq_set_str(self, s, b);
     self
   }
 
   /// fmtstr
+  #[inline]
   pub fn fmtstr(&self, b: int_t) -> String {
     mpq_get_str(None, b, self).expect("mpq fmtstr")
   }
 
   /// get_d (loss of digits)
+  #[inline]
   pub fn get_d(&self) -> double_t {
     mpq_get_d(self)
   }
@@ -152,42 +166,50 @@ impl __mpq_struct {
   }
 
   /// swap
+  #[inline]
   pub fn swap(&mut self, r: mpq_t) -> &mut Self {
     mpq_swap(self, r);
     self
   }
 
   /// cmp
+  #[inline]
   pub fn cmp(&self, r: mpq_r) -> int_t {
     mpq_cmp(self, r)
   }
 
   /// cmp_z
+  #[inline]
   pub fn cmp_z(&self, a: mpz_r) -> int_t {
     mpq_cmp_z(self, a)
   }
 
   /// cmp_ui
+  #[inline]
   pub fn cmp_ui(&self, u: ui_t) -> int_t {
     mpq_cmp_ui(self, u)
   }
 
   /// cmp_si
+  #[inline]
   pub fn cmp_si(&self, s: si_t) -> int_t {
     mpq_cmp_si(self, s)
   }
 
-  /// equal
+  /// equal ***should use cmp == 0***
+  #[inline]
   pub fn equal(&self, r: mpq_r) -> bool {
     mpq_equal(self, r)
   }
 
   /// sgn
+  #[inline]
   pub fn sgn(&self) -> int_t {
     mpq_sgn(self)
   }
 
   /// inv q**-1 create new instance
+  #[inline]
   pub fn inv(&self) -> Self {
     let mut t = mpq_s::init(); // new();
     mpq_inv(&mut t, self);
@@ -195,6 +217,7 @@ impl __mpq_struct {
   }
 
   /// abs create new instance
+  #[inline]
   pub fn abs(&self) -> Self {
     let mut t = mpq_s::init(); // new();
     mpq_abs(&mut t, self);
@@ -202,6 +225,7 @@ impl __mpq_struct {
   }
 
   /// neg create new instance
+  #[inline]
   pub fn neg(&self) -> Self {
     let mut t = mpq_s::init(); // new();
     mpq_neg(&mut t, self);
@@ -209,36 +233,42 @@ impl __mpq_struct {
   }
 
   /// sub self -= r
+  #[inline]
   pub fn sub(&mut self, r: mpq_r) -> &mut Self {
     mpq_sub(self, mpq_s::init().set(self), r);
     self
   }
 
   /// add self += r
+  #[inline]
   pub fn add(&mut self, r: mpq_r) -> &mut Self {
     mpq_add(self, mpq_s::init().set(self), r);
     self
   }
 
   /// mul self *= r
+  #[inline]
   pub fn mul(&mut self, r: mpq_r) -> &mut Self {
     mpq_mul(self, mpq_s::init().set(self), r);
     self
   }
 
   /// mul_2exp self *= 2**n
+  #[inline]
   pub fn mul_2exp(&mut self, n: mp_bitcnt_t) -> &mut Self {
     mpq_mul_2exp(self, mpq_s::init().set(self), n);
     self
   }
 
   /// div self /= r
+  #[inline]
   pub fn div(&mut self, r: mpq_r) -> &mut Self {
     mpq_div(self, mpq_s::init().set(self), r);
     self
   }
 
   /// div_2exp self /= 2**n
+  #[inline]
   pub fn div_2exp(&mut self, n: mp_bitcnt_t) -> &mut Self {
     mpq_div_2exp(self, mpq_s::init().set(self), n);
     self

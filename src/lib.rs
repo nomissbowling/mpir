@@ -1,8 +1,33 @@
-#![doc(html_root_url = "https://docs.rs/mpir/0.3.3")]
+#![doc(html_root_url = "https://docs.rs/mpir/0.3.4")]
 //! partial Rust porting of mpir multiple precision library based on gmp mpfr
 //!
 //! Cargo test with [-- --nocapture] or with [-- --show-output]
 //!
+//! ```Rust
+//! // inv_f
+//! let a = &mpz_s::init_set_si(-3);
+//! let mut f = a.inv_f();
+//! assert_eq!(format!("{}", f), "-0.33333333333333333333e+0");
+//! f *= 3;
+//! assert_eq!(format!("{}", f), "-0.1e+1");
+//!
+//! // inv_f
+//! let a = &mpz_s::init_set_si(-2);
+//! let f = a.inv_f();
+//! assert_eq!(format!("{}", f), "-0.5e+0");
+//!
+//! // inv_q
+//! let a = &mpz_s::init_set_si(-2);
+//! let q = &mut a.inv_q();
+//! assert_eq!(format!("{}", q), "1/-2");
+//! assert_eq!(format!("{}", q.reduce()), "1/-2");
+//! assert_eq!(format!("{}", q.inv()), "-2");
+//!
+//! // mpf from mpq
+//! let f = mpf_s::init_set_q(q);
+//! assert_eq!(format!("{}", f), "-0.5e+0");
+//! assert_eq!(format!("{}", f.inv()), "-0.2e+1");
+//! ```
 //!
 //! # Requirements
 //!
@@ -54,6 +79,9 @@ mod tests {
     significant_digits_test, // single thread
     calc_pi_gauss_legendre_test, // single thread
     calc_pi_euler_test, // single thread
+    calc_pi_leibniz_test, // single thread
+    calc_pi_machin_test, // single thread
+    calc_pi_takano_test, // single thread
     calc_napier_test, // single thread
     ept_test};
   use serial_test::serial;
@@ -192,6 +220,24 @@ mod tests {
   #[serial] // expected on the single thread for mpf_set_default_prec
   fn test_calc_pi_euler() {
     assert_eq!(calc_pi_euler_test(), ());
+  }
+
+  #[test]
+  #[serial] // expected on the single thread for mpf_set_default_prec
+  fn test_calc_pi_leibniz() {
+    assert_eq!(calc_pi_leibniz_test(), ());
+  }
+
+  #[test]
+  #[serial] // expected on the single thread for mpf_set_default_prec
+  fn test_calc_pi_machin() {
+    assert_eq!(calc_pi_machin_test(), ());
+  }
+
+  #[test]
+  #[serial] // expected on the single thread for mpf_set_default_prec
+  fn test_calc_pi_takano() {
+    assert_eq!(calc_pi_takano_test(), ());
   }
 
   #[test]

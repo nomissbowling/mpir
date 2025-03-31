@@ -25,6 +25,7 @@ pub struct __mpf_struct {
 /// impl SNew
 impl SNew for __mpf_struct {
   /// new
+  #[inline]
   fn new() -> Self {
     __mpf_struct {
       _mp_prec: 0,
@@ -45,11 +46,13 @@ impl Drop for __mpf_struct {
 /// impl mpf_s
 impl __mpf_struct {
   /// clear
+  #[inline]
   pub fn clear(&mut self) -> () {
     mpf_clear(self)
   }
 
   /// init create new instance
+  #[inline]
   pub fn init() -> Self {
     let mut t = mpf_s::new();
     mpf_init(&mut t);
@@ -57,6 +60,7 @@ impl __mpf_struct {
   }
 
   /// init2 with prec create new instance
+  #[inline]
   pub fn init2(n: mp_bitcnt_t) -> Self {
     let mut t = mpf_s::new();
     mpf_init2(&mut t, n);
@@ -64,6 +68,7 @@ impl __mpf_struct {
   }
 
   /// init_set create new instance
+  #[inline]
   pub fn init_set(f: mpf_r) -> Self {
     let mut t = mpf_s::new();
     mpf_init_set(&mut t, f);
@@ -71,6 +76,7 @@ impl __mpf_struct {
   }
 
   /// init_set_ui create new instance
+  #[inline]
   pub fn init_set_ui(u: ui_t) -> Self {
     let mut t = mpf_s::new();
     mpf_init_set_ui(&mut t, u);
@@ -78,6 +84,7 @@ impl __mpf_struct {
   }
 
   /// init_set_si create new instance
+  #[inline]
   pub fn init_set_si(s: si_t) -> Self {
     let mut t = mpf_s::new();
     mpf_init_set_si(&mut t, s);
@@ -85,6 +92,7 @@ impl __mpf_struct {
   }
 
   /// init_set_d create new instance
+  #[inline]
   pub fn init_set_d(d: double_t) -> Self {
     let mut t = mpf_s::new();
     mpf_init_set_d(&mut t, d);
@@ -92,6 +100,7 @@ impl __mpf_struct {
   }
 
   /// init_set_str create new instance
+  #[inline]
   pub fn init_set_str(s: &str, b: int_t) -> Self {
     let mut t = mpf_s::new();
     mpf_init_set_str(&mut t, s, b);
@@ -99,62 +108,73 @@ impl __mpf_struct {
   }
 
   /// fmtstr
+  #[inline]
   pub fn fmtstr(&self, b: int_t, d: mp_size_t) -> String {
     mpf_get_fmtstr(self, b, d).expect("mpf fmtstr")
   }
 
   /// set self = f
+  #[inline]
   pub fn set(&mut self, f: mpf_r) -> &mut Self {
     mpf_set(self, f);
     self
   }
 
   /// set_ui self = u
+  #[inline]
   pub fn set_ui(&mut self, u: ui_t) -> &mut Self {
     mpf_set_ui(self, u);
     self
   }
 
   /// set_si self = s
+  #[inline]
   pub fn set_si(&mut self, s: si_t) -> &mut Self {
     mpf_set_si(self, s);
     self
   }
 
   /// set_d self = d
+  #[inline]
   pub fn set_d(&mut self, d: double_t) -> &mut Self {
     mpf_set_d(self, d);
     self
   }
 
   /// set_z self = a
+  #[inline]
   pub fn set_z(&mut self, a: mpz_r) -> &mut Self {
     mpf_set_z(self, a);
     self
   }
 
   /// set_str self from str
+  #[inline]
   pub fn set_str(&mut self, s: &str, b: int_t) -> &mut Self {
     mpf_set_str(self, s, b);
     self
   }
 
   /// get_d (loss of digits)
+  #[inline]
   pub fn get_d(&self) -> double_t {
     mpf_get_d(self)
   }
 
   /// get_ui (loss of digits)
+  #[inline]
   pub fn get_ui(&self) -> ui_t {
     mpf_get_ui(self)
   }
 
   /// get_si (loss of digits)
+  #[inline]
   pub fn get_si(&self) -> si_t {
     mpf_get_si(self)
   }
 
   /// get_d_2exp (loss of digits)
+  #[inline]
   pub fn get_d_2exp(&self) -> (double_t, si_t) {
     let mut e: si_t = 0;
     let d = mpf_get_d_2exp(&mut e, self);
@@ -162,41 +182,49 @@ impl __mpf_struct {
   }
 
   /// cmp
+  #[inline]
   pub fn cmp(&self, g: mpf_r) -> int_t {
     mpf_cmp(self, g)
   }
 
   /// cmp_d
+  #[inline]
   pub fn cmp_d(&self, d: double_t) -> int_t {
     mpf_cmp_d(self, d)
   }
 
   /// cmp_ui
+  #[inline]
   pub fn cmp_ui(&self, u: ui_t) -> int_t {
     mpf_cmp_ui(self, u)
   }
 
   /// cmp_si
+  #[inline]
   pub fn cmp_si(&self, s: si_t) -> int_t {
     mpf_cmp_si(self, s)
   }
 
   /// cmp_z
+  #[inline]
   pub fn cmp_z(&self, a: mpz_r) -> int_t {
     mpf_cmp_z(self, a)
   }
 
   /// eq ***mathematically ill-defined and should not be used***
+  #[inline]
   pub fn eq(&self, g: mpf_r, n: mp_bitcnt_t) -> int_t {
     mpf_eq(self, g, n)
   }
 
   /// sgn
+  #[inline]
   pub fn sgn(&self) -> int_t {
     mpf_sgn(self)
   }
 
   /// reldiff returns abs(self - e) / self create new instance
+  #[inline]
   pub fn reldiff(&self, e: mpf_r) -> Self {
     let mut t = mpf_s::init(); // new();
     mpf_reldiff(&mut t, self, e);
@@ -204,6 +232,7 @@ impl __mpf_struct {
   }
 
   /// sqrt create new instance
+  #[inline]
   pub fn sqrt(&self) -> Self {
     let mut t = mpf_s::init(); // new();
     mpf_sqrt(&mut t, self);
@@ -211,6 +240,7 @@ impl __mpf_struct {
   }
 
   /// sqrt_ui create new instance
+  #[inline]
   pub fn sqrt_ui(u: ui_t) -> Self {
     let mut t = mpf_s::init(); // new();
     mpf_sqrt_ui(&mut t, u);
@@ -218,6 +248,7 @@ impl __mpf_struct {
   }
 
   /// abs create new instance
+  #[inline]
   pub fn abs(&self) -> Self {
     let mut t = mpf_s::init(); // new();
     mpf_abs(&mut t, self);
@@ -225,6 +256,7 @@ impl __mpf_struct {
   }
 
   /// neg create new instance
+  #[inline]
   pub fn neg(&self) -> Self {
     let mut t = mpf_s::init(); // new();
     mpf_neg(&mut t, self);
@@ -232,78 +264,91 @@ impl __mpf_struct {
   }
 
   /// sub self -= e
+  #[inline]
   pub fn sub(&mut self, e: mpf_r) -> &mut Self {
     mpf_sub(self, &mpf_s::init_set(self), e);
     self
   }
 
   /// sub_ui self -= u
+  #[inline]
   pub fn sub_ui(&mut self, u: ui_t) -> &mut Self {
     mpf_sub_ui(self, &mpf_s::init_set(self), u);
     self
   }
 
   /// ui_sub self = u - self
+  #[inline]
   pub fn ui_sub(&mut self, u: ui_t) -> &mut Self {
     mpf_ui_sub(self, u, &mpf_s::init_set(self));
     self
   }
 
   /// add self += e
+  #[inline]
   pub fn add(&mut self, e: mpf_r) -> &mut Self {
     mpf_add(self, &mpf_s::init_set(self), e);
     self
   }
 
   /// add_ui self += u
+  #[inline]
   pub fn add_ui(&mut self, u: ui_t) -> &mut Self {
     mpf_add_ui(self, &mpf_s::init_set(self), u);
     self
   }
 
   /// mul self *= e
+  #[inline]
   pub fn mul(&mut self, e: mpf_r) -> &mut Self {
     mpf_mul(self, &mpf_s::init_set(self), e);
     self
   }
 
   /// mul_ui self *= u
+  #[inline]
   pub fn mul_ui(&mut self, u: ui_t) -> &mut Self {
     mpf_mul_ui(self, &mpf_s::init_set(self), u);
     self
   }
 
   /// mul_2exp self *= 2**n
+  #[inline]
   pub fn mul_2exp(&mut self, n: mp_bitcnt_t) -> &mut Self {
     mpf_mul_2exp(self, &mpf_s::init_set(self), n);
     self
   }
 
   /// div self /= e
+  #[inline]
   pub fn div(&mut self, e: mpf_r) -> &mut Self {
     mpf_div(self, &mpf_s::init_set(self), e);
     self
   }
 
   /// div_ui self /= u
+  #[inline]
   pub fn div_ui(&mut self, u: ui_t) -> &mut Self {
     mpf_div_ui(self, &mpf_s::init_set(self), u);
     self
   }
 
   /// ui_div self = u / self
+  #[inline]
   pub fn ui_div(&mut self, u: ui_t) -> &mut Self {
     mpf_ui_div(self, u, &mpf_s::init_set(self));
     self
   }
 
   /// div_2exp self /= 2**n
+  #[inline]
   pub fn div_2exp(&mut self, n: mp_bitcnt_t) -> &mut Self {
     mpf_div_2exp(self, &mpf_s::init_set(self), n);
     self
   }
 
   /// pow_ui f**n create new instance
+  #[inline]
   pub fn pow_ui(f: mpf_r, n: ui_t) -> Self {
     let mut t = mpf_s::init(); // ***never*** use new();
     mpf_pow_ui(&mut t, f, n);
@@ -311,6 +356,7 @@ impl __mpf_struct {
   }
 
   /// ceil create new instance
+  #[inline]
   pub fn ceil(&self) -> Self {
     let mut t = mpf_s::init();
     mpf_ceil(&mut t, self);
@@ -318,6 +364,7 @@ impl __mpf_struct {
   }
 
   /// floor create new instance
+  #[inline]
   pub fn floor(&self) -> Self {
     let mut t = mpf_s::init();
     mpf_floor(&mut t, self);
@@ -325,6 +372,7 @@ impl __mpf_struct {
   }
 
   /// trunc create new instance
+  #[inline]
   pub fn trunc(&self) -> Self {
     let mut t = mpf_s::init();
     mpf_trunc(&mut t, self);
@@ -332,41 +380,49 @@ impl __mpf_struct {
   }
 
   /// integer_p
+  #[inline]
   pub fn integer_p(&self) -> bool {
     mpf_integer_p(self)
   }
 
   /// fits_ulong_p
+  #[inline]
   pub fn fits_ulong_p(&self) -> bool {
     mpf_fits_ulong_p(self)
   }
 
   /// fits_slong_p
+  #[inline]
   pub fn fits_slong_p(&self) -> bool {
     mpf_fits_slong_p(self)
   }
 
   /// fits_uint_p
+  #[inline]
   pub fn fits_uint_p(&self) -> bool {
     mpf_fits_uint_p(self)
   }
 
   /// fits_sint_p
+  #[inline]
   pub fn fits_sint_p(&self) -> bool {
     mpf_fits_sint_p(self)
   }
 
   /// fits_ushort_p
+  #[inline]
   pub fn fits_ushort_p(&self) -> bool {
     mpf_fits_ushort_p(self)
   }
 
   /// fits_sshort_p
+  #[inline]
   pub fn fits_sshort_p(&self) -> bool {
     mpf_fits_sshort_p(self)
   }
 
   /// urandomb (must init random state before) create new instance
+  #[inline]
   pub fn urandomb(state: randstate_t, nbits: mp_bitcnt_t) -> Self {
     let mut t = mpf_s::init();
     mpf_urandomb(&mut t, state, nbits);
@@ -374,6 +430,7 @@ impl __mpf_struct {
   }
 
   /// random2 create new instance
+  #[inline]
   pub fn random2(max_size: mp_size_t, e: mp_exp_t) -> Self {
     let mut t = mpf_s::init();
     mpf_random2(&mut t, max_size, e);
@@ -381,16 +438,19 @@ impl __mpf_struct {
   }
 
   /// get_prec
+  #[inline]
   pub fn get_prec(&self) -> mp_bitcnt_t {
     mpf_get_prec(self)
   }
 
   /// set_prec
+  #[inline]
   pub fn set_prec(&mut self, n: mp_bitcnt_t) -> () {
     mpf_set_prec(self, n)
   }
 
   /// set_prec_raw
+  #[inline]
   pub fn set_prec_raw(&mut self, n: mp_bitcnt_t) -> () {
     mpf_set_prec_raw(self, n)
   }
@@ -405,7 +465,7 @@ impl __mpf_struct {
     (n as f64 / 10f64.log2()) as mp_size_t
   }
 
-  /// calc_pi_gauss_legendre create new instance
+  /// calc pi Gauss-Legendre create new instance
   pub fn calc_pi_gauss_legendre(digits: mp_size_t) -> Self {
     let recursion = digits.ilog2(); // or + 1
     let a = &mut mpf_s::init_set_ui(1);
@@ -425,7 +485,7 @@ impl __mpf_struct {
     pi
   }
 
-  /// calc_pi_euler create new instance ***CAUTION too slow digits &gt;= 9***
+  /// calc pi Euler create new instance ***CAUTION too slow digits &gt;= 9***
   pub fn calc_pi_euler(digits: mp_size_t) -> Self {
     let mut pi = mpf_s::init_set_ui(1);
     let g = &mut mpf_s::init_set_ui(0);
@@ -440,7 +500,59 @@ impl __mpf_struct {
     pi.mul_ui(6).sqrt()
   }
 
-  /// calc_napier create new instance
+  /// calc pi Leibniz create new instance ***CAUTION too slow digits &gt;= 7***
+  /// = arctan(1)
+  pub fn calc_pi_leibniz(digits: mp_size_t) -> Self {
+    let recursion = 10usize.pow(digits as u32) as ui_t; // ipow
+    let ax = [(1, 1)];
+    let pi = mpf_s::sum_arctan_gregory(&ax, recursion);
+    pi * 4
+  }
+
+  /// calc pi Machin
+  /// = 4arctan(1/5) - arctan(1/239)
+  pub fn calc_pi_machin(digits: mp_size_t) -> Self {
+    let recursion = digits.ilog2().pow(4); // ***loss of digits when big***
+    let ax = [(4, 5), (-1, 239)];
+    let pi = mpf_s::sum_arctan_gregory(&ax, recursion);
+    pi * 4
+  }
+
+  /// calc pi Takano-Kanada
+  /// = 12arctan(1/49) + 32arctan(1/57) - 5arctan(1/239) + 12arctan(1/110443)
+  pub fn calc_pi_takano(digits: mp_size_t) -> Self {
+    let recursion = digits.ilog2().pow(4); // ***loss of digits when big***
+    let ax = [(12, 49), (32, 57), (-5, 239), (12, 110443)];
+    let pi = mpf_s::sum_arctan_gregory(&ax, recursion);
+    pi * 4
+  }
+
+  /// calc pi/4 sum arctan Gregory
+  /// arctan x = sigma[n=0-&gt;inf](x**(2n+1)*(-1**n)/(2n+1))
+  /// sum_n = sigma[k=0-&gt;ax.len](a_k * arctan_n x_k)
+  /// result = sigma[n=0-&gt;m]sum_n
+  /// inner loop may be slow (should mul a_k outer) to check stop iterator
+  pub fn sum_arctan_gregory(ax: &[(si_t, si_t)], m: ui_t) -> Self {
+    let mut sa = mpf_s::init_set_ui(0);
+    let ax = ax.into_iter().map(|&(a, x)|
+      (mpf_s::init_set_si(a), mpf_s::init_set_si(x).inv())
+    ).collect::<Vec<_>>();
+    let _s = (0..=m).try_fold(&mut sa, |mut sa, n| {
+      let pre = &mpf_s::init_set(sa);
+      let k = 2 * n + 1;
+      let mut sn = mpf_s::init_set_ui(0);
+      let _a = ax.iter().fold(&mut sn, |mut sn, (a, x)| {
+        let s = a * mpf_s::pow_ui(&x, k) / k; // move mul a outer to be faster
+        if n & 1 == 1 { sn -= s; } else { sn += s; }
+        sn
+      });
+      sa += sn;
+      if sa.cmp(pre) == 0 { None } else { Some(sa) }
+    });
+    sa
+  }
+
+  /// calc Napier create new instance
   pub fn calc_napier(x: mpf_r, digits: mp_size_t) -> Self {
     // significant digits of calc napier by Stirling's approximation
     let significant_digits_of_calc_napier = |n: f64| -> f64 {
@@ -485,6 +597,14 @@ impl __mpf_struct {
   #[inline]
   pub fn init_set_q(q: mpq_r) -> Self {
     mpf_s::init_set_z(q.numref()) / mpf_s::init_set_z(q.denref())
+  }
+
+  /// inv create new instance
+  #[inline]
+  pub fn inv(&self) -> Self {
+    let mut t = mpf_s::init();
+    mpf_ui_div(&mut t, 1, self);
+    t
   }
 }
 

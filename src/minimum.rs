@@ -961,7 +961,7 @@ pub fn significant_digits_test() {
     "0.10000000000000000000000000000001e-18"); // disp as match with prec
 }
 
-/// calc pi gauss legendre test
+/// calc pi Gauss-Legendre test
 /// expected on the single thread for mpf_set_default_prec
 pub fn calc_pi_gauss_legendre_test() {
   let pi = "resources/pi.dat"; // has 11001 digits
@@ -974,7 +974,7 @@ pub fn calc_pi_gauss_legendre_test() {
   });
 }
 
-/// calc pi euler test ***CAUTION too slow digits &gt;= 9***
+/// calc pi Euler test ***CAUTION too slow digits &gt;= 9***
 /// expected on the single thread for mpf_set_default_prec
 pub fn calc_pi_euler_test() {
   let pi = "resources/pi.dat"; // has 11001 digits
@@ -986,8 +986,46 @@ pub fn calc_pi_euler_test() {
     assert_eq!(o, load_digits(pi, digits, true)); // rounded up when need
   });
 }
+/// calc pi Leibniz test ***CAUTION too slow digits &gt;= 7***
+/// expected on the single thread for mpf_set_default_prec
+pub fn calc_pi_leibniz_test() {
+  let pi = "resources/pi.dat"; // has 11001 digits
+  [3, 6].into_iter().for_each(|digits| { // too slow over 7 digits
+    mpf_set_default_prec(mpf_s::calc_bits_from_digits(digits + 3));
+    let pi_leibniz = &mpf_s::calc_pi_leibniz(digits);
+//    assert_eq!(format!("{}", pi_leibniz), "0.31415926535897932385e+1");
+    let o = trim_padding_digits(&pi_leibniz.fmtstr(10, digits), digits);
+    assert_eq!(o, load_digits(pi, digits, true)); // rounded up when need
+  });
+}
 
-/// calc napier test
+/// calc pi Machin test
+/// expected on the single thread for mpf_set_default_prec
+pub fn calc_pi_machin_test() {
+  let pi = "resources/pi.dat"; // has 11001 digits
+  [20, 1000].into_iter().for_each(|digits| { // 10000 few seconds
+    mpf_set_default_prec(mpf_s::calc_bits_from_digits(digits + 3));
+    let pi_machin = &mpf_s::calc_pi_machin(digits);
+    assert_eq!(format!("{}", pi_machin), "0.31415926535897932385e+1");
+    let o = trim_padding_digits(&pi_machin.fmtstr(10, digits), digits);
+    assert_eq!(o, load_digits(pi, digits, true)); // rounded up when need
+  });
+}
+
+/// calc pi Takano-Kanada test
+/// expected on the single thread for mpf_set_default_prec
+pub fn calc_pi_takano_test() {
+  let pi = "resources/pi.dat"; // has 11001 digits
+  [20, 1000].into_iter().for_each(|digits| { // 10000 few seconds
+    mpf_set_default_prec(mpf_s::calc_bits_from_digits(digits + 3));
+    let pi_takano = &mpf_s::calc_pi_takano(digits);
+    assert_eq!(format!("{}", pi_takano), "0.31415926535897932385e+1");
+    let o = trim_padding_digits(&pi_takano.fmtstr(10, digits), digits);
+    assert_eq!(o, load_digits(pi, digits, true)); // rounded up when need
+  });
+}
+
+/// calc Napier test
 /// expected on the single thread for mpf_set_default_prec
 pub fn calc_napier_test() {
   // mpf calc napier (to be operator)

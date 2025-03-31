@@ -12,6 +12,30 @@ use crate::*;
 pub fn ops_test() {
   mpf_set_default_prec(64); // 64 bits default
 
+  // inv_f
+  let a = &mpz_s::init_set_si(-3);
+  let mut f = a.inv_f();
+  assert_eq!(format!("{}", f), "-0.33333333333333333333e+0");
+  f *= 3;
+  assert_eq!(format!("{}", f), "-0.1e+1");
+
+  // inv_f
+  let a = &mpz_s::init_set_si(-2);
+  let f = a.inv_f();
+  assert_eq!(format!("{}", f), "-0.5e+0");
+
+  // inv_q
+  let a = &mpz_s::init_set_si(-2);
+  let q = &mut a.inv_q();
+  assert_eq!(format!("{}", q), "1/-2");
+  assert_eq!(format!("{}", q.reduce()), "1/-2");
+  assert_eq!(format!("{}", q.inv()), "-2");
+
+  // mpf from mpq
+  let f = mpf_s::init_set_q(q);
+  assert_eq!(format!("{}", f), "-0.5e+0");
+  assert_eq!(format!("{}", f.inv()), "-0.2e+1");
+
   // mpz_r * mpf_r
   let a = &mpz_s::init_set_si(-3);
   let f = &mpf_s::init_set_ui(2);

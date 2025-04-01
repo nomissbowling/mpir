@@ -7,32 +7,47 @@ partial Rust porting of mpir multiple precision library based on gmp mpfr
 Sample
 ------
 
+see also [sum_arctan_gregory() source](https://docs.rs/mpir/latest/mpir/prim/mpf/struct.__mpf_struct.html#method.sum_arctan_gregory)
+
 ```Rust
   mpf_set_default_prec(64); // 64 bits default
 
   // inv_f
-  let a = &mpz_s::init_set_si(-3);
+  let a = &mpz_s::from(-3);
   let mut f = a.inv_f();
   assert_eq!(format!("{}", f), "-0.33333333333333333333e+0");
   f *= 3;
   assert_eq!(format!("{}", f), "-0.1e+1");
 
   // inv_f
-  let a = &mpz_s::init_set_si(-2);
+  let a = &mpz_s::from(-2);
   let f = a.inv_f();
   assert_eq!(format!("{}", f), "-0.5e+0");
 
   // inv_q
-  let a = &mpz_s::init_set_si(-2);
+  let a = &mpz_s::from(-2);
   let q = &mut a.inv_q();
   assert_eq!(format!("{}", q), "1/-2");
   assert_eq!(format!("{}", q.reduce()), "1/-2");
   assert_eq!(format!("{}", q.inv()), "-2");
 
   // mpf from mpq
-  let f = mpf_s::init_set_q(q);
+  let f = mpf_s::from(&*q);
   assert_eq!(format!("{}", f), "-0.5e+0");
   assert_eq!(format!("{}", f.inv()), "-0.2e+1");
+
+  // mpq from &str
+  let f = &mut mpq_s::from("9/-24");
+  assert_eq!(format!("{}", f), "9/-24");
+  assert_eq!(format!("{}", f.reduce()), "3/-8");
+
+  // mpf from &str
+  let f = mpf_s::from("-5");
+  assert_eq!(format!("{}", f), "-0.5e+1");
+
+  // mpz from &str
+  let f = mpz_s::from("-5");
+  assert_eq!(format!("{}", f), "-5");
 
   // mpz and mpf (prepare and reset)
   let a = &mut mpz_s::init();

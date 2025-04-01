@@ -501,7 +501,7 @@ impl __mpf_struct {
   }
 
   /// calc pi Leibniz create new instance ***CAUTION too slow digits &gt;= 7***
-  /// = arctan(1)
+  /// - = arctan(1)
   pub fn calc_pi_leibniz(digits: mp_size_t) -> Self {
     let recursion = 10usize.pow(digits as u32) as ui_t; // ipow
     let ax = [(1, 1)];
@@ -510,7 +510,7 @@ impl __mpf_struct {
   }
 
   /// calc pi Machin
-  /// = 4arctan(1/5) - arctan(1/239)
+  /// - = 4arctan(1/5) - arctan(1/239)
   pub fn calc_pi_machin(digits: mp_size_t) -> Self {
     let recursion = digits.ilog2().pow(4); // ***loss of digits when big***
     let ax = [(4, 5), (-1, 239)];
@@ -519,7 +519,7 @@ impl __mpf_struct {
   }
 
   /// calc pi Takano-Kanada
-  /// = 12arctan(1/49) + 32arctan(1/57) - 5arctan(1/239) + 12arctan(1/110443)
+  /// - = 12arctan(1/49) + 32arctan(1/57) - 5arctan(1/239) + 12arctan(1/110443)
   pub fn calc_pi_takano(digits: mp_size_t) -> Self {
     let recursion = digits.ilog2().pow(4); // ***loss of digits when big***
     let ax = [(12, 49), (32, 57), (-5, 239), (12, 110443)];
@@ -528,22 +528,23 @@ impl __mpf_struct {
   }
 
   /// calc pi/4 sum arctan Gregory
-  /// arctan x = sigma[n=0-&gt;inf](x**(2n+1)*(-1**n)/(2n+1))
-  /// sum_n = sigma[k=0-&gt;ax.len](a_k * arctan_n x_k)
-  /// result = sigma[n=0-&gt;m]sum_n
-  /// inner loop may be slow (should mul a_k outer) to check stop iterator
-  pub fn sum_arctan_gregory(ax: &[(si_t, si_t)], m: ui_t) -> Self {
-    let mut sa = mpf_s::init_set_ui(0);
+  /// - arctan x = sigma[n=0-&gt;inf]{(-1**n)*x**(2n+1)/(2n+1)}
+  /// - sum_n = sigma[k=0-&gt;ax.len](a_k * arctan_n x_k)
+  /// - result = sigma[n=0-&gt;m]sum_n
+  /// - inner loop may be slow (should be outer mul a_k) to check stop iterator
+  pub fn sum_arctan_gregory(ax: &[(si_t, ui_t)], m: ui_t) -> Self {
+    let mut sa = mpf_s::from(0);
     let ax = ax.into_iter().map(|&(a, x)|
-      (mpf_s::init_set_si(a), mpf_s::init_set_si(x).inv())
+      if a < 0 { (1, -a as ui_t, x) } else { (0, a as ui_t, x) } // care range
     ).collect::<Vec<_>>();
     let _s = (0..=m).try_fold(&mut sa, |mut sa, n| {
-      let pre = &mpf_s::init_set(sa);
+      let pre = &mpf_s::from(&*sa);
       let k = 2 * n + 1;
-      let mut sn = mpf_s::init_set_ui(0);
-      let _a = ax.iter().fold(&mut sn, |mut sn, (a, x)| {
-        let s = a * mpf_s::pow_ui(&x, k) / k; // move mul a outer to be faster
-        if n & 1 == 1 { sn -= s; } else { sn += s; }
+      let mut sn = mpf_s::from(0);
+      let _a = ax.iter().fold(&mut sn, |mut sn, (sgn, a, x)| {
+//      let s = a * (mpz_s::ui_pow_ui(*x, k) * k).inv_f(); // outer a to faster
+        let s = a / mpf_s::from(&(mpz_s::ui_pow_ui(*x, k) * k));
+        if 1 == ((n & 1) ^ sgn) { sn -= s; } else { sn += s; }
         sn
       });
       sa += sn;

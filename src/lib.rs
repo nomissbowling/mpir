@@ -1,32 +1,47 @@
-#![doc(html_root_url = "https://docs.rs/mpir/0.3.4")]
+#![doc(html_root_url = "https://docs.rs/mpir/0.3.5")]
 //! partial Rust porting of mpir multiple precision library based on gmp mpfr
 //!
 //! Cargo test with [-- --nocapture] or with [-- --show-output]
 //!
+//! see also [sum_arctan_gregory() source](https://docs.rs/mpir/latest/mpir/prim/mpf/struct.__mpf_struct.html#method.sum_arctan_gregory)
+//!
 //! ```Rust
 //! // inv_f
-//! let a = &mpz_s::init_set_si(-3);
+//! let a = &mpz_s::from(-3);
 //! let mut f = a.inv_f();
 //! assert_eq!(format!("{}", f), "-0.33333333333333333333e+0");
 //! f *= 3;
 //! assert_eq!(format!("{}", f), "-0.1e+1");
 //!
 //! // inv_f
-//! let a = &mpz_s::init_set_si(-2);
+//! let a = &mpz_s::from(-2);
 //! let f = a.inv_f();
 //! assert_eq!(format!("{}", f), "-0.5e+0");
 //!
 //! // inv_q
-//! let a = &mpz_s::init_set_si(-2);
+//! let a = &mpz_s::from(-2);
 //! let q = &mut a.inv_q();
 //! assert_eq!(format!("{}", q), "1/-2");
 //! assert_eq!(format!("{}", q.reduce()), "1/-2");
 //! assert_eq!(format!("{}", q.inv()), "-2");
 //!
 //! // mpf from mpq
-//! let f = mpf_s::init_set_q(q);
+//! let f = mpf_s::from(&*q);
 //! assert_eq!(format!("{}", f), "-0.5e+0");
 //! assert_eq!(format!("{}", f.inv()), "-0.2e+1");
+//!
+//! // mpq from &str
+//! let f = &mut mpq_s::from("9/-24");
+//! assert_eq!(format!("{}", f), "9/-24");
+//! assert_eq!(format!("{}", f.reduce()), "3/-8");
+//!
+//! // mpf from &str
+//! let f = mpf_s::from("-5");
+//! assert_eq!(format!("{}", f), "-0.5e+1");
+//!
+//! // mpz from &str
+//! let f = mpz_s::from("-5");
+//! assert_eq!(format!("{}", f), "-5");
 //! ```
 //!
 //! # Requirements
@@ -52,6 +67,9 @@ pub use crate::prim::{*, typ::*, mpz::*, mpf::*, mpq::*, randstate::*};
 
 pub mod ops;
 pub use crate::ops::{*};
+
+pub mod convert;
+pub use crate::convert::{*};
 
 pub mod util;
 pub use crate::util::{*};

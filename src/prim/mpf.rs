@@ -4,6 +4,7 @@
 use std::fmt;
 use std::error::Error;
 use std::collections::HashMap;
+use std::mem::MaybeUninit;
 
 use crate::prim::{*, typ::*, mpz::*, mpq::*, randstate::*, gmp::*};
 use crate::util;
@@ -25,14 +26,29 @@ pub struct __mpf_struct {
 /// impl SNew
 impl SNew for __mpf_struct {
   /// new
+  /// This is acrobatic way, new() MUST be called with mpf_s::init*()
   #[inline]
   fn new() -> Self {
+/*
     __mpf_struct {
       _mp_prec: 0,
       _mp_size: 0,
       _mp_exp: 0,
       _mp_d: 0 as *mut mp_limb_t
     }
+*/
+unsafe {
+    let prec = MaybeUninit::<int_t>::uninit();
+    let sz = MaybeUninit::<int_t>::uninit();
+    let exp = MaybeUninit::<mp_exp_t>::uninit();
+    let d = MaybeUninit::<*mut mp_limb_t>::uninit();
+    __mpf_struct {
+      _mp_prec: prec.assume_init(),
+      _mp_size: sz.assume_init(),
+      _mp_exp: exp.assume_init(),
+      _mp_d: d.assume_init()
+    }
+}
   }
 }
 
@@ -226,7 +242,7 @@ impl __mpf_struct {
   /// reldiff returns abs(self - e) / self create new instance
   #[inline]
   pub fn reldiff(&self, e: mpf_r) -> Self {
-    let mut t = mpf_s::init(); // new();
+    let mut t = mpf_s::init();
     mpf_reldiff(&mut t, self, e);
     t
   }
@@ -234,7 +250,7 @@ impl __mpf_struct {
   /// sqrt create new instance
   #[inline]
   pub fn sqrt(&self) -> Self {
-    let mut t = mpf_s::init(); // new();
+    let mut t = mpf_s::init();
     mpf_sqrt(&mut t, self);
     t
   }
@@ -242,7 +258,7 @@ impl __mpf_struct {
   /// sqrt_ui create new instance
   #[inline]
   pub fn sqrt_ui(u: ui_t) -> Self {
-    let mut t = mpf_s::init(); // new();
+    let mut t = mpf_s::init();
     mpf_sqrt_ui(&mut t, u);
     t
   }
@@ -250,7 +266,7 @@ impl __mpf_struct {
   /// abs create new instance
   #[inline]
   pub fn abs(&self) -> Self {
-    let mut t = mpf_s::init(); // new();
+    let mut t = mpf_s::init();
     mpf_abs(&mut t, self);
     t
   }
@@ -258,7 +274,7 @@ impl __mpf_struct {
   /// neg create new instance
   #[inline]
   pub fn neg(&self) -> Self {
-    let mut t = mpf_s::init(); // new();
+    let mut t = mpf_s::init();
     mpf_neg(&mut t, self);
     t
   }
@@ -350,7 +366,7 @@ impl __mpf_struct {
   /// pow_ui f**n create new instance
   #[inline]
   pub fn pow_ui(f: mpf_r, n: ui_t) -> Self {
-    let mut t = mpf_s::init(); // ***never*** use new();
+    let mut t = mpf_s::init(); // ***NEVER*** use new()
     mpf_pow_ui(&mut t, f, n);
     t
   }
@@ -501,7 +517,7 @@ impl __mpf_struct {
   }
 
   /// calc pi Leibniz create new instance ***CAUTION too slow digits &gt;= 7***
-  /// - = arctan(1)
+  /// - pi/4 = arctan(1)
   pub fn calc_pi_leibniz(digits: mp_size_t) -> Self {
     let recursion = 10usize.pow(digits as u32) as ui_t; // ipow
     let ax = [(1, 1)];
@@ -510,7 +526,7 @@ impl __mpf_struct {
   }
 
   /// calc pi Machin
-  /// - = 4arctan(1/5) - arctan(1/239)
+  /// - pi/4 = 4arctan(1/5) - arctan(1/239)
   pub fn calc_pi_machin(digits: mp_size_t) -> Self {
     let recursion = digits.ilog2().pow(4); // ***loss of digits when big***
     let ax = [(4, 5), (-1, 239)];
@@ -519,7 +535,7 @@ impl __mpf_struct {
   }
 
   /// calc pi Takano-Kanada
-  /// - = 12arctan(1/49) + 32arctan(1/57) - 5arctan(1/239) + 12arctan(1/110443)
+  /// - 12arctan(1/49) + 32arctan(1/57) - 5arctan(1/239) + 12arctan(1/110443)
   pub fn calc_pi_takano(digits: mp_size_t) -> Self {
     let recursion = digits.ilog2().pow(4); // ***loss of digits when big***
     let ax = [(12, 49), (32, 57), (-5, 239), (12, 110443)];

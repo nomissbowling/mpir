@@ -3,6 +3,7 @@
 
 use std::fmt;
 use std::error::Error;
+use std::mem::MaybeUninit;
 
 use crate::prim::{*, typ::*, mpz::*, mpf::*, gmp::*}; // randstate::*
 
@@ -19,12 +20,23 @@ pub struct __mpq_struct {
 /// impl SNew
 impl SNew for __mpq_struct {
   /// new
+  /// This is acrobatic way, new() MUST be called with mpq_s::init*()
   #[inline]
   fn new() -> Self {
+/*
     __mpq_struct {
       _mp_num: mpz_s::new(), // init_set_ui(0),
       _mp_den: mpz_s::new() // init_set_ui(1)
     }
+*/
+unsafe {
+    let num = MaybeUninit::<mpz_s>::uninit();
+    let den = MaybeUninit::<mpz_s>::uninit();
+    __mpq_struct {
+      _mp_num: num.assume_init(),
+      _mp_den: den.assume_init()
+    }
+}
   }
 }
 
@@ -211,7 +223,7 @@ impl __mpq_struct {
   /// inv q**-1 create new instance
   #[inline]
   pub fn inv(&self) -> Self {
-    let mut t = mpq_s::init(); // new();
+    let mut t = mpq_s::init();
     mpq_inv(&mut t, self);
     t
   }
@@ -219,7 +231,7 @@ impl __mpq_struct {
   /// abs create new instance
   #[inline]
   pub fn abs(&self) -> Self {
-    let mut t = mpq_s::init(); // new();
+    let mut t = mpq_s::init();
     mpq_abs(&mut t, self);
     t
   }
@@ -227,7 +239,7 @@ impl __mpq_struct {
   /// neg create new instance
   #[inline]
   pub fn neg(&self) -> Self {
-    let mut t = mpq_s::init(); // new();
+    let mut t = mpq_s::init();
     mpq_neg(&mut t, self);
     t
   }
@@ -235,42 +247,42 @@ impl __mpq_struct {
   /// sub self -= r
   #[inline]
   pub fn sub(&mut self, r: mpq_r) -> &mut Self {
-    mpq_sub(self, mpq_s::init().set(self), r);
+    mpq_sub(self, &mpq_s::from(&*self), r); // cast &mut self to &self
     self
   }
 
   /// add self += r
   #[inline]
   pub fn add(&mut self, r: mpq_r) -> &mut Self {
-    mpq_add(self, mpq_s::init().set(self), r);
+    mpq_add(self, &mpq_s::from(&*self), r); // cast &mut self to &self
     self
   }
 
   /// mul self *= r
   #[inline]
   pub fn mul(&mut self, r: mpq_r) -> &mut Self {
-    mpq_mul(self, mpq_s::init().set(self), r);
+    mpq_mul(self, &mpq_s::from(&*self), r); // cast &mut self to &self
     self
   }
 
   /// mul_2exp self *= 2**n
   #[inline]
   pub fn mul_2exp(&mut self, n: mp_bitcnt_t) -> &mut Self {
-    mpq_mul_2exp(self, mpq_s::init().set(self), n);
+    mpq_mul_2exp(self, &mpq_s::from(&*self), n); // cast &mut self to &self
     self
   }
 
   /// div self /= r
   #[inline]
   pub fn div(&mut self, r: mpq_r) -> &mut Self {
-    mpq_div(self, mpq_s::init().set(self), r);
+    mpq_div(self, &mpq_s::from(&*self), r); // cast &mut self to &self
     self
   }
 
   /// div_2exp self /= 2**n
   #[inline]
   pub fn div_2exp(&mut self, n: mp_bitcnt_t) -> &mut Self {
-    mpq_div_2exp(self, mpq_s::init().set(self), n);
+    mpq_div_2exp(self, &mpq_s::from(&*self), n); // cast &mut self to &self
     self
   }
 

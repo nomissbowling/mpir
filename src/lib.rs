@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/mpir/0.3.5")]
+#![doc(html_root_url = "https://docs.rs/mpir/0.4.0")]
 //! partial Rust porting of mpir multiple precision library based on gmp mpfr
 //!
 //! Cargo test with [-- --nocapture] or with [-- --show-output]
@@ -26,7 +26,7 @@
 //! assert_eq!(format!("{}", q.inv()), "-2");
 //!
 //! // mpf from mpq
-//! let f = mpf_s::from(&*q);
+//! let f = mpf_s::from(q);
 //! assert_eq!(format!("{}", f), "-0.5e+0");
 //! assert_eq!(format!("{}", f.inv()), "-0.2e+1");
 //!
@@ -106,8 +106,7 @@ mod tests {
 
   #[test]
   fn test_mpz() {
-    let a = &mut mpz_s::new();
-    mpz_init_set_si(a, -123);
+    let a = &mpz_s::from(-123); // si_t
     assert_eq!(format!("{:?}", a),
       "1, -1 000000000000007b");
   }
@@ -116,17 +115,14 @@ mod tests {
   #[serial] // expected on the single thread for mpf_set_default_prec
   fn test_mpf() {
     mpf_set_default_prec(64); // 64 bits default
-    let f = &mut mpf_s::new();
-    mpf_init_set_d(f, -0.3);
+    let f = &mpf_s::from(-0.3); // double_t
     assert_eq!(format!("{:?}", f),
       "2, -2, 0 0000000000000000 4ccccccccccccc00");
   }
 
   #[test]
   fn test_mpq() {
-    let q = &mut mpq_s::new();
-    mpq_init(q);
-    mpq_set_ui(q, 2, 8);
+    let q = &mpq_s::from((2, 8 as ui_t)); // ui_t, ui_t
     assert_eq!(format!("{:?}", q),
       "(1, 1 0000000000000002) / (1, 1 0000000000000008)");
   }

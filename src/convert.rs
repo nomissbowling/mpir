@@ -1,9 +1,13 @@
 //! convert
 //!
 
-use std::convert::From;
+pub use from_ref::*;
 
+use std::convert::From;
 use crate::prim::{typ::*, mpz::*, mpf::*, mpq::*};
+
+// from_ref_unop!{impl From, from for mpz_s, mpz_s} // same as set(self)
+from_ref_mut_unop!{impl From, from for mpz_s, mpz_s}
 
 /// mpz_s from mpz_r
 impl<'a> From<&'a mpz_s> for mpz_s {
@@ -50,6 +54,9 @@ impl<'a> From<&'a str> for mpz_s {
   }
 }
 
+// from_ref_unop!{impl From, from for mpf_s, mpf_s} // same as set(self)
+from_ref_mut_unop!{impl From, from for mpf_s, mpf_s}
+
 /// mpf_s from mpf_r
 impl<'a> From<&'a mpf_s> for mpf_s {
   /// mpf_s from mpf_r
@@ -95,6 +102,8 @@ impl<'a> From<&'a str> for mpf_s {
   }
 }
 
+from_ref_unop!{impl From, from for mpf_s, mpz_s}
+
 /// mpf_s from mpz_r
 impl<'a> From<&'a mpz_s> for mpf_s {
   /// mpf_s from mpz_r
@@ -104,6 +113,8 @@ impl<'a> From<&'a mpz_s> for mpf_s {
   }
 }
 
+from_ref_unop!{impl From, from for mpf_s, mpq_s}
+
 /// mpf_s from mpq_r
 impl<'a> From<&'a mpq_s> for mpf_s {
   /// mpf_s from mpq_r
@@ -112,6 +123,9 @@ impl<'a> From<&'a mpq_s> for mpf_s {
     mpf_s::init_set_q(q)
   }
 }
+
+// from_ref_unop!{impl From, from for mpq_s, mpq_s} // same as set(self)
+from_ref_mut_unop!{impl From, from for mpq_s, mpq_s}
 
 /// mpq_s from mpq_r
 impl<'a> From<&'a mpq_s> for mpq_s {
@@ -168,6 +182,8 @@ impl<'a> From<&'a str> for mpq_s {
   }
 }
 
+from_ref_unop!{impl From, from for mpq_s, mpz_s}
+
 /// mpq_s from mpz_r
 impl<'a> From<&'a mpz_s> for mpq_s {
   /// mpq_s from mpz_r
@@ -178,6 +194,8 @@ impl<'a> From<&'a mpz_s> for mpq_s {
     t
   }
 }
+
+from_ref_unop!{impl From, from for mpq_s, mpf_s}
 
 /// mpq_s from mpf_r
 impl<'a> From<&'a mpf_s> for mpq_s {

@@ -41,7 +41,7 @@ impl SNew for gmp_randstate_struct {
   #[inline]
   fn new() -> Self {
     gmp_randstate_struct {
-      _mp_seed: mpz_s::new(), // init_set_ui(0),
+      _mp_seed: mpz_s::from(0), // init_set_ui(0), // ***NEVER*** use new(),
       _mp_alg: GMP_RAND_ALG_DEFAULT,
       _mp_algdata_union_mp_lc: 0 as mp_t
     }

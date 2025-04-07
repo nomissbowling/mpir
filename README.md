@@ -32,7 +32,7 @@ see also [sum_arctan_gregory() source](https://docs.rs/mpir/latest/mpir/prim/mpf
   assert_eq!(format!("{}", q.inv()), "-2");
 
   // mpf from mpq
-  let f = mpf_s::from(&*q);
+  let f = mpf_s::from(q);
   assert_eq!(format!("{}", f), "-0.5e+0");
   assert_eq!(format!("{}", f.inv()), "-0.2e+1");
 
@@ -97,10 +97,10 @@ see also [sum_arctan_gregory() source](https://docs.rs/mpir/latest/mpir/prim/mpf
   });
 
   // mpq (to be operator)
-  let q = &mut mpq_s::init();
-  assert_eq!(format!("{}", q.set_ui(2, 8)), "2/8");
+  let q = &mpq_s::from((2, 8 as ui_t));
+  assert_eq!(format!("{}", q), "2/8");
 
-  // mpf prec (c style)
+  // mpf prec
 //  assert_eq!(mpf_get_default_prec(), 64); // may be 64
   mpf_set_default_prec(100); // 100 set to 128 bits (step by 2**n)
 //  assert_eq!(mpf_get_default_prec(), 128); // may be 128 (about 38 digits)
@@ -109,8 +109,8 @@ see also [sum_arctan_gregory() source](https://docs.rs/mpir/latest/mpir/prim/mpf
 
   // mpf significant digits (to be operator) test loss of digits on display
   let disp_digits = digits + 3; // set disp_digits to over prec
-  let f = &mut mpf_s::init_set_str("1.0e-19", 10);
-  let e = &mpf_s::init_set_str("1.0e-50", 10);
+  let f = &mut mpf_s::from("1.0e-19");
+  let e = &mpf_s::from("1.0e-50");
   assert_eq!(e.fmtstr(10, disp_digits), "0.1e-49");
   assert_eq!(f.fmtstr(10, disp_digits), "0.1e-18");
   // f.add(e) as 0.99999999999999999999e-19 without mpf_set_default_prec(100)
@@ -122,7 +122,7 @@ see also [sum_arctan_gregory() source](https://docs.rs/mpir/latest/mpir/prim/mpf
   // mpf calc napier (to be operator)
   let digits = 150;
   mpf_set_default_prec(mpf_s::calc_bits_from_digits(digits + 3));
-  let e = &mpf_s::calc_napier(&mpf_s::init_set_d(1.0), digits);
+  let e = &mpf_s::calc_napier(&mpf_s::from(1.0), digits);
   assert_eq!(format!("{}", e),
     "0.27182818284590452354e+1");
   assert_eq!(e.fmtstr(10, digits),

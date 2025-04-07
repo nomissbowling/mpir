@@ -19,7 +19,7 @@ pub struct EraPrimeTableUI {
 impl EraPrimeTableUI {
   /// new
   pub fn new(maxera: mp_size_t) -> Self {
-    let mut era = mpz_s::init_set_ui(0); // lsb = 0, msb = maxera allows but NC
+    let mut era = mpz_s::from(0); // lsb = 0, msb = maxera allows but NC
     let even64 = maxera + 63 - (maxera - 1) % 64; // even bit always non prime
     era.setbit(even64 as ui_t); // pre expand mpz before era filter (to faster)
     (0..=1).for_each(|i| { era.setbit(i); });
@@ -33,7 +33,7 @@ impl EraPrimeTableUI {
     let mut tbl = BTreeMap::<mp_size_t, mpz_s>::new();
     let _t = (2..maxera as ui_t).fold((&mut tbl, 0), |(tbl, cnt), i| {
       if era.tstbit(i) { (tbl, cnt) }
-      else { tbl.insert(cnt, mpz_s::init_set_ui(i)); (tbl, cnt + 1) }
+      else { tbl.insert(cnt, mpz_s::from(i)); (tbl, cnt + 1) }
     });
     EraPrimeTableUI{maxera, era, tbl}
   }

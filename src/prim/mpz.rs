@@ -4,6 +4,7 @@
 use std::fmt;
 use std::error::Error;
 use std::collections::HashMap;
+use std::mem::MaybeUninit;
 
 use crate::prim::{*, typ::*, mpf::*, mpq::*, randstate::*, gmp::*};
 
@@ -22,13 +23,26 @@ pub struct __mpz_struct {
 /// impl SNew
 impl SNew for __mpz_struct {
   /// new
+  /// This is acrobatic way, new() MUST be called with mpz_s::init*()
   #[inline]
   fn new() -> Self {
+/*
     __mpz_struct {
       _mp_alloc: 0,
       _mp_size: 0,
       _mp_d: 0 as *mut mp_limb_t
     }
+*/
+unsafe {
+    let a = MaybeUninit::<int_t>::uninit();
+    let sz = MaybeUninit::<int_t>::uninit();
+    let d = MaybeUninit::<*mut mp_limb_t>::uninit();
+    __mpz_struct {
+      _mp_alloc: a.assume_init(),
+      _mp_size: sz.assume_init(),
+      _mp_d: d.assume_init()
+    }
+}
   }
 }
 
@@ -563,7 +577,7 @@ impl __mpz_struct {
   /// abs create new instance
   #[inline]
   pub fn abs(&self) -> Self {
-    let mut t = mpz_s::new();
+    let mut t = mpz_s::init();
     mpz_abs(&mut t, self);
     t
   }
@@ -571,7 +585,7 @@ impl __mpz_struct {
   /// neg create new instance
   #[inline]
   pub fn neg(&self) -> Self {
-    let mut t = mpz_s::new();
+    let mut t = mpz_s::init();
     mpz_neg(&mut t, self);
     t
   }
@@ -954,7 +968,7 @@ impl __mpz_struct {
   /// powm_sec (a**n) mod m ***required n &gt; 0 and m is odd*** create new instance
   #[inline]
   pub fn powm_sec(a: mpz_r, n: mpz_r, m: mpz_r) -> Self {
-    let mut t = mpz_s::new();
+    let mut t = mpz_s::init();
     mpz_powm_sec(&mut t, a, n, m);
     t
   }
@@ -962,7 +976,7 @@ impl __mpz_struct {
   /// powm (a**n) mod m ***n &lt; 0 when exists inv a**-1 mod m*** create new instance
   #[inline]
   pub fn powm(a: mpz_r, n: mpz_r, m: mpz_r) -> Self {
-    let mut t = mpz_s::new();
+    let mut t = mpz_s::init();
     mpz_powm(&mut t, a, n, m);
     t
   }
@@ -970,7 +984,7 @@ impl __mpz_struct {
   /// powm_ui (a**n) mod m create new instance
   #[inline]
   pub fn powm_ui(a: mpz_r, n: ui_t, m: mpz_r) -> Self {
-    let mut t = mpz_s::new();
+    let mut t = mpz_s::init();
     mpz_powm_ui(&mut t, a, n, m);
     t
   }
@@ -978,7 +992,7 @@ impl __mpz_struct {
   /// pow_ui a**n create new instance
   #[inline]
   pub fn pow_ui(a: mpz_r, n: ui_t) -> Self {
-    let mut t = mpz_s::new();
+    let mut t = mpz_s::init();
     mpz_pow_ui(&mut t, a, n);
     t
   }
@@ -986,7 +1000,7 @@ impl __mpz_struct {
   /// ui_pow_ui a**n create new instance
   #[inline]
   pub fn ui_pow_ui(a: ui_t, n: ui_t) -> Self {
-    let mut t = mpz_s::new();
+    let mut t = mpz_s::init();
     mpz_ui_pow_ui(&mut t, a, n);
     t
   }

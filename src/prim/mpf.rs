@@ -484,13 +484,13 @@ impl __mpf_struct {
   /// calc pi Gauss-Legendre create new instance
   pub fn calc_pi_gauss_legendre(digits: mp_size_t) -> Self {
     let recursion = digits.ilog2(); // or + 1
-    let a = &mut mpf_s::init_set_ui(1);
+    let a = &mut mpf_s::from(1);
     let b = &mut mpf_s::sqrt_ui(2);
-    let t = &mut mpf_s::init_set_ui(4);
-    let p = &mut mpf_s::init_set_ui(1);
+    let t = &mut mpf_s::from(4);
+    let p = &mut mpf_s::from(1);
     let (a, b, t, _p) = (0..recursion).fold((a, b.ui_div(1), t.ui_div(1), p),
       |(a, b, t, p), _k| {
-      let na = &mut mpf_s::init_set(a); // next a, keep a
+      let na = &mut mpf_s::from(&*a); // next a, keep a
       na.add(b).div_ui(2);
       let nb = &b.mul(a).sqrt(); // next b, b will be broken
       t.sub(mpf_s::pow_ui(a.sub(na), 2).mul(p)); // modify t, a will be broken
@@ -503,8 +503,8 @@ impl __mpf_struct {
 
   /// calc pi Euler create new instance ***CAUTION too slow digits &gt;= 9***
   pub fn calc_pi_euler(digits: mp_size_t) -> Self {
-    let mut pi = mpf_s::init_set_ui(1);
-    let g = &mut mpf_s::init_set_ui(0);
+    let mut pi = mpf_s::from(1);
+    let g = &mut mpf_s::from(0);
     let d = 10usize.pow(digits as u32);
     let mut ept = util::EraPrimeTableUI::new(d);
     let _p = (0..ept.nprimes()).fold(&mut pi, |pi: mpf_t, k| {
@@ -578,9 +578,9 @@ impl __mpf_struct {
       p + q - 1.0
     };
 
-    let mut e = mpf_s::init_set_ui(0);
+    let mut e = mpf_s::from(0);
 //    e.set_str("2.71828182845904523536", 10); // when digits = 21
-    let g = &mut mpf_s::init_set_ui(0);
+    let g = &mut mpf_s::from(0);
     let m = &mut HashMap::<ui_t, mpz_s>::new();
     let _s = (0..=digits as ui_t).try_fold(&mut e, |e: mpf_t, i| {
       let d = if i == 0 { 0 } // 0.log10() is NaN

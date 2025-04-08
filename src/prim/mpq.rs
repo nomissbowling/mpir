@@ -45,8 +45,8 @@ impl Drop for __mpq_struct {
   fn drop(&mut self) {
     // needless to call self.clear() when auto called clear for mpz_s members
 /*
-    self._mp_num = mpz_s::new(); // must set _mp_num before call self.clear()
-    self._mp_den = mpz_s::new(); // must set _mp_den before call self.clear()
+    self._mp_num = mpz_s::init(); // must set _mp_num before call self.clear()
+    self._mp_den = mpz_s::init(); // must set _mp_den before call self.clear()
     self.clear() // duplex (already called clear for mpz_s members)
 */
   }

@@ -400,7 +400,7 @@ impl __mpz_struct {
   /// remove create new instance
   #[inline]
   pub fn remove(&self, f: mpz_r) -> (Self, mp_bitcnt_t) {
-    let mut t = mpz_s::init();
+    let mut t = mpz_s::init_set_ui(1);
     let n = mpz_remove(&mut t, self, f);
     (t, n)
   }
@@ -1184,7 +1184,7 @@ impl __mpz_struct {
 
   /// fact create new instance (slow without cache)
   pub fn fact(n: ui_t) -> Self {
-    let mut t = mpz_s::init_set_ui(1);
+    let mut t = mpz_s::from(1);
     (1..=n).for_each(|i| { t.mul_ui(i); });
     t
   }
@@ -1192,29 +1192,29 @@ impl __mpz_struct {
   /// fact cached
   pub fn fact_cached(n: ui_t, m: &mut HashMap<ui_t, mpz_s>) -> Self {
 /*  // duplex mutable borrow m
-    let e = m.entry(n).or_insert(if n == 0 { mpz_s::init_set_ui(1) }
+    let e = m.entry(n).or_insert(if n == 0 { mpz_s::from(1) }
       else { let mut t = mpz_s::fact_cached(n - 1, m); t.mul_ui(n); t }
     );
-    mpz_s::init_set(e) // as clone
+    mpz_s::from(e) // as clone
 */
     // early return to avoid duplex mutable borrow m
-    if let Some(e) = m.get_mut(&n) { return mpz_s::init_set(e); } // as clone
-    let mut e = if n == 0 { mpz_s::init_set_ui(1) }
+    if let Some(e) = m.get(&n) { return mpz_s::from(e); } // as clone
+    let e = if n == 0 { mpz_s::from(1) }
       else { let mut t = mpz_s::fact_cached(n - 1, m); t.mul_ui(n); t };
-    m.insert(n, mpz_s::init_set(&mut e)); // as clone
+    m.insert(n, mpz_s::from(&e)); // as clone
     e
   }
 
   /// inv_f create new instance
   #[inline]
   pub fn inv_f(&self) -> mpf_s {
-    mpf_s::init_set_z(self).inv()
+    mpf_s::from(self).inv()
   }
 
   /// inv_q create new instance
   #[inline]
   pub fn inv_q(&self) -> mpq_s {
-    mpq_s::frac(&mpz_s::init_set_ui(1), self)
+    mpq_s::frac(&mpz_s::from(1), self)
   }
 }
 

@@ -52,7 +52,7 @@ impl SNew for gmp_randstate_struct {
 impl Drop for gmp_randstate_struct {
   fn drop(&mut self) {
 /*
-    self._mp_seed = mpz_s::new(); // must set _mp_seed before call self.clear()
+    self._mp_seed = mpz_s::init(); // must set _mp_seed before call self.clear()
     self.clear() // duplex (already called clear for mpz_s members)
 */
   }

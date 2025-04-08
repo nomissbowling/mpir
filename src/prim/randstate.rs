@@ -58,6 +58,12 @@ impl Drop for gmp_randstate_struct {
   }
 }
 
+/// impl AsPtr
+impl AsPtr for gmp_randstate_struct {}
+
+/// impl AsPtrMut
+impl AsPtrMut for gmp_randstate_struct {}
+
 /// impl randstate_s
 impl gmp_randstate_struct {
   /// clear

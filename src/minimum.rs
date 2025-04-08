@@ -961,7 +961,7 @@ pub fn calc_pi_gauss_legendre_test() {
   let pi = "resources/pi.dat"; // has 11001 digits
   [16, 1000, 10000].into_iter().for_each(|digits| { // loss of digits when < 16
     mpf_set_default_prec(mpf_s::calc_bits_from_digits(digits + 3));
-    let pi_gauss_legendre = &mpf_s::calc_pi_gauss_legendre(digits);
+    let pi_gauss_legendre = &util::Sigma::from(digits).calc_pi_gauss_legendre();
     assert_eq!(format!("{}", pi_gauss_legendre), "0.31415926535897932385e+1");
     let o = trim_padding_digits(&pi_gauss_legendre.fmtstr(10, digits), digits);
     assert_eq!(o, load_digits(pi, digits, true)); // rounded up when need
@@ -974,7 +974,7 @@ pub fn calc_pi_euler_test() {
   let pi = "resources/pi.dat"; // has 11001 digits
   (1..8).for_each(|digits| { // (1..8): &lt; 1s, (1..=8): few seconds
     mpf_set_default_prec(mpf_s::calc_bits_from_digits(100)); // not digits + 3
-    let pi_euler = &mpf_s::calc_pi_euler(digits);
+    let pi_euler = &util::Sigma::from(digits).calc_pi_euler();
 //    assert_eq!(format!("{}", pi_euler), "0.31415926535897932385e+1");
     let o = trim_padding_digits(&pi_euler.fmtstr(10, digits), digits);
     assert_eq!(o, load_digits(pi, digits, true)); // rounded up when need
@@ -986,7 +986,7 @@ pub fn calc_pi_leibniz_test() {
   let pi = "resources/pi.dat"; // has 11001 digits
   [3, 6].into_iter().for_each(|digits| { // too slow over 7 digits
     mpf_set_default_prec(mpf_s::calc_bits_from_digits(digits + 3));
-    let pi_leibniz = &mpf_s::calc_pi_leibniz(digits);
+    let pi_leibniz = &util::Sigma::from(digits).calc_pi_leibniz();
 //    assert_eq!(format!("{}", pi_leibniz), "0.31415926535897932385e+1");
     let o = trim_padding_digits(&pi_leibniz.fmtstr(10, digits), digits);
     assert_eq!(o, load_digits(pi, digits, true)); // rounded up when need
@@ -999,7 +999,7 @@ pub fn calc_pi_machin_test() {
   let pi = "resources/pi.dat"; // has 11001 digits
   [20, 1000].into_iter().for_each(|digits| { // 10000 few seconds
     mpf_set_default_prec(mpf_s::calc_bits_from_digits(digits + 3));
-    let pi_machin = &mpf_s::calc_pi_machin(digits);
+    let pi_machin = &util::Sigma::from(digits).calc_pi_machin();
     assert_eq!(format!("{}", pi_machin), "0.31415926535897932385e+1");
     let o = trim_padding_digits(&pi_machin.fmtstr(10, digits), digits);
     assert_eq!(o, load_digits(pi, digits, true)); // rounded up when need
@@ -1012,7 +1012,7 @@ pub fn calc_pi_takano_test() {
   let pi = "resources/pi.dat"; // has 11001 digits
   [20, 1000].into_iter().for_each(|digits| { // 10000 few seconds
     mpf_set_default_prec(mpf_s::calc_bits_from_digits(digits + 3));
-    let pi_takano = &mpf_s::calc_pi_takano(digits);
+    let pi_takano = &util::Sigma::from(digits).calc_pi_takano();
     assert_eq!(format!("{}", pi_takano), "0.31415926535897932385e+1");
     let o = trim_padding_digits(&pi_takano.fmtstr(10, digits), digits);
     assert_eq!(o, load_digits(pi, digits, true)); // rounded up when need
@@ -1033,7 +1033,7 @@ pub fn calc_napier_test() {
   let napier = "resources/napier.dat"; // has 10001 digits
   [21, 22, 26, 150, 114, 331, 1573, 10000].into_iter().for_each(|digits| {
     mpf_set_default_prec(mpf_s::calc_bits_from_digits(digits + 3));
-    let e = &mpf_s::calc_napier(&mpf_s::from(1.0), digits); // double_t
+    let e = &util::Sigma::from(digits).calc_napier(&mpf_s::from(1.0));
     assert_eq!(format!("{}", e), "0.27182818284590452354e+1");
     let o = trim_padding_digits(&e.fmtstr(10, digits), digits); // 0.NN...NNe+1
 /*

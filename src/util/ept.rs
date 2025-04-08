@@ -3,7 +3,7 @@
 
 use std::collections::BTreeMap;
 
-use crate::prim::{typ::*, mpz::*}; // *, mpf::*, mpq::*, randstate::*, gmp::*
+use crate::prim::{typ::*, mpz::*};
 
 /// era prime table ui
 pub struct EraPrimeTableUI {

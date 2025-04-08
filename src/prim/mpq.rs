@@ -52,6 +52,12 @@ impl Drop for __mpq_struct {
   }
 }
 
+/// impl AsPtr
+impl AsPtr for __mpq_struct {}
+
+/// impl AsPtrMut
+impl AsPtrMut for __mpq_struct {}
+
 /// impl mpq_s
 impl __mpq_struct {
   /// clear

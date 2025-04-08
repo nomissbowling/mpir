@@ -3,8 +3,8 @@
 
 use std::fmt;
 use std::error::Error;
-use std::collections::HashMap;
 use std::mem::MaybeUninit;
+use std::collections::HashMap;
 
 use crate::prim::{*, typ::*, mpf::*, mpq::*, randstate::*, gmp::*};
 
@@ -52,6 +52,12 @@ impl Drop for __mpz_struct {
     self.clear()
   }
 }
+
+/// impl AsPtr
+impl AsPtr for __mpz_struct {}
+
+/// impl AsPtrMut
+impl AsPtrMut for __mpz_struct {}
 
 /// impl mpz_s
 impl __mpz_struct {
@@ -1224,7 +1230,9 @@ impl fmt::Debug for __mpz_struct {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     let mut s = String::from("");
 unsafe {
-    std::slice::from_raw_parts(self._mp_d, self._mp_alloc as usize).iter()
+    let mut sz = self._mp_size;
+    sz = if sz < 0 { -sz } else { sz };
+    std::slice::from_raw_parts(self._mp_d, sz as usize).iter()
       .for_each(|d| s += format!(" {:016x}", d).as_str())
 }
     write!(f, "{}, {}{}", self._mp_alloc, self._mp_size, s)

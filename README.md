@@ -122,7 +122,7 @@ see also [sum_arctan_gregory() source](https://docs.rs/mpir/latest/mpir/prim/mpf
   // mpf calc napier (to be operator)
   let digits = 150;
   mpf_set_default_prec(mpf_s::calc_bits_from_digits(digits + 3));
-  let e = &mpf_s::calc_napier(&mpf_s::from(1.0), digits);
+  let e = &util::Sigma::from(digits).calc_napier(&mpf_s::from(1.0));
   assert_eq!(format!("{}", e),
     "0.27182818284590452354e+1");
   assert_eq!(e.fmtstr(10, digits),

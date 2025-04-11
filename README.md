@@ -49,34 +49,29 @@ see also [sum_arctan_gregory() source](https://docs.rs/mpir/latest/mpir/prim/mpf
   let f = mpz_s::from("-5");
   assert_eq!(format!("{}", f), "-5");
 
-  // mpz and mpf (prepare and reset)
-  let a = &mut mpz_s::init();
-  let f = &mut mpf_s::init();
-  let g = &mut mpf_s::init();
-
-  // mpz and mpf (to be operator) check about significant digits
-  assert_eq!(format!("{}", a.set_str("987654321098765432109", 10)),
-    "987654321098765432109"); // 21 digits
-  assert_eq!(format!("{}", f.set_z(a).div(g.set_str("1.0e+11", 10))), // drift
+  // mpz and mpf check about (default) significant digits
+  let a = mpz_s::from("987654321098765432109");
+  assert_eq!(format!("{}", a), "987654321098765432109"); // 21 digits
+  let mut f = mpf_s::from(a);
+  f /= mpf_s::from("1.0e+11"); // drift
+  assert_eq!(format!("{}", f),
     "0.98765432109876543211e+10"); // 20 digits by default formatter
   assert_eq!(f.fmtstr(10, 22), // check to 22 digits
     "0.987654321098765432109e+10"); // 21 digits ok
 
-  // mpf (to be operator)
-  assert_eq!(format!("{}", f.set_ui(3).ui_div(1)),
+  // mpf
+  assert_eq!(format!("{}", 1 / mpf_s::from(3)),
     "0.33333333333333333333e+0"); // 1 / 3
-  assert_eq!(format!("{}", g.set_ui(1).div_ui(3)),
+  assert_eq!(format!("{}", mpf_s::from(1) / 3),
     "0.33333333333333333333e+0"); // 1 / 3
-  assert_eq!(format!("{}", f.set_ui(3).ui_div(1)),
-    format!("{}", g.set_ui(1).div_ui(3))); // 1 / 3
-  assert_eq!(format!("{}", f.set_ui(3).ui_div(2)),
+  assert_eq!(1 / mpf_s::from(3), mpf_s::from(1) / 3); // 1 / 3
+  assert_eq!(format!("{}", 2 / mpf_s::from(3)),
     "0.66666666666666666667e+0"); // 2 / 3
-  assert_eq!(format!("{}", g.set_ui(2).div_ui(3)),
+  assert_eq!(format!("{}", mpf_s::from(2) / 3),
     "0.66666666666666666667e+0"); // 2 / 3
-  assert_eq!(format!("{}", f.set_ui(3).ui_div(2)),
-    format!("{}", g.set_ui(2).div_ui(3))); // 2 / 3
+  assert_eq!(2 / mpf_s::from(3), mpf_s::from(2) / 3); // 2 / 3
 
-  // mpz fact (to be operator)
+  // mpz fact
   let facts = vec![
     "1", "1", "2", "6", "24", "120", "720", "5040", "40320", "362880", // 0-9
     "3628800", "39916800", "479001600", "6227020800", "87178291200", // 10-14
@@ -89,14 +84,14 @@ see also [sum_arctan_gregory() source](https://docs.rs/mpir/latest/mpir/prim/mpf
     assert_eq!(format!("{}! = {}", n, t), format!("{}! = {}", n, u));
   });
 
-  // mpz fact (to be operator) cached
+  // mpz fact cached
   let m = &mut HashMap::<ui_t, mpz_s>::new();
   (0..=20).for_each(|n: usize| {
     let t = &mpz_s::fact_cached(n as ui_t, m);
     assert_eq!(format!("{}! = {}", n, t), format!("{}! = {}", n, facts[n]));
   });
 
-  // mpq (to be operator)
+  // mpq
   let q = &mpq_s::from((2, 8 as ui_t));
   assert_eq!(format!("{}", q), "2/8");
 
@@ -107,7 +102,7 @@ see also [sum_arctan_gregory() source](https://docs.rs/mpir/latest/mpir/prim/mpf
   let digits = mpf_s::calc_digits_from_bits(128);
   assert_eq!(digits, 38); // may be 38
 
-  // mpf significant digits (to be operator) test loss of digits on display
+  // mpf significant digits test loss of digits on display
   let disp_digits = digits + 3; // set disp_digits to over prec
   let f = &mut mpf_s::from("1.0e-19");
   let e = &mpf_s::from("1.0e-50");
@@ -119,7 +114,7 @@ see also [sum_arctan_gregory() source](https://docs.rs/mpir/latest/mpir/prim/mpf
   assert_eq!(f.fmtstr(10, digits), // use digits
     "0.10000000000000000000000000000001e-18"); // disp as match with prec
 
-  // mpf calc napier (to be operator)
+  // mpf calc napier
   let digits = 150;
   mpf_set_default_prec(mpf_s::calc_bits_from_digits(digits + 3));
   let e = &util::Sigma::from(digits).calc_napier(&mpf_s::from(1.0));

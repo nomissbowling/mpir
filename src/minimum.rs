@@ -64,7 +64,7 @@ pub fn calc_mpz_test() {
   assert_eq!(mpz_get_str(None, 10, a).expect("z"), "-123");
   assert_eq!(format!("{}", a), "-123");
 
-  // mpz (to be operator)
+  // mpz
   let b = &mut mpz_s::from(654); // ui_t
   assert_eq!(format!("{}", a.add(b).add(b)), "1185"); // a + b + b
   let c = &mut mpz_s::from(-1); // si_t
@@ -81,7 +81,7 @@ pub fn calc_mpz_test() {
   assert_eq!(format!("{}", a), "-257949696");
   assert_eq!(format!("{}", b), "654");
 
-  // mpz (to be operator)
+  // mpz
   let (r3, flg) = &c.set_ui(27).root(3);
   assert_eq!(format!("{} {}", r3, flg), "3 true"); // 3
   let (r3, rem) = &c.rootrem(3);
@@ -238,7 +238,7 @@ pub fn calc_mpz_test() {
 
 /// calc fact test
 pub fn calc_fact_test() {
-  // mpz fact (to be operator)
+  // mpz fact
   let facts = vec![
     "1", "1", "2", "6", "24", "120", "720", "5040", "40320", "362880", // 0-9
     "3628800", "39916800", "479001600", "6227020800", "87178291200", // 10-14
@@ -251,14 +251,14 @@ pub fn calc_fact_test() {
     assert_eq!(format!("{}! = {}", n, t), format!("{}! = {}", n, u));
   });
 
-  // mpz fact (to be operator) cached
+  // mpz fact cached
   let m = &mut HashMap::<ui_t, mpz_s>::new();
   (0..=20).for_each(|n: usize| {
     let t = &mpz_s::fact_cached(n as ui_t, m);
     assert_eq!(format!("{}! = {}", n, t), format!("{}! = {}", n, facts[n]));
   });
 
-  // mpz primorial (to be operator)
+  // mpz primorial
   let primorials = vec!["1", "2", "6", "30", "210", "2310", "30030", "510510"];
   let (ps, _c) = (0..=16).fold((vec![], 0), |(mut v, mut c), k| {
     let n = &mpz_s::from(k); // ui_t
@@ -529,52 +529,38 @@ pub fn calc_mpf_prec64_test() {
   mpf_sqrt(g, f);
   assert_eq!(format!("{}", g), "0.22360679774997896964e+1");
 
-  // mpz and mpf (prepare and reset)
-  let a = &mut mpz_s::init();
-  let f = &mut mpf_s::init();
-  let g = &mut mpf_s::init();
-/*
-  // ***must NOT call*** auto called clear
-  a.clear(); mpz_init(a);
-  f.clear(); mpf_init(f);
-  g.clear(); mpf_init(g);
-*/
-/*
-  // ***must NOT call*** auto called clear
-  mpz_clears(&mut vec![a]); mpz_init(a);
-  mpf_clears(&mut vec![g, f]); mpf_init(f); mpf_init(g);
-*/
-
-  // mpf (to be operator)
-  assert_eq!(format!("{}", a.set_ui(1).mul_2exp(100)), // 1 * 2**100
+  // mpz and mpf
+  let a = &mut mpz_s::from(1);
+  assert_eq!(format!("{}", a.mul_2exp(100)), // 1 * 2**100
     "1267650600228229401496703205376");
-  assert_eq!(format!("{}", f.set_z(a).div_2exp(100)), // 2**100 / 2**100
+  let f = &mut mpf_s::from(a);
+  assert_eq!(format!("{}", f.div_2exp(100)), // 2**100 / 2**100
     "0.1e+1");
 
-  // mpz and mpf (to be operator) check about (default) significant digits
-  assert_eq!(format!("{}", a.set_str("987654321098765432109", 10)),
-    "987654321098765432109"); // 21 digits
-  assert_eq!(format!("{}", f.set_z(a).div(g.set_str("1.0e+11", 10))), // drift
+  // mpz and mpf check about (default) significant digits
+  let a = mpz_s::from("987654321098765432109");
+  assert_eq!(format!("{}", a), "987654321098765432109"); // 21 digits
+  let mut f = mpf_s::from(a);
+  f /= mpf_s::from("1.0e+11"); // drift
+  assert_eq!(format!("{}", f),
     "0.98765432109876543211e+10"); // 20 digits by default formatter
   assert_eq!(f.fmtstr(10, 22), // check to 22 digits
     "0.987654321098765432109e+10"); // 21 digits ok
 
-  // mpf (to be operator)
-  assert_eq!(format!("{}", f.set_ui(3).ui_div(1)),
+  // mpf
+  assert_eq!(format!("{}", 1 / mpf_s::from(3)),
     "0.33333333333333333333e+0"); // 1 / 3
-  assert_eq!(format!("{}", g.set_ui(1).div_ui(3)),
+  assert_eq!(format!("{}", mpf_s::from(1) / 3),
     "0.33333333333333333333e+0"); // 1 / 3
-  assert_eq!(format!("{}", f.set_ui(3).ui_div(1)),
-    format!("{}", g.set_ui(1).div_ui(3))); // 1 / 3
-  assert_eq!(format!("{}", f.set_ui(3).ui_div(2)),
+  assert_eq!(1 / mpf_s::from(3), mpf_s::from(1) / 3); // 1 / 3
+  assert_eq!(format!("{}", 2 / mpf_s::from(3)),
     "0.66666666666666666667e+0"); // 2 / 3
-  assert_eq!(format!("{}", g.set_ui(2).div_ui(3)),
+  assert_eq!(format!("{}", mpf_s::from(2) / 3),
     "0.66666666666666666667e+0"); // 2 / 3
-  assert_eq!(format!("{}", f.set_ui(3).ui_div(2)),
-    format!("{}", g.set_ui(2).div_ui(3))); // 2 / 3
+  assert_eq!(2 / mpf_s::from(3), mpf_s::from(2) / 3); // 2 / 3
 
-  // loss of digits
-  g.set_si(-2).div_ui(3).ui_div(1);
+  // check loss of digits
+  let g = 1 / (mpf_s::from(-2) / 3);
   assert!(g.get_d() == -1.5);
   assert!(g.get_ui() == 1);
   assert!(g.get_si() == -1);
@@ -590,7 +576,7 @@ pub fn calc_rand_test() {
   let w = &mut BufWriter::new(fs::File::create(fo_log).expect("create file"));
 //  let w = &mut std::io::stdout();
 
-  // mpf (to be operator)
+  // mpf
   let n = 4;
   let b = 64;
   let u: ui_t = 37;
@@ -614,7 +600,7 @@ pub fn calc_rand_test() {
     fo(w, format!("{} mpf_s::random2: {}", i, f));
   });
 
-  // mpz (to be operator)
+  // mpz
   (0..n).for_each(|i| {
     let c = &mut mpz_s::urandomb(lc, 16);
     fo(w, format!("{} mpz_s::urandomb lc: {} {:?}", i, c, lc));
@@ -658,7 +644,7 @@ pub fn calc_rand_test() {
     fo(w, format!("{} mpz_s::random2: {}", i, c));
   });
 
-  // randstate (to be operator)
+  // randstate
   (0..n).for_each(|i| {
     let u = randstate_s::urandomb_ui(lc, 16);
     fo(w, format!("{} randstate_s::urandomb lc: {} {:?}", i, u, lc));
@@ -846,23 +832,23 @@ pub fn calc_mpq_test() {
   assert_eq!(mpq_get_str(None, 10, q).expect("q"), "2/8");
   assert_eq!(format!("{}", q), "2/8");
 
-  // mpq (to be operator)
+  // mpq
   let q = &mut mpq_s::from((2, 8 as ui_t)); // ui_t, ui_t
   assert_eq!(format!("{}", q), "2/8");
   let p = &mpq_s::from((1, 4 as ui_t)); // ui_t, ui_t
   assert_eq!(format!("{}", p), "1/4");
-  assert!(p.cmp(q) == 0); // true
+  assert!(p == q); // true
   assert_eq!(p.equal(q), false); // ***false*** 2/8 != 1/4
   let o = &mut mpq_s::from((2, 8 as ui_t)); // ui_t, ui_t
   assert_eq!(format!("{}", o), "2/8");
-  assert!(o.cmp(q) == 0); // true
+  assert!(o == q); // true
   assert_eq!(o.equal(q), true); // true
   let r = &mut mpq_s::from((2, 3 as ui_t)); // ui_t, ui_t
   assert_eq!(format!("{}", r), "2/3");
-  assert!(r.cmp(q) > 0);
+  assert!(r > q);
   assert_eq!(r.equal(q), false);
 
-  // mpq (to be operator)
+  // mpq
   q.swap(r);
   assert_eq!(format!("{}", q), "2/3");
   assert_eq!(format!("{}", r), "2/8");
@@ -870,7 +856,7 @@ pub fn calc_mpq_test() {
   assert_eq!(format!("{}", q), "2/8");
   assert_eq!(format!("{}", r), "2/3");
 
-  // mpz (to be operator)
+  // mpz
   assert_eq!(format!("{}", o.set(q).div(p)), "2/2");
   assert!(o.cmp(r.set_ui(1, 1)) == 0); // true
   assert_eq!(o.equal(r), false); // ***false*** 2/2 != 1/1
@@ -895,7 +881,7 @@ pub fn calc_mpq_test() {
 pub fn compare_test() {
   mpf_set_default_prec(64); // 64 bits default
 
-  // mpz (to be operator)
+  // mpz
   let a = &mut mpz_s::init();
   let b = &mut mpz_s::init();
   assert!(a.set_si(0).sgn() == 0);
@@ -908,8 +894,11 @@ pub fn compare_test() {
   assert!(a.cmpabs(b.set_si(-10)) < 0);
   assert!(a.cmpabs_d(-10.0) < 0);
   assert!(a.cmpabs_ui(10) < 0);
+  assert!(&*a < &mpz_s::from(0));
+  assert!(&*a > &mpz_s::from(-10));
+  assert!(a > b);
 
-  // mpf (to be operator)
+  // mpf
   let f = &mut mpf_s::init();
   let g = &mut mpf_s::init();
   assert!(f.set_si(0).sgn() == 0);
@@ -922,12 +911,17 @@ pub fn compare_test() {
   assert!(f.cmp_z(a) == 0);
   assert!(f.cmp_z(a.set_si(-20)) > 0);
   assert!(f.cmp_z(a.set_ui(20)) < 0);
+  assert!(&*f < &mpf_s::from(0));
+  assert!(&*f < &mpf_s::from(a));
+  assert!(&*f > &mpf_s::from(-10.0));
+  assert!(f > g);
 
-  // mpq (to be operator)
+  // mpq
   let q = &mut mpq_s::init();
   assert!(q.set_si(0, 1).sgn() == 0);
   assert!(q.set_si(1, 1).sgn() > 0);
   assert!(q.set_si(-1, 1).sgn() < 0);
+  assert!(&*q < &mpq_s::from((0, 0 as ui_t)));
 }
 
 /// significant digits test
@@ -935,14 +929,14 @@ pub fn compare_test() {
 pub fn significant_digits_test() {
   mpf_set_default_prec(64); // 64 bits default
 
-  // mpf prec (c style)
+  // mpf prec
   assert_eq!(mpf_get_default_prec(), 64); // may be 64
   mpf_set_default_prec(100); // 100 set to 128 bits (step by 2**n)
   assert_eq!(mpf_get_default_prec(), 128); // may be 128 (about 38 digits)
   let digits = mpf_s::calc_digits_from_bits(128);
   assert_eq!(digits, 38); // may be 38
 
-  // mpf significant digits (to be operator) test loss of digits on display
+  // mpf significant digits test loss of digits on display
   let disp_digits = digits + 3; // set disp_digits to over prec
   let f = &mut mpf_s::from("1.0e-19");
   let e = &mpf_s::from("1.0e-50");
@@ -1022,7 +1016,7 @@ pub fn calc_pi_takano_test() {
 /// calc Napier test
 /// expected on the single thread for mpf_set_default_prec
 pub fn calc_napier_test() {
-  // mpf calc napier (to be operator)
+  // mpf calc napier
   // digits = 22 for check last 0
   // digits = 26 for check last 4 (...47 rounded up to ...5)
   // digits = 114 for check last 00

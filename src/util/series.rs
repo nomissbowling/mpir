@@ -30,7 +30,7 @@ impl From<Vec<(si_t, ui_t)>> for SumArctan {
 /// impl SumArctan
 impl SumArctan {
   /// calc pi/4 sum arctan Gregory
-  /// - arctan x = sigma[n=0-&gt;inf]{(-1**n)*x**(2n+1)/(2n+1)}
+  /// - arctan x = sigma[n=0-&gt;inf]{(-1 ** n) * x**(2n+1) / (2n+1)}
   /// - sum_n = sigma[k=0-&gt;ax.len](a_k * arctan_n x_k)
   /// - result = sigma[n=0-&gt;m]sum_n
   /// - inner loop may be slow (should be outer mul a_k) to check stop iterator

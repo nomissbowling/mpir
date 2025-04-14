@@ -81,16 +81,16 @@ impl __mpq_struct {
     self
   }
 
-  /// set_ui self = u
+  /// set_ui self = u/f
   #[inline]
-  pub fn set_ui(&mut self, u: ui_t, f: ui_t) -> &mut Self {
+  pub fn set_ui(&mut self, (u, f): (ui_t, ui_t)) -> &mut Self {
     mpq_set_ui(self, u, f);
     self
   }
 
-  /// set_si self = s
+  /// set_si self = s/f
   #[inline]
-  pub fn set_si(&mut self, s: si_t, f: ui_t) -> &mut Self {
+  pub fn set_si(&mut self, (s, f): (si_t, ui_t)) -> &mut Self {
     mpq_set_si(self, s, f);
     self
   }
@@ -204,14 +204,14 @@ impl __mpq_struct {
 
   /// cmp_ui
   #[inline]
-  pub fn cmp_ui(&self, u: ui_t) -> int_t {
-    mpq_cmp_ui(self, u)
+  pub fn cmp_ui(&self, (u, f): (ui_t, ui_t)) -> int_t {
+    mpq_cmp_ui(self, u, f)
   }
 
   /// cmp_si
   #[inline]
-  pub fn cmp_si(&self, s: si_t) -> int_t {
-    mpq_cmp_si(self, s)
+  pub fn cmp_si(&self, (s, f): (si_t, ui_t)) -> int_t {
+    mpq_cmp_si(self, s, f)
   }
 
   /// equal ***should use cmp == 0***
@@ -507,14 +507,14 @@ pub fn mpq_cmp_z(q: mpq_r, a: mpz_r) -> int_t {
 
 /// mpq_cmp_ui
 #[inline]
-pub fn mpq_cmp_ui(q: mpq_r, u: ui_t) -> int_t {
-  unsafe { __gmpq_cmp_ui(q, u) }
+pub fn mpq_cmp_ui(q: mpq_r, u: ui_t, f: ui_t) -> int_t {
+  unsafe { __gmpq_cmp_ui(q, u, f) }
 }
 
 /// mpq_cmp_si
 #[inline]
-pub fn mpq_cmp_si(q: mpq_r, s: si_t) -> int_t {
-  unsafe { __gmpq_cmp_si(q, s) }
+pub fn mpq_cmp_si(q: mpq_r, s: si_t, f: ui_t) -> int_t {
+  unsafe { __gmpq_cmp_si(q, s, f) }
 }
 
 /// mpq_equal

@@ -858,21 +858,21 @@ pub fn calc_mpq_test() {
 
   // mpz
   assert_eq!(format!("{}", o.set(q).div(p)), "2/2");
-  assert!(o.cmp(r.set_ui(1, 1)) == 0); // true
+  assert!(o.cmp(r.set_ui((1, 1))) == 0); // true
   assert_eq!(o.equal(r), false); // ***false*** 2/2 != 1/1
-  assert_eq!(o.equal(r.set_ui(2, 2)), true); // true
+  assert_eq!(o.equal(r.set_ui((2, 2))), true); // true
 
   assert_eq!(format!("{}", o.set(q).mul(&p.inv())), "2/2");
-  assert!(o.cmp(r.set_ui(1, 1)) == 0); // true
+  assert!(o.cmp(r.set_ui((1, 1))) == 0); // true
 
   assert_eq!(format!("{}", o.set(q).div_2exp(2)), "1/16"); // reduced fraction
-  assert!(o.cmp(r.set_ui(1, 16)) == 0); // true
+  assert!(o.cmp(r.set_ui((1, 16))) == 0); // true
 
   assert_eq!(format!("{}", o.set(q).mul_2exp(2)), "2/2");
-  assert!(o.cmp(r.set_ui(1, 1)) == 0); // true
+  assert!(o.cmp(r.set_ui((1, 1))) == 0); // true
 
   // loss of digits
-  let t = &r.set_si(-2, 3).inv();
+  let t = &r.set_si((-2, 3)).inv();
   assert!(t.get_d() == -1.5);
 }
 
@@ -918,10 +918,25 @@ pub fn compare_test() {
 
   // mpq
   let q = &mut mpq_s::init();
-  assert!(q.set_si(0, 1).sgn() == 0);
-  assert!(q.set_si(1, 1).sgn() > 0);
-  assert!(q.set_si(-1, 1).sgn() < 0);
-  assert!(&*q < &mpq_s::from((0, 0 as ui_t)));
+  assert!(q.set_si((0, 1)).sgn() == 0);
+  assert!(q.set_si((1, 1)).sgn() > 0);
+  assert!(q.set_si((-1, 1)).sgn() < 0);
+  assert!(&*q < &mpq_s::from((0, 1 as ui_t)));
+  assert!(q < (0, 1 as ui_t));
+  assert!((0, 1 as ui_t) > q);
+  assert!(&*q > &mpq_s::from((-2 as si_t, 1)));
+  assert!(q.cmp_si((-2, 1)) > 0);
+  assert!(q > (-2 as si_t, 1));
+  assert!((-2 as si_t, 1) < q);
+
+  // mpq
+  let q = &mpq_s::from((-1 as si_t, 1));
+  assert!(q < (0, 1 as ui_t));
+  assert!((0, 1 as ui_t) > q);
+  assert!(q > &mpq_s::from((-2 as si_t, 1)));
+  assert!(q.cmp_si((-2, 1)) > 0);
+  assert!(q > (-2 as si_t, 1));
+  assert!((-2 as si_t, 1) < q);
 }
 
 /// significant digits test

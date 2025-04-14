@@ -1,6 +1,6 @@
 [package]
 name = "mpir"
-version = "0.4.3" # change with html_root_url in lib.rs
+version = "0.4.4" # change with html_root_url in lib.rs
 edition = "2021"
 authors = ["nomissbowling <nomissbowling@yahoo.co.jp>"]
 
@@ -27,6 +27,7 @@ once_cell = { version = "=1.20.3" } # skip 1.21.0
 # forward_ref = { version = "=1.0.0" }
 # forward_ref_generic = { version = "=0.2.1" }
 onforward_ref = { version = "=0.0.1" }
+impl_ops_cmp = { version = "=0.0.1" }
 from_ref = { version = "=0.0.1" }
 
 serial_test = { version = "=3.2.0" }

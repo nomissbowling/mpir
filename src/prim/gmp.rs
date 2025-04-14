@@ -579,9 +579,9 @@ extern "C" {
   /// __gmpq_cmp_z
   pub fn __gmpq_cmp_z(q: *const mpq_s, a: *const mpz_s) -> int_t;
   /// __gmpq_cmp_ui
-  pub fn __gmpq_cmp_ui(q: *const mpq_s, u: ui_t) -> int_t;
+  pub fn __gmpq_cmp_ui(q: *const mpq_s, u: ui_t, f: ui_t) -> int_t;
   /// __gmpq_cmp_si
-  pub fn __gmpq_cmp_si(q: *const mpq_s, s: si_t) -> int_t;
+  pub fn __gmpq_cmp_si(q: *const mpq_s, s: si_t, f: ui_t) -> int_t;
   /// __gmpq_equal
   pub fn __gmpq_equal(q: *const mpq_s, r: *const mpq_s) -> int_t;
 /*

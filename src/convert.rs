@@ -144,7 +144,7 @@ impl From<(ui_t, ui_t)> for mpq_s {
   #[inline]
   fn from((p, q): (ui_t, ui_t)) -> Self {
     let mut t = mpq_s::init();
-    t.set_ui(p, q);
+    t.set_ui((p, q));
     t
   }
 }
@@ -155,7 +155,7 @@ impl From<(si_t, ui_t)> for mpq_s {
   #[inline]
   fn from((p, q): (si_t, ui_t)) -> Self {
     let mut t = mpq_s::init();
-    t.set_si(p, q);
+    t.set_si((p, q));
     t
   }
 }

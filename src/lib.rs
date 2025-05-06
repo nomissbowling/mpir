@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/mpir/0.4.4")]
+#![doc(html_root_url = "https://docs.rs/mpir/0.4.5")]
 //! partial Rust porting of mpir multiple precision library based on gmp mpfr
 //!
 //! Cargo test with [-- --nocapture] or with [-- --show-output]

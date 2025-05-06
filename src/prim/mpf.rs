@@ -231,9 +231,9 @@ impl __mpf_struct {
     mpf_cmp_z(self, a)
   }
 
-  /// eq ***mathematically ill-defined and should not be used***
+  /// equal ***mathematically ill-defined and should not be used***
   #[inline]
-  pub fn eq(&self, g: mpf_r, n: mp_bitcnt_t) -> int_t {
+  pub fn equal(&self, g: mpf_r, n: mp_bitcnt_t) -> int_t {
     mpf_eq(self, g, n)
   }
 

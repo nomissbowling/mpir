@@ -312,6 +312,18 @@ impl __mpq_struct {
     self.set_den(&den);
     self
   }
+
+  /// cmp_u
+  #[inline]
+  pub fn cmp_u(&self, u: ui_t) -> int_t {
+    self.cmp_ui((u, 1))
+  }
+
+  /// cmp_s
+  #[inline]
+  pub fn cmp_s(&self, s: si_t) -> int_t {
+    self.cmp_si((s, 1))
+  }
 }
 
 /// impl Debug

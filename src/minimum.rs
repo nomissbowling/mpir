@@ -898,6 +898,11 @@ pub fn compare_test() {
   assert!(&*a > &mpz_s::from(-10));
   assert!(a > b);
 
+  assert!(a > mpq_s::from((-2 as si_t, 1)));
+  assert!(mpq_s::from((-2 as si_t, 1)) < a);
+  assert!(a > &mpq_s::from((-2 as si_t, 1)));
+  assert!(&mpq_s::from((-2 as si_t, 1)) < a);
+
   // mpf
   let f = &mut mpf_s::init();
   let g = &mut mpf_s::init();
@@ -921,22 +926,76 @@ pub fn compare_test() {
   assert!(q.set_si((0, 1)).sgn() == 0);
   assert!(q.set_si((1, 1)).sgn() > 0);
   assert!(q.set_si((-1, 1)).sgn() < 0);
+
+  assert!(q < &mpz_s::from(0));
   assert!(&*q < &mpq_s::from((0, 1 as ui_t)));
   assert!(q < (0, 1 as ui_t));
   assert!((0, 1 as ui_t) > q);
+  assert!(q < 0);
+  assert!(0 > q);
+
+  assert!(q == (-1 as si_t, 1));
+  assert!((-1 as si_t, 1) == q);
+  assert!(q == -1);
+  assert!(-1 == q);
+
+  assert!(q > &mpz_s::from(-2));
   assert!(&*q > &mpq_s::from((-2 as si_t, 1)));
   assert!(q.cmp_si((-2, 1)) > 0);
   assert!(q > (-2 as si_t, 1));
   assert!((-2 as si_t, 1) < q);
+  assert!(q > -2);
+  assert!(-2 < q);
 
   // mpq
   let q = &mpq_s::from((-1 as si_t, 1));
+
+  assert!(q < &mpz_s::from(0));
+  assert!(q < &mpq_s::from((0, 1 as ui_t)));
   assert!(q < (0, 1 as ui_t));
   assert!((0, 1 as ui_t) > q);
+  assert!(q < 0);
+  assert!(0 > q);
+
+  assert!(q == (-1 as si_t, 1));
+  assert!((-1 as si_t, 1) == q);
+  assert!(q == -1);
+  assert!(-1 == q);
+
+  assert!(q > &mpz_s::from(-2));
   assert!(q > &mpq_s::from((-2 as si_t, 1)));
   assert!(q.cmp_si((-2, 1)) > 0);
   assert!(q > (-2 as si_t, 1));
   assert!((-2 as si_t, 1) < q);
+  assert!(q > -2);
+  assert!(-2 < q);
+
+  // mpq
+  let q = mpq_s::from((-1 as si_t, 1));
+
+  let z = &mut mpz_s::from(0);
+  z.set_ui(0);
+  assert!(q < z); // test for &mut a
+
+  assert!(q < &mpz_s::from(0));
+  assert!(q < mpq_s::from((0, 1 as ui_t)));
+  assert!(q < (0, 1 as ui_t));
+  assert!((0, 1 as ui_t) > q);
+  assert!(q < 0);
+  assert!(0 > q);
+
+  assert!(q == (-1 as si_t, 1));
+  assert!((-1 as si_t, 1) == q);
+  assert!(q == -1);
+  assert!(-1 == q);
+
+  assert!(q > &mpz_s::from(-2));
+  assert!(q > mpq_s::from((-2 as si_t, 1)));
+  assert!(q.cmp_si((-2, 1)) > 0);
+  assert!(q > (-2 as si_t, 1));
+  assert!((-2 as si_t, 1) < q);
+  assert!(q > -2);
+  assert!(-2 < q);
 }
 
 /// significant digits test
